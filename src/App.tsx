@@ -1,12 +1,24 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 
+function PokeBall({ size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="white" stroke="#222" strokeWidth="4"/>
+      <path d="M2 50 Q2 2 50 2 Q98 2 98 50 Z" fill="#CC0000"/>
+      <rect x="2" y="46" width="96" height="8" fill="#222"/>
+      <circle cx="50" cy="50" r="14" fill="white" stroke="#222" strokeWidth="4"/>
+      <circle cx="50" cy="50" r="7" fill="#CC0000"/>
+    </svg>
+  );
+}
+
 const COMMISSION = 0.03;
 const TCG_API = "https://api.pokemontcg.io/v2";
 const fmt = n => `$${Number(n).toLocaleString("es-AR")}`;
 
 const SET_COLORS = {
-  "151":"#FFD700","Scarlet & Violet":"#7B1FA2","Paradox Rift":"#1565C0",
+  "151":"#CC0000","Scarlet & Violet":"#7B1FA2","Paradox Rift":"#1565C0",
   "Evolving Skies":"#00897B","Brilliant Stars":"#F9A825","Crown Zenith":"#6D4C41",
   "Sword & Shield":"#2E7D32","Vivid Voltage":"#F57F17","Silver Tempest":"#546E7A",
   "Mega Evolución":"#AD1457","Shining Legends":"#FF8F00","Battle Styles":"#C62828",
@@ -16,7 +28,7 @@ const SET_COLORS = {
 };
 
 const TYPE_COLORS = {
-  "Fuego":"#FF4C1A","Eléctrico":"#FFD700","Psíquico":"#B24BF3","Dragón":"#4B7BEC",
+  "Fuego":"#FF4C1A","Eléctrico":"#CC0000","Psíquico":"#B24BF3","Dragón":"#4B7BEC",
   "Oscuro":"#5B5EA6","Incoloro":"#7F8C8D","Agua":"#2E86C1","Planta":"#27AE60",
   "Lucha":"#C0392B","Metal":"#7F8C8D","Hada":"#FF69B4",
 };
@@ -74,7 +86,7 @@ function Stars({ rating, size=14, interactive=false, onRate }) {
     <div style={{ display:"flex", gap:2 }}>
       {[1,2,3,4,5].map(i => (
         <span key={i}
-          style={{ fontSize:size, cursor:interactive?"pointer":"default", color:i<=(interactive?hover||rating:rating)?"#FFD700":"#333", transition:"color .1s" }}
+          style={{ fontSize:size, cursor:interactive?"pointer":"default", color:i<=(interactive?hover||rating:rating)?"#CC0000":"#333", transition:"color .1s" }}
           onMouseEnter={() => interactive && setHover(i)}
           onMouseLeave={() => interactive && setHover(0)}
           onClick={() => interactive && onRate && onRate(i)}>★</span>
@@ -89,7 +101,7 @@ function SellerBadge({ sellerId, size="sm" }) {
   return (
     <div style={{ display:"flex", alignItems:"center", gap:4 }}>
       <Stars rating={Math.round(rep.avg)} size={size==="sm"?11:14} />
-      <span style={{ fontSize:size==="sm"?11:13, color:"#FFD700", fontWeight:700, fontFamily:"'DM Sans',sans-serif" }}>{rep.avg}</span>
+      <span style={{ fontSize:size==="sm"?11:13, color:"#CC0000", fontWeight:700, fontFamily:"'DM Sans',sans-serif" }}>{rep.avg}</span>
       <span style={{ fontSize:size==="sm"?10:12, color:"#555", fontFamily:"'DM Sans',sans-serif" }}>({rep.count})</span>
     </div>
   );
@@ -98,31 +110,31 @@ function SellerBadge({ sellerId, size="sm" }) {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#080A12;}::-webkit-scrollbar-thumb{background:#FFD700;border-radius:3px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#080A12;}::-webkit-scrollbar-thumb{background:#CC0000;border-radius:3px;}
 .card{background:#10131F;border:1px solid rgba(255,255,255,.07);border-radius:16px;transition:all .25s;}
-.card:hover{border-color:rgba(255,215,0,.4);box-shadow:0 0 28px rgba(255,215,0,.08);transform:translateY(-3px);}
+.card:hover{border-color:rgba(204,0,0,.4);box-shadow:0 0 28px rgba(204,0,0,.08);transform:translateY(-3px);}
 .btn{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:10px;font-weight:700;transition:all .2s;}
-.btn-gold{background:linear-gradient(135deg,#FFD700,#FF9500);color:#fff;padding:11px 24px;font-size:14px;}
-.btn-gold:hover{box-shadow:0 4px 22px rgba(255,215,0,.5);transform:scale(1.04);}
+.btn-gold{background:linear-gradient(135deg,#CC0000,#990000);color:#fff;padding:11px 24px;font-size:14px;}
+.btn-gold:hover{box-shadow:0 4px 22px rgba(204,0,0,.5);transform:scale(1.04);}
 .btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn-ghost{background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.12);padding:10px 20px;font-size:14px;}
-.btn-ghost:hover{border-color:#FFD700;color:#FFD700;}
-.btn-outline{background:transparent;color:#FFD700;border:1px solid #FFD700;padding:10px 20px;font-size:14px;}
-.btn-outline:hover{background:rgba(255,215,0,.1);}
+.btn-ghost:hover{border-color:#CC0000;color:#CC0000;}
+.btn-outline{background:transparent;color:#CC0000;border:1px solid #CC0000;padding:10px 20px;font-size:14px;}
+.btn-outline:hover{background:rgba(204,0,0,.1);}
 .btn-mp{background:linear-gradient(135deg,#009EE3,#0066B2);color:#fff;padding:16px;font-size:15px;width:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;}
 .btn-mp:hover{box-shadow:0 4px 22px rgba(0,158,227,.4);transform:scale(1.02);}
 .btn-danger{background:rgba(231,76,60,.12);color:#E74C3C;border:1px solid rgba(231,76,60,.25);padding:8px 16px;font-size:13px;}
 .btn-danger:hover{background:rgba(231,76,60,.22);}
 .input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:border-color .2s;}
-.input:focus{border-color:#FFD700;}
+.input:focus{border-color:#CC0000;}
 .input::placeholder{color:#555;}
 .select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
-.select:focus{border-color:#FFD700;}
+.select:focus{border-color:#CC0000;}
 .select option{background:#10131F;}
 label{display:block;font-size:11px;font-weight:700;color:#555;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px;font-family:'DM Sans',sans-serif;}
-.filter-chip{background:rgba(255,255,255,.04);color:#666;border:1px solid rgba(255,255,255,.08);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.filter-chip.active{color:#080A12;font-weight:700;border-color:transparent;background:#FFD700;}
-.filter-chip:hover{transform:scale(1.04);border-color:rgba(255,215,0,.4);color:#FFD700;}
+.filter-chip{background:rgba(255,255,255,.04);color:#666;border:1px solid rgba(255,255,255,.08);padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filter-chip.active{color:#080A12;font-weight:700;border-color:transparent;background:#CC0000;}
+.filter-chip:hover{transform:scale(1.04);border-color:rgba(204,0,0,.4);color:#CC0000;}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .2s;}
 .modal{background:#10131F;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px;width:100%;max-width:520px;position:relative;animation:slidein .25s ease;max-height:90vh;overflow-y:auto;}
 .modal::-webkit-scrollbar{width:4px;}
@@ -131,11 +143,11 @@ label{display:block;font-size:11px;font-weight:700;color:#555;letter-spacing:.8p
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 @keyframes glow{0%,100%{opacity:.2;}50%{opacity:.5;}}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-.spinner{width:26px;height:26px;border:3px solid rgba(255,215,0,.2);border-top-color:#FFD700;border-radius:50%;animation:spin .8s linear infinite;}
+.spinner{width:26px;height:26px;border:3px solid rgba(204,0,0,.2);border-top-color:#CC0000;border-radius:50%;animation:spin .8s linear infinite;}
 .autocomplete-item{padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s;}
-.autocomplete-item:hover{background:rgba(255,215,0,.08);}
+.autocomplete-item:hover{background:rgba(204,0,0,.08);}
 .upload-zone{border:2px dashed rgba(255,255,255,.1);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;}
-.upload-zone:hover,.upload-zone.drag{border-color:#FFD700;background:rgba(255,215,0,.04);}
+.upload-zone:hover,.upload-zone.drag{border-color:#CC0000;background:rgba(204,0,0,.04);}
 `;
 
 function AuthModal({ onLogin, onClose }) {
@@ -165,13 +177,13 @@ function AuthModal({ onLogin, onClose }) {
       <div className="modal">
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{textAlign:"center",marginBottom:24}}>
-          <div style={{fontSize:30,marginBottom:6}}>🔴</div>
-          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",letterSpacing:2}}>TIENDA POKE ROJO</div>
+          <div style={{fontSize:30,marginBottom:6}}><PokeBall size={30} /></div>
+          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#CC0000",letterSpacing:2}}>TIENDA POKE ROJO</div>
           <div style={{fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3}}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
         <div style={{display:"flex",background:"rgba(255,255,255,.04)",borderRadius:10,padding:4,marginBottom:20}}>
           {["login","register"].map(m=>(
-            <button key={m} onClick={()=>{setMode(m);setError("");}} className="btn" style={{flex:1,background:mode===m?"rgba(255,215,0,.15)":"transparent",color:mode===m?"#FFD700":"#555",border:"none",padding:"9px",fontSize:13,fontWeight:700,borderRadius:8}}>
+            <button key={m} onClick={()=>{setMode(m);setError("");}} className="btn" style={{flex:1,background:mode===m?"rgba(204,0,0,.15)":"transparent",color:mode===m?"#CC0000":"#555",border:"none",padding:"9px",fontSize:13,fontWeight:700,borderRadius:8}}>
               {m==="login"?"Iniciar sesión":"Registrarse"}
             </button>
           ))}
@@ -182,8 +194,8 @@ function AuthModal({ onLogin, onClose }) {
           <div><label>Contraseña</label><input className="input" type="password" placeholder={mode==="register"?"Mínimo 6 caracteres":"••••••••"} value={form.password} onChange={f("password")}/></div>
           {mode==="register"&&<div><label>Provincia</label><select className="select" style={{width:"100%"}} value={form.province} onChange={f("province")}>{PROVINCES.map(p=><option key={p}>{p}</option>)}</select></div>}
           {error&&<div style={{background:"rgba(231,76,60,.1)",border:"1px solid rgba(231,76,60,.3)",color:"#E74C3C",padding:"10px 14px",borderRadius:8,fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>⚠️ {error}</div>}
-          {mode==="login"&&<div style={{background:"rgba(255,215,0,.06)",border:"1px solid rgba(255,215,0,.15)",borderRadius:8,padding:"10px 14px",fontSize:12,color:"#888",fontFamily:"'DM Sans',sans-serif"}}>
-            💡 Demo: <strong style={{color:"#FFD700"}}>ash@pokemon.com</strong> / <strong style={{color:"#FFD700"}}>pikachu</strong>
+          {mode==="login"&&<div style={{background:"rgba(204,0,0,.06)",border:"1px solid rgba(204,0,0,.15)",borderRadius:8,padding:"10px 14px",fontSize:12,color:"#888",fontFamily:"'DM Sans',sans-serif"}}>
+            💡 Demo: <strong style={{color:"#CC0000"}}>ash@pokemon.com</strong> / <strong style={{color:"#CC0000"}}>pikachu</strong>
           </div>}
           <button className="btn btn-gold" style={{width:"100%",padding:"14px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={submit} disabled={loading}>
             {loading?<><div className="spinner"/>Verificando...</>:mode==="login"?"Entrar a la Tienda":"Crear cuenta"}
@@ -214,7 +226,7 @@ function ReviewModal({ purchase, userId, onClose, onSubmit }) {
         {done ? (
           <div style={{textAlign:"center",padding:"32px 0"}}>
             <div style={{fontSize:48,marginBottom:12,animation:"float 1.5s ease-in-out infinite"}}>⭐</div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",letterSpacing:1}}>¡GRACIAS POR TU RESEÑA!</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#CC0000",letterSpacing:1}}>¡GRACIAS POR TU RESEÑA!</div>
           </div>
         ) : <>
           <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
@@ -234,7 +246,7 @@ function ReviewModal({ purchase, userId, onClose, onSubmit }) {
           <div style={{marginBottom:18}}>
             <label>Tu calificación *</label>
             <div style={{display:"flex",gap:6,marginTop:4}}><Stars rating={rating} size={28} interactive onRate={setRating}/></div>
-            {rating>0&&<div style={{fontSize:12,color:"#FFD700",marginTop:6,fontFamily:"'DM Sans',sans-serif"}}>{["","😞 Muy malo","😕 Malo","😐 Regular","😊 Bueno","🤩 Excelente"][rating]}</div>}
+            {rating>0&&<div style={{fontSize:12,color:"#CC0000",marginTop:6,fontFamily:"'DM Sans',sans-serif"}}>{["","😞 Muy malo","😕 Malo","😐 Regular","😊 Bueno","🤩 Excelente"][rating]}</div>}
           </div>
           <div style={{marginBottom:20}}>
             <label>Comentario (opcional)</label>
@@ -258,20 +270,20 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
       <div className="modal" style={{maxWidth:560}}>
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:24}}>
-          <div style={{width:64,height:64,borderRadius:"50%",background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:700,color:"#fff",flexShrink:0}}>{seller.name[0]}</div>
+          <div style={{width:64,height:64,borderRadius:"50%",background:"linear-gradient(135deg,#CC0000,#990000)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:700,color:"#fff",flexShrink:0}}>{seller.name[0]}</div>
           <div style={{fontFamily:"'DM Sans',sans-serif"}}>
             <div style={{fontWeight:700,fontSize:20}}>{seller.name}</div>
             <div style={{color:"#555",fontSize:13,marginBottom:4}}>📍 {seller.province}</div>
-            {rep.count?(<div style={{display:"flex",alignItems:"center",gap:8}}><Stars rating={Math.round(rep.avg)} size={16}/><span style={{color:"#FFD700",fontWeight:700,fontSize:14}}>{rep.avg}</span><span style={{color:"#555",fontSize:12}}>· {rep.count} reseña{rep.count!==1?"s":""}</span></div>):<span style={{color:"#444",fontSize:13}}>Sin reseñas aún</span>}
+            {rep.count?(<div style={{display:"flex",alignItems:"center",gap:8}}><Stars rating={Math.round(rep.avg)} size={16}/><span style={{color:"#CC0000",fontWeight:700,fontSize:14}}>{rep.avg}</span><span style={{color:"#555",fontSize:12}}>· {rep.count} reseña{rep.count!==1?"s":""}</span></div>):<span style={{color:"#444",fontSize:13}}>Sin reseñas aún</span>}
           </div>
           <div style={{marginLeft:"auto",textAlign:"center"}}>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#FFD700"}}>{sellerCards.length}</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#CC0000"}}>{sellerCards.length}</div>
             <div style={{fontSize:11,color:"#555"}}>cartas activas</div>
           </div>
         </div>
         <div style={{display:"flex",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:20}}>
           {["cartas","reseñas"].map(t=>(
-            <button key={t} onClick={()=>setTab(t)} style={{background:"none",border:"none",color:tab===t?"#FFD700":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 18px",borderBottom:tab===t?"2px solid #FFD700":"2px solid transparent",transition:"all .2s",textTransform:"capitalize"}}>
+            <button key={t} onClick={()=>setTab(t)} style={{background:"none",border:"none",color:tab===t?"#CC0000":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 18px",borderBottom:tab===t?"2px solid #CC0000":"2px solid transparent",transition:"all .2s",textTransform:"capitalize"}}>
               {t==="cartas"?`🃏 Cartas (${sellerCards.length})`:`⭐ Reseñas (${sellerReviews.length})`}
             </button>
           ))}
@@ -283,7 +295,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
                 {c.imgUrl?<img src={c.imgUrl} alt={c.name} style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
                 <div style={{flex:1,fontFamily:"'DM Sans',sans-serif"}}><div style={{fontWeight:700,fontSize:14}}>{c.name}</div><div style={{color:"#555",fontSize:12}}>{c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span></div></div>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#FFD700"}}>{fmt(c.price)}</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#CC0000"}}>{fmt(c.price)}</div>
                   {userId&&userId!==c.sellerId&&<button className="btn btn-gold" style={{padding:"6px 14px",fontSize:12,marginTop:4}} onClick={()=>{onBuy(c);onClose();}}>Comprar</button>}
                 </div>
               </div>
@@ -342,14 +354,14 @@ function CheckoutModal({ card, onClose, onSuccess }) {
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8,fontSize:14,color:"#888"}}><span>Precio carta</span><span style={{color:"#E8E8F0"}}>{fmt(base)}</span></div>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8,fontSize:14,color:"#888"}}><span>Comisión servicio (3%)</span><span>+{fmt(commission)}</span></div>
             <div style={{height:1,background:"rgba(255,255,255,.07)",margin:"10px 0"}}/>
-            <div style={{display:"flex",justifyContent:"space-between",fontWeight:700}}><span style={{fontSize:15}}>Total</span><span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700"}}>{fmt(total)}</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",fontWeight:700}}><span style={{fontSize:15}}>Total</span><span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#CC0000"}}>{fmt(total)}</span></div>
           </div>
           <button className="btn btn-mp" onClick={pay}><span style={{fontWeight:900,fontSize:16,background:"#fff",color:"#009EE3",borderRadius:5,padding:"1px 7px"}}>MP</span>Pagar con Mercado Pago</button>
           <div style={{fontSize:11,color:"#333",textAlign:"center",marginTop:10,fontFamily:"'DM Sans',sans-serif"}}>🔒 Pago seguro · Compra garantizada</div>
         </>}
         {step===2&&<div style={{textAlign:"center",padding:"44px 20px"}}>
-          <div style={{fontSize:44,marginBottom:16,animation:"spin 1s linear infinite",display:"inline-block"}}>🔴</div>
-          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",marginBottom:8,letterSpacing:2}}>PROCESANDO PAGO</div>
+          <div style={{marginBottom:16,animation:"spin 1s linear infinite",display:"inline-block"}}><PokeBall size={44}/></div>
+          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#CC0000",marginBottom:8,letterSpacing:2}}>PROCESANDO PAGO</div>
           <div style={{color:"#555",fontFamily:"'DM Sans',sans-serif",fontSize:14,marginBottom:22}}>Conectando con Mercado Pago...</div>
           <div style={{display:"flex",justifyContent:"center"}}><div className="spinner" style={{width:34,height:34,borderWidth:4}}/></div>
         </div>}
@@ -419,7 +431,7 @@ function PublishForm({ user, onPublish }) {
     <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
       <div className="card" style={{padding:48}}>
         <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
-        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#FFD700",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#CC0000",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Tu carta ya está visible en el marketplace.</div>
         <div style={{display:"flex",gap:10,justifyContent:"center"}}>
           <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",number:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:""});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
@@ -441,7 +453,7 @@ function PublishForm({ user, onPublish }) {
             <input className="input" placeholder="Ej: Charizard, Pikachu VMAX, Gardevoir ex..." value={query} onChange={e=>{setQuery(e.target.value);if(!e.target.value)setSelectedCard(null);}}/>
             {searching&&<div style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)"}}><div className="spinner" style={{width:16,height:16,borderWidth:2}}/></div>}
             {suggestions.length>0&&(
-              <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#14172A",border:"1px solid rgba(255,215,0,.2)",borderRadius:12,zIndex:50,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
+              <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#14172A",border:"1px solid rgba(204,0,0,.2)",borderRadius:12,zIndex:50,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
                 {suggestions.map(s=>(
                   <div key={s.id} className="autocomplete-item" onClick={()=>pickCard(s)}>
                     {s.images?.small?<img src={s.images.small} alt="" style={{width:34,height:47,objectFit:"contain",borderRadius:4,flexShrink:0}}/>:<div style={{width:34,height:47,background:"rgba(255,255,255,.05)",borderRadius:4,flexShrink:0}}/>}
@@ -458,8 +470,8 @@ function PublishForm({ user, onPublish }) {
             <div style={{flexShrink:0,width:100}}>
               {finalImg?<img src={finalImg} alt="" style={{width:100,borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,.5)"}}/>:<div style={{width:100,height:140,background:"rgba(255,255,255,.04)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30}}>🃏</div>}
               <div style={{display:"flex",gap:6,marginTop:10}}>
-                {form.imgUrl&&<button className="btn" onClick={()=>setImgMode("official")} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="official"?"rgba(255,215,0,.15)":"rgba(255,255,255,.04)",color:imgMode==="official"?"#FFD700":"#666",border:`1px solid ${imgMode==="official"?"#FFD700":"rgba(255,255,255,.1)"}`,borderRadius:6}}>Oficial</button>}
-                <button className="btn" onClick={()=>fileRef.current?.click()} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="upload"?"rgba(255,215,0,.15)":"rgba(255,255,255,.04)",color:imgMode==="upload"?"#FFD700":"#666",border:`1px solid ${imgMode==="upload"?"#FFD700":"rgba(255,255,255,.1)"}`,borderRadius:6}}>📷 Tuya</button>
+                {form.imgUrl&&<button className="btn" onClick={()=>setImgMode("official")} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="official"?"rgba(204,0,0,.15)":"rgba(255,255,255,.04)",color:imgMode==="official"?"#CC0000":"#666",border:`1px solid ${imgMode==="official"?"#CC0000":"rgba(255,255,255,.1)"}`,borderRadius:6}}>Oficial</button>}
+                <button className="btn" onClick={()=>fileRef.current?.click()} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="upload"?"rgba(204,0,0,.15)":"rgba(255,255,255,.04)",color:imgMode==="upload"?"#CC0000":"#666",border:`1px solid ${imgMode==="upload"?"#CC0000":"rgba(255,255,255,.1)"}`,borderRadius:6}}>📷 Tuya</button>
               </div>
               <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
             </div>
@@ -490,7 +502,7 @@ function PublishForm({ user, onPublish }) {
             onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
             onClick={()=>fileRef.current?.click()}>
             <div style={{fontSize:28,marginBottom:8}}>📷</div>
-            <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Arrastrá una foto o <span style={{color:"#FFD700",cursor:"pointer"}}>hacé clic para subir</span></div>
+            <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Arrastrá una foto o <span style={{color:"#CC0000",cursor:"pointer"}}>hacé clic para subir</span></div>
             <div style={{fontSize:11,color:"#444",marginTop:4}}>JPG, PNG, WEBP · Máx 5MB</div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
           </div>
@@ -506,11 +518,11 @@ function PublishForm({ user, onPublish }) {
         </div>
 
         {Number(form.price)>0&&(
-          <div style={{background:"rgba(255,215,0,.05)",border:"1px solid rgba(255,215,0,.12)",borderRadius:9,padding:"12px 14px",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>
+          <div style={{background:"rgba(204,0,0,.05)",border:"1px solid rgba(204,0,0,.12)",borderRadius:9,padding:"12px 14px",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>
             <div style={{display:"flex",justifyContent:"space-between",color:"#888",marginBottom:6}}><span>Precio carta</span><span>{fmt(form.price)}</span></div>
             <div style={{display:"flex",justifyContent:"space-between",color:"#888",marginBottom:6}}><span>Comisión (3%)</span><span>+{fmt(Math.round(Number(form.price)*COMMISSION))}</span></div>
-            <div style={{borderTop:"1px solid rgba(255,215,0,.1)",paddingTop:8,display:"flex",justifyContent:"space-between",fontWeight:700}}>
-              <span>Total comprador</span><span style={{color:"#FFD700"}}>{fmt(Math.round(Number(form.price)*(1+COMMISSION)))}</span>
+            <div style={{borderTop:"1px solid rgba(204,0,0,.1)",paddingTop:8,display:"flex",justifyContent:"space-between",fontWeight:700}}>
+              <span>Total comprador</span><span style={{color:"#CC0000"}}>{fmt(Math.round(Number(form.price)*(1+COMMISSION)))}</span>
             </div>
             <div style={{color:"#444",fontSize:11,marginTop:4}}>✓ Vos recibís {fmt(form.price)}</div>
           </div>
@@ -524,7 +536,7 @@ function PublishForm({ user, onPublish }) {
         </div>
 
         <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15}} onClick={publish} disabled={!form.name||!form.price}>
-          🔴 Publicar en la tienda
+          Publicar en la tienda
         </button>
       </div>
     </div>
@@ -537,7 +549,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
 
   return (
     <div className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
-      {card.hot&&<span style={{position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#FFD700,#FF9500)",color:"#fff",padding:"2px 8px",borderRadius:5,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif",zIndex:2}}>🔥 HOT</span>}
+      {card.hot&&<span style={{position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#CC0000,#990000)",color:"#fff",padding:"2px 8px",borderRadius:5,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif",zIndex:2}}>🔥 HOT</span>}
       <div style={{height:160,background:`linear-gradient(160deg,${setColor}18,${setColor}30)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
         {card.imgUrl
           ?<img src={card.imgUrl} alt={card.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>
@@ -562,7 +574,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
             <div style={{fontSize:10,color:"#444"}}>ARS</div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",lineHeight:1}}>{fmt(card.price)}</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#CC0000",lineHeight:1}}>{fmt(card.price)}</div>
           </div>
           {userId==null
             ?<button className="btn btn-ghost" style={{padding:"8px 14px",fontSize:12}} onClick={onLogin}>Ingresar</button>
@@ -620,14 +632,14 @@ export default function App() {
   return (
     <div style={{minHeight:"100vh",background:"#080A12",color:"#E8E8F0",fontFamily:"'DM Sans',sans-serif",position:"relative"}}>
       <style>{CSS}</style>
-      <div style={{position:"fixed",top:-280,right:-180,width:560,height:560,borderRadius:"50%",background:"radial-gradient(circle,rgba(255,215,0,.06) 0%,transparent 70%)",pointerEvents:"none",animation:"glow 5s ease-in-out infinite"}}/>
+      <div style={{position:"fixed",top:-280,right:-180,width:560,height:560,borderRadius:"50%",background:"radial-gradient(circle,rgba(204,0,0,.06) 0%,transparent 70%)",pointerEvents:"none",animation:"glow 5s ease-in-out infinite"}}/>
 
       {/* NAV */}
       <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.06)",padding:"0 24px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(8,10,18,.92)",backdropFilter:"blur(20px)"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
-          <span style={{fontSize:20}}>🔴</span>
+          <PokeBall />
           <div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#FFD700",lineHeight:1}}>TIENDA POKE ROJO</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#CC0000",lineHeight:1}}>TIENDA POKE ROJO</div>
             <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Cartas Individuales</div>
           </div>
         </div>
@@ -636,7 +648,7 @@ export default function App() {
             <button className="btn btn-outline" style={{padding:"8px 16px",fontSize:13}} onClick={()=>setTab("vender")}>+ Publicar</button>
             <div style={{position:"relative"}}>
               <button onClick={()=>setMenuOpen(o=>!o)} className="btn btn-ghost" style={{padding:"7px 14px",fontSize:13,display:"flex",alignItems:"center",gap:8}}>
-                <div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",flexShrink:0}}>{user.name[0]}</div>
+                <div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#CC0000,#990000)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",flexShrink:0}}>{user.name[0]}</div>
                 {user.name.split(" ")[0]}
               </button>
               {menuOpen&&(
@@ -672,7 +684,7 @@ export default function App() {
           <div style={{padding:"30px 0 22px",display:"flex",gap:24,alignItems:"center",flexWrap:"wrap",borderBottom:"1px solid rgba(255,255,255,.05)",marginBottom:22}}>
             <div style={{flex:1,minWidth:240}}>
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:50,lineHeight:.88,marginBottom:10}}>
-                <span style={{color:"#FFD700"}}>COMPRÁ</span> Y <span style={{color:"#FFD700"}}>VENDÉ</span><br/>
+                <span style={{color:"#CC0000"}}>COMPRÁ</span> Y <span style={{color:"#CC0000"}}>VENDÉ</span><br/>
                 <span style={{color:"#888",fontSize:30}}>CARTAS POKÉMON</span>
               </div>
               <div style={{color:"#555",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
@@ -681,7 +693,7 @@ export default function App() {
               {[{v:`${cards.length}`,l:"Cartas",i:"🃏"},{v:`${USERS.length}`,l:"Vendedores",i:"👤"},{v:`${REVIEWS.length}`,l:"Reseñas",i:"⭐"}].map(s=>(
                 <div key={s.l} className="card" style={{padding:"14px 18px",textAlign:"center",minWidth:88}}>
                   <div style={{fontSize:18,marginBottom:2}}>{s.i}</div>
-                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#FFD700"}}>{s.v}</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#CC0000"}}>{s.v}</div>
                   <div style={{fontSize:11,color:"#555"}}>{s.l}</div>
                 </div>
               ))}
@@ -704,7 +716,7 @@ export default function App() {
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SETS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
-                style={filterSet===s?{background:"#FFD700",color:"#080A12",borderColor:"transparent"}:{}}
+                style={filterSet===s?{background:"#CC0000",color:"#080A12",borderColor:"transparent"}:{}}
                 onClick={()=>setFilterSet(s)}>{s}</button>
             ))}
           </div>
@@ -746,7 +758,7 @@ export default function App() {
                     <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
                     <div style={{color:"#555",fontSize:12}}>{c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span> · {c.rarity}</div>
                   </div>
-                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#FFD700"}}>{fmt(c.price)}</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#CC0000"}}>{fmt(c.price)}</div>
                   <button className="btn btn-danger" onClick={()=>{CARDS=CARDS.filter(x=>x.id!==c.id);refresh();}}>Eliminar</button>
                 </div>
               ))}
@@ -775,7 +787,7 @@ export default function App() {
                     <div style={{color:"#555",fontSize:12}}>Envío: {c.shipping.join(", ")}</div>
                   </div>
                   <div style={{textAlign:"right",marginRight:8}}>
-                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#FFD700"}}>{fmt(Math.round(c.price*(1+COMMISSION)))}</div>
+                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#CC0000"}}>{fmt(Math.round(c.price*(1+COMMISSION)))}</div>
                     <div style={{fontSize:11,color:"#27AE60",fontWeight:700}}>✓ PAGADO</div>
                   </div>
                   {!c.reviewed?(
@@ -791,7 +803,7 @@ export default function App() {
       </div>
 
       <div style={{borderTop:"1px solid rgba(255,255,255,.05)",padding:"16px 24px",textAlign:"center",color:"#333",fontSize:12}}>
-        🔴 Tienda Poke Rojo · Argentina · Cartas individuales · Pagos seguros vía Mercado Pago
+        ⬤ Tienda Poke Rojo · Argentina · Cartas individuales · Pagos seguros vía Mercado Pago
       </div>
 
       {showAuth&&<AuthModal onLogin={login} onClose={()=>setShowAuth(false)}/>}
