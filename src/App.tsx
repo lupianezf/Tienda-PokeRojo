@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "./supabase";
 
 function PokeBall({ size = 22 }) {
   return (
@@ -26,7 +27,6 @@ const SET_COLORS = {
   "Temporal Forces":"#00695C","Twilight Masquerade":"#4527A0","Shrouded Fable":"#37474F",
   "Stellar Crown":"#0277BD","Surging Sparks":"#EF6C00","Prismatic Evolutions":"#880E4F",
 };
-
 const TYPE_COLORS = {
   "Fuego":"#FF4C1A","Eléctrico":"#F9A825","Psíquico":"#B24BF3","Dragón":"#4B7BEC",
   "Oscuro":"#5B5EA6","Incoloro":"#7F8C8D","Agua":"#2E86C1","Planta":"#27AE60",
@@ -43,79 +43,22 @@ const CONDITIONS = ["M","NM","LP","MP","HP"];
 const PROVINCES = ["Buenos Aires","CABA","Córdoba","Rosario","Mendoza","Santa Fe","Tucumán",
   "La Plata","Mar del Plata","Salta","Misiones","Neuquén","Corrientes","Chaco","Entre Ríos",
   "San Juan","Jujuy","Río Negro","San Luis","La Rioja","Chubut","Santa Cruz","Tierra del Fuego"];
-
 const SETS = ["Todos","151","Scarlet & Violet","Paradox Rift","Evolving Skies","Brilliant Stars",
   "Crown Zenith","Sword & Shield","Vivid Voltage","Silver Tempest","Mega Evolución",
   "Shining Legends","Battle Styles","Fusion Strike","Paldea Evolved","Obsidian Flames",
   "Temporal Forces","Twilight Masquerade","Shrouded Fable","Stellar Crown",
   "Surging Sparks","Prismatic Evolutions"];
 
-let USERS = [
-  { id:1, email:"ash@pokemon.com", password:"pikachu", name:"Ash K.", province:"Buenos Aires" },
-  { id:2, email:"misty@pokemon.com", password:"togepi", name:"Misty W.", province:"Córdoba" },
-  { id:3, email:"brock@pokemon.com", password:"onix123", name:"Brock S.", province:"Mendoza" },
-];
-
-let REVIEWS = [
-  { id:1, sellerId:2, buyerId:1, cardName:"Pikachu VMAX", rating:5, comment:"Carta llegó perfecta, muy bien embalada. Re recomendable!", date:"2025-03-10" },
-  { id:2, sellerId:2, buyerId:3, cardName:"Mewtwo GX", rating:4, comment:"Buena carta, condición tal como se describió. Envío rápido.", date:"2025-03-18" },
-  { id:3, sellerId:1, buyerId:2, cardName:"Charizard V", rating:5, comment:"Excelente vendedor, muy honesto con la condición.", date:"2025-04-01" },
-  { id:4, sellerId:3, buyerId:1, cardName:"Rayquaza VMAX", rating:3, comment:"Carta ok pero tardó un poco el envío.", date:"2025-04-05" },
-];
-
-let CARDS = [
-  { id:1, name:"Charizard VMAX", set:"Sword & Shield", setId:"swsh1", number:"20/202", condition:"NM", price:18500, type:"Fuego", rarity:"Ultra Rara", sellerId:2, sellerName:"Misty W.", imgUrl:"https://images.pokemontcg.io/swsh1/20_hires.png", hot:true, province:"Córdoba", shipping:["Andreani","OCA"], listedAt:Date.now()-86400000*3 },
-  { id:2, name:"Pikachu V", set:"Vivid Voltage", setId:"swsh4", number:"43/185", condition:"LP", price:2200, type:"Eléctrico", rarity:"Rara V", sellerId:2, sellerName:"Misty W.", imgUrl:"https://images.pokemontcg.io/swsh4/43_hires.png", hot:false, province:"Córdoba", shipping:["Correo Argentino"], listedAt:Date.now()-86400000*2 },
-  { id:3, name:"Mewtwo GX", set:"Shining Legends", setId:"sm35", number:"39/73", condition:"NM", price:9800, type:"Psíquico", rarity:"GX", sellerId:1, sellerName:"Ash K.", imgUrl:"https://images.pokemontcg.io/sm35/39_hires.png", hot:true, province:"Buenos Aires", shipping:["Andreani","OCA","Correo Argentino"], listedAt:Date.now()-86400000*5 },
-  { id:4, name:"Rayquaza V", set:"Evolving Skies", setId:"swsh7", number:"110/203", condition:"NM", price:7500, type:"Dragón", rarity:"V", sellerId:2, sellerName:"Misty W.", imgUrl:"https://images.pokemontcg.io/swsh7/110_hires.png", hot:false, province:"Córdoba", shipping:["OCA"], listedAt:Date.now()-86400000*1 },
-  { id:5, name:"Umbreon VMAX", set:"Evolving Skies", setId:"swsh7", number:"95/203", condition:"NM", price:42000, type:"Oscuro", rarity:"Alt Art", sellerId:1, sellerName:"Ash K.", imgUrl:"https://images.pokemontcg.io/swsh7/95_hires.png", hot:true, province:"Buenos Aires", shipping:["Andreani"], listedAt:Date.now()-86400000*7 },
-  { id:6, name:"Gardevoir ex", set:"Scarlet & Violet", setId:"sv1", number:"86/198", condition:"M", price:5400, type:"Psíquico", rarity:"ex", sellerId:3, sellerName:"Brock S.", imgUrl:"https://images.pokemontcg.io/sv1/86_hires.png", hot:false, province:"Mendoza", shipping:["Andreani","OCA"], listedAt:Date.now()-86400000*4 },
-  { id:7, name:"Lugia V", set:"Silver Tempest", setId:"swsh12", number:"186/195", condition:"NM", price:35000, type:"Incoloro", rarity:"Alt Art", sellerId:3, sellerName:"Brock S.", imgUrl:"https://images.pokemontcg.io/swsh12/186_hires.png", hot:true, province:"Mendoza", shipping:["Andreani"], listedAt:Date.now()-86400000*6 },
-  { id:8, name:"Blastoise V", set:"Battle Styles", setId:"swsh5", number:"17/163", condition:"LP", price:3200, type:"Agua", rarity:"V", sellerId:1, sellerName:"Ash K.", imgUrl:"https://images.pokemontcg.io/swsh5/17_hires.png", hot:false, province:"Buenos Aires", shipping:["Correo Argentino","OCA"], listedAt:Date.now()-86400000*2 },
-];
-
-function getReputation(sellerId) {
-  const r = REVIEWS.filter(x => x.sellerId === sellerId);
-  if (!r.length) return { avg: null, count: 0 };
-  return { avg: (r.reduce((s,x) => s+x.rating,0)/r.length).toFixed(1), count: r.length };
-}
-
-function Stars({ rating, size=14, interactive=false, onRate }) {
-  const [hover, setHover] = useState(0);
-  return (
-    <div style={{ display:"flex", gap:2 }}>
-      {[1,2,3,4,5].map(i => (
-        <span key={i}
-          style={{ fontSize:size, cursor:interactive?"pointer":"default", color:i<=(interactive?hover||rating:rating)?"#DAA520":"#333", transition:"color .1s" }}
-          onMouseEnter={() => interactive && setHover(i)}
-          onMouseLeave={() => interactive && setHover(0)}
-          onClick={() => interactive && onRate && onRate(i)}>★</span>
-      ))}
-    </div>
-  );
-}
-
-function SellerBadge({ sellerId, size="sm" }) {
-  const rep = getReputation(sellerId);
-  if (!rep.count) return <span style={{ fontSize:11, color:"#444", fontFamily:"'DM Sans',sans-serif" }}>Sin reseñas</span>;
-  return (
-    <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-      <Stars rating={Math.round(rep.avg)} size={size==="sm"?11:14} />
-      <span style={{ fontSize:size==="sm"?11:13, color:"#DAA520", fontWeight:700, fontFamily:"'DM Sans',sans-serif" }}>{rep.avg}</span>
-      <span style={{ fontSize:size==="sm"?10:12, color:"#555", fontFamily:"'DM Sans',sans-serif" }}>({rep.count})</span>
-    </div>
-  );
-}
-
+// ── CSS ────────────────────────────────────────────────────────────────────────
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#080A12;}::-webkit-scrollbar-thumb{background:#DAA520;border-radius:3px;}
 .card{background:#10131F;border:1px solid rgba(255,255,255,.07);border-radius:16px;transition:all .25s;}
-.card:hover{border-color:rgba(218,165,32,.4);box-shadow:0 0 28px rgba(218,165,32,.08);transform:translateY(-3px);}
+.card:hover{border-color:rgba(218,165,32,.3);box-shadow:0 0 28px rgba(218,165,32,.07);transform:translateY(-3px);}
 .btn{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:10px;font-weight:700;transition:all .2s;}
 .btn-gold{background:linear-gradient(135deg,#DAA520,#B8860B);color:#fff;padding:11px 24px;font-size:14px;}
-.btn-gold:hover{box-shadow:0 4px 22px rgba(218,165,32,.5);transform:scale(1.04);}
+.btn-gold:hover{box-shadow:0 4px 22px rgba(218,165,32,.4);transform:scale(1.04);}
 .btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn-ghost{background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.12);padding:10px 20px;font-size:14px;}
 .btn-ghost:hover{border-color:#DAA520;color:#DAA520;}
@@ -150,6 +93,35 @@ label{display:block;font-size:11px;font-weight:700;color:#555;letter-spacing:.8p
 .upload-zone:hover,.upload-zone.drag{border-color:#DAA520;background:rgba(218,165,32,.04);}
 `;
 
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+function Stars({ rating, size=14, interactive=false, onRate }) {
+  const [hover, setHover] = useState(0);
+  return (
+    <div style={{ display:"flex", gap:2 }}>
+      {[1,2,3,4,5].map(i => (
+        <span key={i}
+          style={{ fontSize:size, cursor:interactive?"pointer":"default", color:i<=(interactive?hover||rating:rating)?"#DAA520":"#333", transition:"color .1s" }}
+          onMouseEnter={() => interactive && setHover(i)}
+          onMouseLeave={() => interactive && setHover(0)}
+          onClick={() => interactive && onRate && onRate(i)}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function SellerBadge({ reviews, size="sm" }) {
+  if (!reviews || !reviews.length) return <span style={{ fontSize:11, color:"#444", fontFamily:"'DM Sans',sans-serif" }}>Sin reseñas</span>;
+  const avg = (reviews.reduce((s,x) => s+x.rating,0)/reviews.length).toFixed(1);
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+      <Stars rating={Math.round(avg)} size={size==="sm"?11:14} />
+      <span style={{ fontSize:size==="sm"?11:13, color:"#DAA520", fontWeight:700, fontFamily:"'DM Sans',sans-serif" }}>{avg}</span>
+      <span style={{ fontSize:size==="sm"?10:12, color:"#555", fontFamily:"'DM Sans',sans-serif" }}>({reviews.length})</span>
+    </div>
+  );
+}
+
+// ── AUTH MODAL ─────────────────────────────────────────────────────────────────
 function AuthModal({ onLogin, onClose }) {
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ email:"", password:"", name:"", province:"Buenos Aires" });
@@ -159,16 +131,21 @@ function AuthModal({ onLogin, onClose }) {
 
   const submit = async () => {
     setError(""); setLoading(true);
-    await new Promise(r=>setTimeout(r,600));
-    if (mode==="login") {
-      const u = USERS.find(u=>u.email===form.email&&u.password===form.password);
-      u ? onLogin(u) : setError("Email o contraseña incorrectos.");
-    } else {
-      if (!form.name||!form.email||!form.password) { setError("Completá todos los campos."); setLoading(false); return; }
-      if (form.password.length<6) { setError("Mínimo 6 caracteres."); setLoading(false); return; }
-      const nu = { id:Date.now(), ...form };
-      USERS.push(nu); onLogin(nu);
-    }
+    try {
+      if (mode === "login") {
+        const { data, error: err } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
+        if (err) { setError("Email o contraseña incorrectos."); setLoading(false); return; }
+        const { data: profile } = await supabase.from("profiles").select("*").eq("id", data.user.id).single();
+        onLogin({ id: data.user.id, email: data.user.email, name: profile?.name || data.user.email, province: profile?.province || "" });
+      } else {
+        if (!form.name || !form.email || !form.password) { setError("Completá todos los campos."); setLoading(false); return; }
+        if (form.password.length < 6) { setError("Mínimo 6 caracteres."); setLoading(false); return; }
+        const { data, error: err } = await supabase.auth.signUp({ email: form.email, password: form.password });
+        if (err) { setError(err.message); setLoading(false); return; }
+        await supabase.from("profiles").insert({ id: data.user.id, name: form.name, province: form.province });
+        onLogin({ id: data.user.id, email: form.email, name: form.name, province: form.province });
+      }
+    } catch(e) { setError("Error inesperado. Intentá de nuevo."); }
     setLoading(false);
   };
 
@@ -177,7 +154,7 @@ function AuthModal({ onLogin, onClose }) {
       <div className="modal">
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{textAlign:"center",marginBottom:24}}>
-          <div style={{fontSize:30,marginBottom:6}}><PokeBall size={30} /></div>
+          <div style={{marginBottom:6,display:"flex",justifyContent:"center"}}><PokeBall size={36}/></div>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:2}}>TIENDA POKE ROJO</div>
           <div style={{fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3}}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
@@ -194,9 +171,6 @@ function AuthModal({ onLogin, onClose }) {
           <div><label>Contraseña</label><input className="input" type="password" placeholder={mode==="register"?"Mínimo 6 caracteres":"••••••••"} value={form.password} onChange={f("password")}/></div>
           {mode==="register"&&<div><label>Provincia</label><select className="select" style={{width:"100%"}} value={form.province} onChange={f("province")}>{PROVINCES.map(p=><option key={p}>{p}</option>)}</select></div>}
           {error&&<div style={{background:"rgba(231,76,60,.1)",border:"1px solid rgba(231,76,60,.3)",color:"#E74C3C",padding:"10px 14px",borderRadius:8,fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>⚠️ {error}</div>}
-          {mode==="login"&&<div style={{background:"rgba(218,165,32,.06)",border:"1px solid rgba(218,165,32,.15)",borderRadius:8,padding:"10px 14px",fontSize:12,color:"#888",fontFamily:"'DM Sans',sans-serif"}}>
-            💡 Demo: <strong style={{color:"#DAA520"}}>ash@pokemon.com</strong> / <strong style={{color:"#DAA520"}}>pikachu</strong>
-          </div>}
           <button className="btn btn-gold" style={{width:"100%",padding:"14px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={submit} disabled={loading}>
             {loading?<><div className="spinner"/>Verificando...</>:mode==="login"?"Entrar a la Tienda":"Crear cuenta"}
           </button>
@@ -206,18 +180,22 @@ function AuthModal({ onLogin, onClose }) {
   );
 }
 
+// ── REVIEW MODAL ───────────────────────────────────────────────────────────────
 function ReviewModal({ purchase, userId, onClose, onSubmit }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const submit = () => {
+  const submit = async () => {
     if (!rating) return;
-    const rev = { id:Date.now(), sellerId:purchase.sellerId, buyerId:userId, cardName:purchase.name, rating, comment, date:new Date().toISOString().split("T")[0] };
-    REVIEWS.push(rev);
-    onSubmit(rev);
-    setDone(true);
-    setTimeout(onClose, 1800);
+    setLoading(true);
+    const { data, error } = await supabase.from("reviews").insert({
+      seller_id: purchase.sellerId, buyer_id: userId,
+      card_name: purchase.name, rating, comment
+    }).select().single();
+    if (!error) { onSubmit(data); setDone(true); setTimeout(onClose, 1800); }
+    setLoading(false);
   };
 
   return (
@@ -232,17 +210,6 @@ function ReviewModal({ purchase, userId, onClose, onSubmit }) {
           <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,letterSpacing:1,marginBottom:6}}>CALIFICAR VENDEDOR</div>
           <div style={{color:"#555",fontSize:13,fontFamily:"'DM Sans',sans-serif",marginBottom:22}}>Compraste: <strong style={{color:"#aaa"}}>{purchase.name}</strong></div>
-          <div style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",borderRadius:12,padding:16,marginBottom:20,display:"flex",alignItems:"center",gap:14}}>
-            {purchase.imgUrl
-              ?<img src={purchase.imgUrl} alt="" style={{width:52,height:72,objectFit:"contain",borderRadius:6,flexShrink:0}}/>
-              :<div style={{width:52,height:72,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>🃏</div>
-            }
-            <div style={{fontFamily:"'DM Sans',sans-serif"}}>
-              <div style={{fontWeight:700}}>{purchase.sellerName}</div>
-              <SellerBadge sellerId={purchase.sellerId} size="md"/>
-              <div style={{fontSize:12,color:"#555",marginTop:4}}>📍 {purchase.province}</div>
-            </div>
-          </div>
           <div style={{marginBottom:18}}>
             <label>Tu calificación *</label>
             <div style={{display:"flex",gap:6,marginTop:4}}><Stars rating={rating} size={28} interactive onRate={setRating}/></div>
@@ -250,20 +217,27 @@ function ReviewModal({ purchase, userId, onClose, onSubmit }) {
           </div>
           <div style={{marginBottom:20}}>
             <label>Comentario (opcional)</label>
-            <textarea className="input" rows={3} placeholder="Contá tu experiencia con el vendedor..." value={comment} onChange={e=>setComment(e.target.value)} style={{resize:"vertical"}}/>
+            <textarea className="input" rows={3} placeholder="Contá tu experiencia..." value={comment} onChange={e=>setComment(e.target.value)} style={{resize:"vertical"}}/>
           </div>
-          <button className="btn btn-gold" style={{width:"100%",padding:"14px"}} onClick={submit} disabled={!rating}>Enviar calificación</button>
+          <button className="btn btn-gold" style={{width:"100%",padding:"14px",display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={submit} disabled={!rating||loading}>
+            {loading?<><div className="spinner"/>Enviando...</>:"Enviar calificación"}
+          </button>
         </>}
       </div>
     </div>
   );
 }
 
+// ── SELLER MODAL ───────────────────────────────────────────────────────────────
 function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
-  const rep = getReputation(seller.id);
-  const sellerReviews = REVIEWS.filter(r=>r.sellerId===seller.id).sort((a,b)=>b.date.localeCompare(a.date));
-  const sellerCards = allCards.filter(c=>c.sellerId===seller.id);
+  const [sellerReviews, setSellerReviews] = useState([]);
   const [tab, setTab] = useState("cartas");
+  const sellerCards = allCards.filter(c=>c.seller_id===seller.id||c.sellerId===seller.id);
+
+  useEffect(() => {
+    supabase.from("reviews").select("*").eq("seller_id", seller.id).order("created_at", {ascending:false})
+      .then(({data}) => data && setSellerReviews(data));
+  }, [seller.id]);
 
   return (
     <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -274,7 +248,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
           <div style={{fontFamily:"'DM Sans',sans-serif"}}>
             <div style={{fontWeight:700,fontSize:20}}>{seller.name}</div>
             <div style={{color:"#555",fontSize:13,marginBottom:4}}>📍 {seller.province}</div>
-            {rep.count?(<div style={{display:"flex",alignItems:"center",gap:8}}><Stars rating={Math.round(rep.avg)} size={16}/><span style={{color:"#DAA520",fontWeight:700,fontSize:14}}>{rep.avg}</span><span style={{color:"#555",fontSize:12}}>· {rep.count} reseña{rep.count!==1?"s":""}</span></div>):<span style={{color:"#444",fontSize:13}}>Sin reseñas aún</span>}
+            <SellerBadge reviews={sellerReviews} size="md"/>
           </div>
           <div style={{marginLeft:"auto",textAlign:"center"}}>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#DAA520"}}>{sellerCards.length}</div>
@@ -283,7 +257,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
         </div>
         <div style={{display:"flex",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:20}}>
           {["cartas","reseñas"].map(t=>(
-            <button key={t} onClick={()=>setTab(t)} style={{background:"none",border:"none",color:tab===t?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 18px",borderBottom:tab===t?"2px solid #DAA520":"2px solid transparent",transition:"all .2s",textTransform:"capitalize"}}>
+            <button key={t} onClick={()=>setTab(t)} style={{background:"none",border:"none",color:tab===t?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 18px",borderBottom:tab===t?"2px solid #DAA520":"2px solid transparent",transition:"all .2s"}}>
               {t==="cartas"?`🃏 Cartas (${sellerCards.length})`:`⭐ Reseñas (${sellerReviews.length})`}
             </button>
           ))}
@@ -292,11 +266,14 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             {sellerCards.map(c=>(
               <div key={c.id} style={{display:"flex",gap:12,alignItems:"center",background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:12,padding:12}}>
-                {c.imgUrl?<img src={c.imgUrl} alt={c.name} style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
-                <div style={{flex:1,fontFamily:"'DM Sans',sans-serif"}}><div style={{fontWeight:700,fontSize:14}}>{c.name}</div><div style={{color:"#555",fontSize:12}}>{c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span></div></div>
+                {c.img_url||c.imgUrl?<img src={c.img_url||c.imgUrl} alt={c.name} style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
+                <div style={{flex:1,fontFamily:"'DM Sans',sans-serif"}}>
+                  <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
+                  <div style={{color:"#555",fontSize:12}}>{c.set_name||c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span></div>
+                </div>
                 <div style={{textAlign:"right"}}>
                   <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520"}}>{fmt(c.price)}</div>
-                  {userId&&userId!==c.sellerId&&<button className="btn btn-gold" style={{padding:"6px 14px",fontSize:12,marginTop:4}} onClick={()=>{onBuy(c);onClose();}}>Comprar</button>}
+                  {userId&&userId!==(c.seller_id||c.sellerId)&&<button className="btn btn-gold" style={{padding:"6px 14px",fontSize:12,marginTop:4}} onClick={()=>{onBuy(c);onClose();}}>Comprar</button>}
                 </div>
               </div>
             ))}
@@ -306,8 +283,8 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {sellerReviews.map(r=>(
               <div key={r.id} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:12,padding:14,fontFamily:"'DM Sans',sans-serif"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><Stars rating={r.rating} size={14}/><span style={{fontSize:11,color:"#444"}}>{r.date}</span></div>
-                <div style={{fontSize:13,color:"#aaa",marginBottom:4}}>Carta: <strong style={{color:"#E8E8F0"}}>{r.cardName}</strong></div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><Stars rating={r.rating} size={14}/><span style={{fontSize:11,color:"#444"}}>{r.created_at?.split("T")[0]}</span></div>
+                <div style={{fontSize:13,color:"#aaa",marginBottom:4}}>Carta: <strong style={{color:"#E8E8F0"}}>{r.card_name}</strong></div>
                 {r.comment&&<div style={{fontSize:13,color:"#888",fontStyle:"italic"}}>"{r.comment}"</div>}
               </div>
             ))}
@@ -318,14 +295,24 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
   );
 }
 
-function CheckoutModal({ card, onClose, onSuccess }) {
+// ── CHECKOUT MODAL ─────────────────────────────────────────────────────────────
+function CheckoutModal({ card, user, onClose, onSuccess }) {
   const [step, setStep] = useState(1);
-  const [shipping, setShipping] = useState(card.shipping[0]);
-  const base=card.price, commission=Math.round(base*COMMISSION), total=base+commission;
+  const [shipping, setShipping] = useState((card.shipping||["Andreani"])[0]);
+  const base = card.price, commission = Math.round(base*COMMISSION), total = base+commission;
 
   const pay = async () => {
     setStep(2);
     await new Promise(r=>setTimeout(r,2200));
+    // Save purchase to Supabase
+    await supabase.from("purchases").insert({
+      card_id: card.id, buyer_id: user.id,
+      seller_id: card.seller_id || card.sellerId,
+      card_name: card.name, amount: total,
+      commission, shipping_method: shipping, status: "approved"
+    });
+    // Mark card as sold
+    await supabase.from("cards").update({ sold: true }).eq("id", card.id);
     setStep(3);
     setTimeout(()=>{onSuccess();onClose();},2400);
   };
@@ -337,17 +324,18 @@ function CheckoutModal({ card, onClose, onSuccess }) {
           <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,letterSpacing:1,marginBottom:20}}>RESUMEN DE COMPRA</div>
           <div style={{display:"flex",gap:14,alignItems:"center",background:"rgba(255,255,255,.04)",borderRadius:12,padding:14,marginBottom:16,border:"1px solid rgba(255,255,255,.07)"}}>
-            {card.imgUrl?<img src={card.imgUrl} alt={card.name} style={{width:56,height:78,objectFit:"contain",borderRadius:8,flexShrink:0}}/>:<div style={{width:56,height:78,background:"rgba(255,255,255,.05)",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🃏</div>}
+            {(card.img_url||card.imgUrl)?<img src={card.img_url||card.imgUrl} alt={card.name} style={{width:56,height:78,objectFit:"contain",borderRadius:8,flexShrink:0}}/>:<div style={{width:56,height:78,background:"rgba(255,255,255,.05)",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🃏</div>}
             <div style={{fontFamily:"'DM Sans',sans-serif"}}>
               <div style={{fontWeight:700,fontSize:15}}>{card.name}</div>
-              <div style={{color:"#666",fontSize:12,marginTop:2}}>{card.set} · <span style={{color:COND_COLOR[card.condition]}}>{COND_LABEL[card.condition]}</span></div>
-              <div style={{marginTop:6}}><SellerBadge sellerId={card.sellerId}/></div>
-              <div style={{color:"#555",fontSize:11,marginTop:3}}>Vendedor: {card.sellerName} · {card.province}</div>
+              <div style={{color:"#666",fontSize:12,marginTop:2}}>{card.set_name||card.set} · <span style={{color:COND_COLOR[card.condition]}}>{COND_LABEL[card.condition]}</span></div>
+              <div style={{color:"#555",fontSize:11,marginTop:3}}>Vendedor: {card.seller_name||card.sellerName} · {card.province}</div>
             </div>
           </div>
           <div style={{marginBottom:16}}>
             <label>Forma de envío</label>
-            <select className="select" style={{width:"100%"}} value={shipping} onChange={e=>setShipping(e.target.value)}>{card.shipping.map(s=><option key={s}>{s}</option>)}</select>
+            <select className="select" style={{width:"100%"}} value={shipping} onChange={e=>setShipping(e.target.value)}>
+              {(card.shipping||["Andreani","OCA","Correo Argentino"]).map(s=><option key={s}>{s}</option>)}
+            </select>
             <div style={{fontSize:11,color:"#444",marginTop:5,fontFamily:"'DM Sans',sans-serif"}}>⚠️ Costo de envío a coordinar con el vendedor post-compra.</div>
           </div>
           <div style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",borderRadius:12,padding:14,marginBottom:16,fontFamily:"'DM Sans',sans-serif"}}>
@@ -375,8 +363,9 @@ function CheckoutModal({ card, onClose, onSuccess }) {
   );
 }
 
+// ── PUBLISH FORM ───────────────────────────────────────────────────────────────
 function PublishForm({ user, onPublish }) {
-  const [form, setForm] = useState({ name:"", set:"", setId:"", number:"", condition:"NM", price:"", type:"", rarity:"", description:"", imgUrl:"", uploadedImg:"", quantity:"1" });
+  const [form, setForm] = useState({ name:"", set:"", setId:"", condition:"NM", price:"", type:"", rarity:"", description:"", imgUrl:"", uploadedImg:"", quantity:"1" });
   const [step, setStep] = useState(0);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -384,6 +373,7 @@ function PublishForm({ user, onPublish }) {
   const [selectedCard, setSelectedCard] = useState(null);
   const [imgMode, setImgMode] = useState("official");
   const [dragOver, setDragOver] = useState(false);
+  const [loading, setLoading] = useState(false);
   const fileRef = useRef(null);
   const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
 
@@ -422,12 +412,21 @@ function PublishForm({ user, onPublish }) {
 
   const finalImg = imgMode==="upload" ? form.uploadedImg : form.imgUrl;
 
-  const publish = () => {
+  const publish = async () => {
     if (!form.name||!form.price) return;
-    const nc = { id:Date.now(), name:form.name, set:form.set, setId:form.setId, quantity:Number(form.quantity)||1, condition:form.condition, price:Number(form.price), type:form.type||"Incoloro", rarity:form.rarity, sellerId:user.id, sellerName:user.name, imgUrl:finalImg, hot:false, province:user.province, shipping:["Andreani","OCA","Correo Argentino"], listedAt:Date.now() };
-    CARDS.unshift(nc);
-    onPublish(nc);
-    setStep(1);
+    setLoading(true);
+    const { data, error } = await supabase.from("cards").insert({
+      seller_id: user.id, seller_name: user.name,
+      name: form.name, set_name: form.set, set_id: form.setId,
+      condition: form.condition, price: Number(form.price),
+      type: form.type||"Incoloro", rarity: form.rarity,
+      img_url: finalImg, province: user.province,
+      shipping: ["Andreani","OCA","Correo Argentino"],
+      description: form.description, quantity: Number(form.quantity)||1,
+      hot: false, sold: false
+    }).select().single();
+    setLoading(false);
+    if (!error && data) { onPublish(data); setStep(1); }
   };
 
   if (step===1) return (
@@ -436,9 +435,7 @@ function PublishForm({ user, onPublish }) {
         <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Tu carta ya está visible en el marketplace.</div>
-        <div style={{display:"flex",gap:10,justifyContent:"center"}}>
-          <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:"",quantity:"1"});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
-        </div>
+        <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:"",quantity:"1"});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
       </div>
     </div>
   );
@@ -484,15 +481,12 @@ function PublishForm({ user, onPublish }) {
                 <div><label>Set</label><input className="input" placeholder="Ej: Scarlet & Violet" value={form.set} onChange={ff("set")}/></div>
                 <div><label>Rareza</label><input className="input" placeholder="Ej: Ultra Rara" value={form.rarity} onChange={ff("rarity")}/></div>
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-                <div><label>Tipo</label>
-                  <select className="select" style={{width:"100%"}} value={form.type} onChange={ff("type")}>
-                    <option value="">-- Seleccioná --</option>
-                    {Object.values(TYPE_EN_TO_ES).filter((v,i,a)=>a.indexOf(v)===i).map(t=><option key={t}>{t}</option>)}
-                    <option>Incoloro</option>
-                  </select>
-                </div>
-                <div><label>Cantidad de ejemplares *</label><input className="input" type="number" min="1" max="99" placeholder="Ej: 1" value={form.quantity} onChange={ff("quantity")}/></div>
+              <div><label>Tipo</label>
+                <select className="select" style={{width:"100%"}} value={form.type} onChange={ff("type")}>
+                  <option value="">-- Seleccioná --</option>
+                  {Object.values(TYPE_EN_TO_ES).filter((v,i,a)=>a.indexOf(v)===i).map(t=><option key={t}>{t}</option>)}
+                  <option>Incoloro</option>
+                </select>
               </div>
             </div>
           </div>
@@ -517,8 +511,10 @@ function PublishForm({ user, onPublish }) {
               {CONDITIONS.map(c=><option key={c} value={c}>{COND_LABEL[c]} ({c})</option>)}
             </select>
           </div>
-          <div><label>Precio (ARS) *</label><input className="input" type="number" placeholder="Ej: 5000" value={form.price} onChange={ff("price")}/></div>
+          <div><label>Cantidad de ejemplares *</label><input className="input" type="number" min="1" max="99" placeholder="Ej: 1" value={form.quantity} onChange={ff("quantity")}/></div>
         </div>
+
+        <div><label>Precio (ARS) *</label><input className="input" type="number" placeholder="Ej: 5000" value={form.price} onChange={ff("price")}/></div>
 
         {Number(form.price)>0&&(
           <div style={{background:"rgba(218,165,32,.05)",border:"1px solid rgba(218,165,32,.12)",borderRadius:9,padding:"12px 14px",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>
@@ -531,39 +527,35 @@ function PublishForm({ user, onPublish }) {
           </div>
         )}
 
-        <div><label>Descripción adicional</label><textarea className="input" rows={3} placeholder="Idioma, estado detallado, si es foil, firmada..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
+        <div><label>Descripción adicional</label><textarea className="input" rows={3} placeholder="Idioma, estado detallado, si es foil..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
 
-        <div style={{background:"rgba(0,158,227,.05)",border:"1px solid rgba(0,158,227,.12)",borderRadius:10,padding:12,fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>
-          <div style={{color:"#009EE3",fontWeight:700,marginBottom:3}}>📦 Envíos</div>
-          <div style={{color:"#666",lineHeight:1.6}}>Tu carta acepta Andreani, OCA y Correo Argentino. El comprador elige y coordina con vos post-compra.</div>
-        </div>
-
-        <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15}} onClick={publish} disabled={!form.name||!form.price}>
-          Publicar en la tienda
+        <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={publish} disabled={!form.name||!form.price||loading}>
+          {loading?<><div className="spinner"/>Publicando...</>:"Publicar en la tienda"}
         </button>
       </div>
     </div>
   );
 }
 
-function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
-  const rep = getReputation(card.sellerId);
-  const setColor = SET_COLORS[card.set] || "#444";
+// ── CARD ITEM ──────────────────────────────────────────────────────────────────
+function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
+  const cardReviews = reviews.filter(r=>r.seller_id===(card.seller_id||card.sellerId));
+  const setColor = SET_COLORS[card.set_name||card.set] || "#444";
+  const imgUrl = card.img_url || card.imgUrl;
+  const sellerName = card.seller_name || card.sellerName;
+  const sellerId = card.seller_id || card.sellerId;
 
   return (
     <div className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
-      {card.hot&&<span style={{position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#DAA520,#B8860B)",color:"#fff",padding:"2px 8px",borderRadius:5,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif",zIndex:2}}>🔥 HOT</span>}
+      {card.hot&&<span style={{position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#E53935,#B71C1C)",color:"#fff",padding:"2px 8px",borderRadius:5,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif",zIndex:2}}>🔥 HOT</span>}
       <div style={{height:160,background:`linear-gradient(160deg,${setColor}18,${setColor}30)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
-        {card.imgUrl
-          ?<img src={card.imgUrl} alt={card.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>
-          :<div style={{fontSize:52,opacity:.6}}>🃏</div>
-        }
+        {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:52,opacity:.6}}>🃏</div>}
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(16,19,31,1),transparent)"}}/>
       </div>
       <div style={{padding:"14px 14px 16px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'DM Sans',sans-serif"}}>
         <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>{card.name}</div>
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
-          <span style={{background:setColor+"22",color:setColor,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700}}>{card.set}</span>
+          <span style={{background:setColor+"22",color:setColor,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700}}>{card.set_name||card.set}</span>
           {card.quantity>1&&<span style={{fontSize:10,color:"#DAA520",fontWeight:700}}>x{card.quantity}</span>}
         </div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
@@ -571,8 +563,8 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
           <span style={{fontSize:10,color:"#444"}}>📍{card.province}</span>
         </div>
         <button onClick={()=>onSellerClick(card)} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"6px 10px",marginBottom:10,cursor:"pointer",textAlign:"left",width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <span style={{fontSize:12,color:"#888",fontFamily:"'DM Sans',sans-serif"}}>@{card.sellerName}</span>
-          {rep.count>0?<SellerBadge sellerId={card.sellerId}/>:<span style={{fontSize:10,color:"#444"}}>Sin reseñas</span>}
+          <span style={{fontSize:12,color:"#888"}}>@{sellerName}</span>
+          <SellerBadge reviews={cardReviews}/>
         </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
@@ -581,7 +573,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
           </div>
           {userId==null
             ?<button className="btn btn-ghost" style={{padding:"8px 14px",fontSize:12}} onClick={onLogin}>Ingresar</button>
-            :userId===card.sellerId
+            :userId===sellerId
               ?<span style={{fontSize:11,color:"#444"}}>Tu carta</span>
               :<button className="btn btn-gold" style={{padding:"8px 14px",fontSize:12}} onClick={()=>onBuy(card)}>Comprar</button>
           }
@@ -591,6 +583,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
   );
 }
 
+// ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
@@ -601,36 +594,73 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [filterSet, setFilterSet] = useState("Todos");
   const [sortBy, setSortBy] = useState("reciente");
-  const [cards, setCards] = useState(CARDS);
+  const [cards, setCards] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [purchases, setPurchases] = useState([]);
+  const [loadingCards, setLoadingCards] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [, forceUpdate] = useState(0);
 
-  const myListings = cards.filter(c=>c.sellerId===user?.id);
-  const refresh = () => { setCards([...CARDS]); forceUpdate(n=>n+1); };
+  // Load session on mount
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        supabase.from("profiles").select("*").eq("id", session.user.id).single()
+          .then(({ data }) => {
+            if (data) setUser({ id: session.user.id, email: session.user.email, name: data.name, province: data.province });
+          });
+      }
+    });
+  }, []);
+
+  // Load cards
+  const loadCards = async () => {
+    setLoadingCards(true);
+    const { data } = await supabase.from("cards").select("*").eq("sold", false).order("listed_at", { ascending: false });
+    if (data) setCards(data);
+    setLoadingCards(false);
+  };
+
+  // Load reviews
+  const loadReviews = async () => {
+    const { data } = await supabase.from("reviews").select("*");
+    if (data) setReviews(data);
+  };
+
+  // Load purchases for current user
+  const loadPurchases = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("purchases").select("*").eq("buyer_id", user.id).order("created_at", { ascending: false });
+    if (data) setPurchases(data.map(p => ({ ...p, reviewed: false })));
+  };
+
+  useEffect(() => { loadCards(); loadReviews(); }, []);
+  useEffect(() => { if (user) loadPurchases(); }, [user]);
 
   const login = u => { setUser(u); setShowAuth(false); };
-  const logout = () => { setUser(null); setMenuOpen(false); setTab("marketplace"); };
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null); setMenuOpen(false); setTab("marketplace"); setPurchases([]);
+  };
+
   const onBuy = card => { if(!user){setShowAuth(true);return;} setCheckoutCard(card); };
 
   const onPurchaseSuccess = () => {
-    const bought = { ...checkoutCard, purchasedAt:new Date(), reviewed:false };
-    setPurchases(p=>[bought,...p]);
-    CARDS = CARDS.filter(c=>c.id!==checkoutCard.id);
-    refresh();
+    loadCards();
+    loadPurchases();
   };
 
-  const onPublish = () => refresh();
+  const onPublish = () => { loadCards(); };
 
   const openSeller = (card) => {
-    const seller = USERS.find(u=>u.id===card.sellerId)||{ id:card.sellerId, name:card.sellerName, province:card.province };
-    setSellerModal(seller);
+    setSellerModal({ id: card.seller_id||card.sellerId, name: card.seller_name||card.sellerName, province: card.province });
   };
 
+  const myListings = cards.filter(c => c.seller_id === user?.id);
+
   const filtered = cards
-    .filter(c=>filterSet==="Todos"||c.set===filterSet)
-    .filter(c=>[c.name,c.sellerName,c.set].join(" ").toLowerCase().includes(search.toLowerCase()))
-    .sort((a,b)=>sortBy==="asc"?a.price-b.price:sortBy==="desc"?b.price-a.price:b.listedAt-a.listedAt);
+    .filter(c => filterSet==="Todos" || (c.set_name||c.set)===filterSet)
+    .filter(c => [c.name, c.seller_name, c.set_name].join(" ").toLowerCase().includes(search.toLowerCase()))
+    .sort((a,b) => sortBy==="asc" ? a.price-b.price : sortBy==="desc" ? b.price-a.price : 0);
 
   return (
     <div style={{minHeight:"100vh",background:"#080A12",color:"#E8E8F0",fontFamily:"'DM Sans',sans-serif",position:"relative"}}>
@@ -640,7 +670,7 @@ export default function App() {
       {/* NAV */}
       <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.06)",padding:"0 24px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(8,10,18,.92)",backdropFilter:"blur(20px)"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
-          <PokeBall />
+          <PokeBall size={22}/>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#DAA520",lineHeight:1}}>TIENDA POKE ROJO</div>
             <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Cartas Individuales</div>
@@ -660,7 +690,7 @@ export default function App() {
                     <div style={{fontWeight:700,fontSize:14}}>{user.name}</div>
                     <div style={{fontSize:12,color:"#555"}}>{user.email}</div>
                     <div style={{fontSize:12,color:"#555",marginTop:2}}>📍 {user.province}</div>
-                    <div style={{marginTop:6}}><SellerBadge sellerId={user.id} size="md"/></div>
+                    <div style={{marginTop:6}}><SellerBadge reviews={reviews.filter(r=>r.seller_id===user.id)} size="md"/></div>
                   </div>
                   {[{l:"🏪 Mis publicaciones",a:()=>{setTab("mis-publicaciones");setMenuOpen(false);}},{l:"📦 Mis compras",a:()=>{setTab("mis-compras");setMenuOpen(false);}}].map(i=>(
                     <button key={i.l} onClick={i.a} className="btn" style={{width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
@@ -693,7 +723,7 @@ export default function App() {
               <div style={{color:"#555",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
             </div>
             <div style={{display:"flex",gap:10}}>
-              {[{v:`${cards.length}`,l:"Cartas",i:"🃏"},{v:`${USERS.length}`,l:"Vendedores",i:"👤"},{v:`${REVIEWS.length}`,l:"Reseñas",i:"⭐"}].map(s=>(
+              {[{v:`${cards.length}`,l:"Cartas",i:"🃏"},{v:`${new Set(cards.map(c=>c.seller_id)).size}`,l:"Vendedores",i:"👤"},{v:`${reviews.length}`,l:"Reseñas",i:"⭐"}].map(s=>(
                 <div key={s.l} className="card" style={{padding:"14px 18px",textAlign:"center",minWidth:88}}>
                   <div style={{fontSize:18,marginBottom:2}}>{s.i}</div>
                   <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#DAA520"}}>{s.v}</div>
@@ -715,7 +745,6 @@ export default function App() {
             </select>
           </div>
 
-          {/* FILTRO POR SET */}
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SETS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
@@ -724,10 +753,19 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16}}>
-            {filtered.map(c=><CardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller}/>)}
-          </div>
-          {filtered.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>🃏</div><div>No hay cartas con ese filtro.</div></div>}
+          {loadingCards ? (
+            <div style={{textAlign:"center",padding:"60px 0"}}>
+              <div style={{display:"flex",justifyContent:"center",marginBottom:12}}><div className="spinner" style={{width:40,height:40,borderWidth:4}}/></div>
+              <div style={{color:"#555",fontFamily:"'DM Sans',sans-serif"}}>Cargando cartas...</div>
+            </div>
+          ) : (
+            <>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16}}>
+                {filtered.map(c=><CardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)}
+              </div>
+              {filtered.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>🃏</div><div>No hay cartas con ese filtro.</div></div>}
+            </>
+          )}
         </>}
 
         {/* VENDER */}
@@ -756,13 +794,13 @@ export default function App() {
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               {myListings.map(c=>(
                 <div key={c.id} className="card" style={{padding:14,display:"flex",gap:12,alignItems:"center"}}>
-                  {c.imgUrl?<img src={c.imgUrl} alt="" style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
+                  {c.img_url?<img src={c.img_url} alt="" style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
                   <div style={{flex:1}}>
                     <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
-                    <div style={{color:"#555",fontSize:12}}>{c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span> · {c.rarity}</div>
+                    <div style={{color:"#555",fontSize:12}}>{c.set_name} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span> · {c.rarity}</div>
                   </div>
                   <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520"}}>{fmt(c.price)}</div>
-                  <button className="btn btn-danger" onClick={()=>{CARDS=CARDS.filter(x=>x.id!==c.id);refresh();}}>Eliminar</button>
+                  <button className="btn btn-danger" onClick={async()=>{await supabase.from("cards").delete().eq("id",c.id);loadCards();}}>Eliminar</button>
                 </div>
               ))}
             </div>
@@ -783,18 +821,16 @@ export default function App() {
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               {purchases.map((c,i)=>(
                 <div key={i} className="card" style={{padding:14,display:"flex",gap:12,alignItems:"center"}}>
-                  {c.imgUrl?<img src={c.imgUrl} alt="" style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
                   <div style={{flex:1}}>
-                    <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
-                    <div style={{color:"#555",fontSize:12}}>Vendedor: {c.sellerName} · {c.province}</div>
-                    <div style={{color:"#555",fontSize:12}}>Envío: {c.shipping.join(", ")}</div>
+                    <div style={{fontWeight:700,fontSize:14}}>{c.card_name}</div>
+                    <div style={{color:"#555",fontSize:12}}>Envío: {c.shipping_method}</div>
                   </div>
                   <div style={{textAlign:"right",marginRight:8}}>
-                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520"}}>{fmt(Math.round(c.price*(1+COMMISSION)))}</div>
+                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520"}}>{fmt(c.amount)}</div>
                     <div style={{fontSize:11,color:"#27AE60",fontWeight:700}}>✓ PAGADO</div>
                   </div>
                   {!c.reviewed?(
-                    <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12,flexShrink:0}} onClick={()=>setReviewTarget({...c,idx:i})}>⭐ Calificar</button>
+                    <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12,flexShrink:0}} onClick={()=>setReviewTarget({...c,idx:i,sellerId:c.seller_id,name:c.card_name,sellerName:"Vendedor"})}>⭐ Calificar</button>
                   ):(
                     <span style={{fontSize:12,color:"#555",flexShrink:0}}>✓ Calificado</span>
                   )}
@@ -810,9 +846,9 @@ export default function App() {
       </div>
 
       {showAuth&&<AuthModal onLogin={login} onClose={()=>setShowAuth(false)}/>}
-      {checkoutCard&&<CheckoutModal card={checkoutCard} onClose={()=>setCheckoutCard(null)} onSuccess={onPurchaseSuccess}/>}
+      {checkoutCard&&<CheckoutModal card={checkoutCard} user={user} onClose={()=>setCheckoutCard(null)} onSuccess={onPurchaseSuccess}/>}
       {sellerModal&&<SellerModal seller={sellerModal} allCards={cards} onClose={()=>setSellerModal(null)} onBuy={onBuy} userId={user?.id}/>}
-      {reviewTarget&&<ReviewModal purchase={reviewTarget} userId={user?.id} onClose={()=>setReviewTarget(null)} onSubmit={()=>{ setPurchases(p=>p.map((x,i)=>i===reviewTarget.idx?{...x,reviewed:true}:x)); forceUpdate(n=>n+1); }}/>}
+      {reviewTarget&&<ReviewModal purchase={reviewTarget} userId={user?.id} onClose={()=>setReviewTarget(null)} onSubmit={()=>{loadReviews();setPurchases(p=>p.map((x,i)=>i===reviewTarget.idx?{...x,reviewed:true}:x));}}/>}
     </div>
   );
 }
