@@ -160,7 +160,7 @@ function AuthModal({ onLogin, onClose }) {
         <button onClick={onClose} className="btn" style={{ position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center" }}>×</button>
         <div style={{ textAlign:"center",marginBottom:24 }}>
           <div style={{ fontSize:30,marginBottom:6 }}>⚡</div>
-          <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",letterSpacing:2 }}>POKÉMERCADO</div>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#FFD700",letterSpacing:2 }}>TIENDA POKE ROJO</div>
           <div style={{ fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3 }}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
         <div style={{ display:"flex",background:"rgba(255,255,255,.04)",borderRadius:10,padding:4,marginBottom:20 }}>
@@ -719,7 +719,7 @@ export default function App() {
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
           <span style={{fontSize:20}}>⚡</span>
           <div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#FFD700",lineHeight:1}}>POKÉMERCADO</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#FFD700",lineHeight:1}}>TIENDA POKE ROJO</div>
             <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Cartas Individuales</div>
           </div>
         </div>
@@ -888,7 +888,7 @@ export default function App() {
       </div>
 
       <div style={{borderTop:"1px solid rgba(255,255,255,.05)",padding:"16px 24px",textAlign:"center",color:"#333",fontSize:12}}>
-        ⚡ PokéMercado · Argentina · Cartas individuales · Pagos seguros vía Mercado Pago
+        ⚡ TIENDA POKE ROJO · Argentina · Cartas individuales · Pagos seguros vía Mercado Pago
       </div>
 
       {/* MODALS */}
