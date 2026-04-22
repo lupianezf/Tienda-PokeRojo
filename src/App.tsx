@@ -392,7 +392,7 @@ function PublishForm({ user, onPublish }) {
     const timer = setTimeout(async () => {
       setSearching(true);
       try {
-        const res = await fetch(`${TCG_API}/cards?q=name:"${query}"*&pageSize=8&select=id,name,set,types,rarity,number,images`);
+        const res = await fetch(`${TCG_API}/cards?q=name:"${query}"*&pageSize=8&select=id,name,set,types,rarity,number,images`, { headers: { "X-Api-Key": import.meta.env.VITE_TCG_API_KEY } });
         const data = await res.json();
         setSuggestions(data.data||[]);
       } catch { setSuggestions([]); }
