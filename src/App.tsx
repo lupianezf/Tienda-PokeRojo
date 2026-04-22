@@ -450,13 +450,13 @@ function PublishForm({ user, onPublish }) {
         <div>
           <label>🔍 Buscar carta en base de datos Pokémon TCG</label>
           <div style={{position:"relative"}}>
-            <input className="input" placeholder="Ej: Charizard, Pikachu VMAX, Gardevoir ex..." value={query} onChange={e=>{setQuery(e.target.value);if(!e.target.value)setSelectedCard(null);}}/>
+            <input className="input" placeholder="Ej: Charizard, Pikachu VMAX, Gardevoir ex..." value={query} onChange={e=>{setQuery(e.target.value);if(!e.target.value)setSelectedCard(null);}} onBlur={()=>setTimeout(()=>setSuggestions([]),150)}/>
             {searching&&<div style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)"}}><div className="spinner" style={{width:16,height:16,borderWidth:2}}/></div>}
             {suggestions.length>0&&(
               <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#14172A",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,zIndex:50,boxShadow:"0 8px 32px rgba(0,0,0,.6)",maxHeight:360,overflowY:"auto",padding:12}}>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(80px,1fr))",gap:8}}>
                   {suggestions.map(s=>(
-                    <div key={s.id} onClick={()=>pickCard(s)} style={{cursor:"pointer",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:10,padding:8,display:"flex",flexDirection:"column",alignItems:"center",gap:6,transition:"all .15s"}}
+                    <div key={s.id} onMouseDown={e=>{e.preventDefault();pickCard(s);}} style={{cursor:"pointer",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:10,padding:8,display:"flex",flexDirection:"column",alignItems:"center",gap:6,transition:"all .15s"}}
                       onMouseEnter={e=>{e.currentTarget.style.borderColor="#DAA520";e.currentTarget.style.background="rgba(218,165,32,.08)";}}
                       onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.08)";e.currentTarget.style.background="rgba(255,255,255,.04)";}}>
                       {s.images?.small
