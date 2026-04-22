@@ -376,7 +376,7 @@ function CheckoutModal({ card, onClose, onSuccess }) {
 }
 
 function PublishForm({ user, onPublish }) {
-  const [form, setForm] = useState({ name:"", set:"", setId:"", number:"", condition:"NM", price:"", type:"", rarity:"", description:"", imgUrl:"", uploadedImg:"" });
+  const [form, setForm] = useState({ name:"", set:"", setId:"", number:"", condition:"NM", price:"", type:"", rarity:"", description:"", imgUrl:"", uploadedImg:"", quantity:"1" });
   const [step, setStep] = useState(0);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -407,7 +407,7 @@ function PublishForm({ user, onPublish }) {
   const pickCard = (c) => {
     const typeEs = c.types ? TYPE_EN_TO_ES[c.types[0]]||c.types[0] : "Incoloro";
     setSelectedCard(c);
-    setForm(p=>({...p, name:c.name, set:c.set?.name||"", setId:c.set?.id||"", number:c.number||"", type:typeEs, rarity:c.rarity||"", imgUrl:c.images?.large||c.images?.small||""}));
+    setForm(p=>({...p, name:c.name, set:c.set?.name||"", setId:c.set?.id||"", type:typeEs, rarity:c.rarity||"", imgUrl:c.images?.large||c.images?.small||""}));
     setQuery(c.name);
     setSuggestions([]);
   };
@@ -424,7 +424,7 @@ function PublishForm({ user, onPublish }) {
 
   const publish = () => {
     if (!form.name||!form.price) return;
-    const nc = { id:Date.now(), name:form.name, set:form.set, setId:form.setId, number:form.number, condition:form.condition, price:Number(form.price), type:form.type||"Incoloro", rarity:form.rarity, sellerId:user.id, sellerName:user.name, imgUrl:finalImg, hot:false, province:user.province, shipping:["Andreani","OCA","Correo Argentino"], listedAt:Date.now() };
+    const nc = { id:Date.now(), name:form.name, set:form.set, setId:form.setId, quantity:Number(form.quantity)||1, condition:form.condition, price:Number(form.price), type:form.type||"Incoloro", rarity:form.rarity, sellerId:user.id, sellerName:user.name, imgUrl:finalImg, hot:false, province:user.province, shipping:["Andreani","OCA","Correo Argentino"], listedAt:Date.now() };
     CARDS.unshift(nc);
     onPublish(nc);
     setStep(1);
@@ -437,7 +437,7 @@ function PublishForm({ user, onPublish }) {
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Tu carta ya está visible en el marketplace.</div>
         <div style={{display:"flex",gap:10,justifyContent:"center"}}>
-          <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",number:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:""});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
+          <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:"",quantity:"1"});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
         </div>
       </div>
     </div>
@@ -460,7 +460,7 @@ function PublishForm({ user, onPublish }) {
                 {suggestions.map(s=>(
                   <div key={s.id} className="autocomplete-item" onClick={()=>pickCard(s)}>
                     {s.images?.small?<img src={s.images.small} alt="" style={{width:34,height:47,objectFit:"contain",borderRadius:4,flexShrink:0}}/>:<div style={{width:34,height:47,background:"rgba(255,255,255,.05)",borderRadius:4,flexShrink:0}}/>}
-                    <div style={{fontFamily:"'DM Sans',sans-serif"}}><div style={{fontWeight:700,fontSize:13}}>{s.name}</div><div style={{color:"#666",fontSize:11}}>{s.set?.name} · {s.rarity} {s.number&&`· #${s.number}`}</div></div>
+                    <div style={{fontFamily:"'DM Sans',sans-serif"}}><div style={{fontWeight:700,fontSize:13}}>{s.name}</div><div style={{color:"#666",fontSize:11}}>{s.set?.name} · {s.rarity}</div></div>
                   </div>
                 ))}
               </div>
@@ -492,7 +492,7 @@ function PublishForm({ user, onPublish }) {
                     <option>Incoloro</option>
                   </select>
                 </div>
-                <div><label>Nº de carta</label><input className="input" placeholder="Ej: 20/202" value={form.number} onChange={ff("number")}/></div>
+                <div><label>Cantidad de ejemplares *</label><input className="input" type="number" min="1" max="99" placeholder="Ej: 1" value={form.quantity} onChange={ff("quantity")}/></div>
               </div>
             </div>
           </div>
@@ -564,7 +564,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick }) {
         <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>{card.name}</div>
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
           <span style={{background:setColor+"22",color:setColor,padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700}}>{card.set}</span>
-          {card.number&&<span style={{fontSize:10,color:"#444"}}>#{card.number}</span>}
+          {card.quantity>1&&<span style={{fontSize:10,color:"#DAA520",fontWeight:700}}>x{card.quantity}</span>}
         </div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
           <span style={{background:COND_COLOR[card.condition]+"22",color:COND_COLOR[card.condition],padding:"3px 8px",borderRadius:5,fontSize:11,fontWeight:700}}>{COND_LABEL[card.condition]}</span>
