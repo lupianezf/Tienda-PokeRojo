@@ -383,7 +383,7 @@ function PublishForm({ user, onPublish }) {
       setSearching(true);
       try {
         const apiKey = import.meta.env.VITE_TCG_API_KEY || "";
-        const res = await fetch(`${TCG_API}/cards?q=name:${encodeURIComponent(query)}*&pageSize=10&select=id,name,set,types,rarity,number,images`, {
+        const res = await fetch(`${TCG_API}/cards?q=name:${encodeURIComponent(query)}*&pageSize=24&select=id,name,set,types,rarity,number,images`, {
           headers: apiKey ? { "X-Api-Key": apiKey } : {}
         });
         const data = await res.json();
@@ -453,13 +453,24 @@ function PublishForm({ user, onPublish }) {
             <input className="input" placeholder="Ej: Charizard, Pikachu VMAX, Gardevoir ex..." value={query} onChange={e=>{setQuery(e.target.value);if(!e.target.value)setSelectedCard(null);}}/>
             {searching&&<div style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)"}}><div className="spinner" style={{width:16,height:16,borderWidth:2}}/></div>}
             {suggestions.length>0&&(
-              <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#14172A",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,zIndex:50,overflow:"hidden",boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
-                {suggestions.map(s=>(
-                  <div key={s.id} className="autocomplete-item" onClick={()=>pickCard(s)}>
-                    {s.images?.small?<img src={s.images.small} alt="" style={{width:34,height:47,objectFit:"contain",borderRadius:4,flexShrink:0}}/>:<div style={{width:34,height:47,background:"rgba(255,255,255,.05)",borderRadius:4,flexShrink:0}}/>}
-                    <div style={{fontFamily:"'DM Sans',sans-serif"}}><div style={{fontWeight:700,fontSize:13}}>{s.name}</div><div style={{color:"#666",fontSize:11}}>{s.set?.name} · {s.rarity}</div></div>
-                  </div>
-                ))}
+              <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#14172A",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,zIndex:50,boxShadow:"0 8px 32px rgba(0,0,0,.6)",maxHeight:360,overflowY:"auto",padding:12}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(80px,1fr))",gap:8}}>
+                  {suggestions.map(s=>(
+                    <div key={s.id} onClick={()=>pickCard(s)} style={{cursor:"pointer",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:10,padding:8,display:"flex",flexDirection:"column",alignItems:"center",gap:6,transition:"all .15s"}}
+                      onMouseEnter={e=>{e.currentTarget.style.borderColor="#DAA520";e.currentTarget.style.background="rgba(218,165,32,.08)";}}
+                      onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.08)";e.currentTarget.style.background="rgba(255,255,255,.04)";}}>
+                      {s.images?.small
+                        ?<img src={s.images.small} alt="" style={{width:60,height:84,objectFit:"contain",borderRadius:6}}/>
+                        :<div style={{width:60,height:84,background:"rgba(255,255,255,.05)",borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>
+                      }
+                      <div style={{fontFamily:"'DM Sans',sans-serif",textAlign:"center"}}>
+                        <div style={{fontWeight:700,fontSize:11,color:"#E8E8F0",lineHeight:1.2}}>{s.name}</div>
+                        <div style={{color:"#666",fontSize:10,marginTop:2}}>{s.set?.name}</div>
+                        {s.rarity&&<div style={{color:"#DAA520",fontSize:9,marginTop:1}}>{s.rarity}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
