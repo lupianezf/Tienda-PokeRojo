@@ -304,6 +304,12 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
   const pay = async () => {
     setStep(2);
     await new Promise(r=>setTimeout(r,2200));
+    // Call MP payment function
+    const fnUrl = `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`;
+    const { data: mpData } = await supabase.functions.invoke('bright-task', {
+      body: { cardId: card.id, cardName: card.name, amount: total, buyerEmail: user.email, shippingMethod: shipping }
+    });
+    if (mpData?.init_point) { window.open(mpData.init_point, '_blank'); }
     // Save purchase to Supabase
     await supabase.from("purchases").insert({
       card_id: card.id, buyer_id: user.id,
