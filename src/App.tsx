@@ -306,10 +306,15 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
     await new Promise(r=>setTimeout(r,2200));
     // Call MP payment function
     const fnUrl = `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`;
-    const { data: mpData } = await supabase.functions.invoke('bright-task', {
-      body: { cardId: card.id, cardName: card.name, amount: total, buyerEmail: user.email, shippingMethod: shipping }
-    });
-    if (mpData?.init_point) { window.location.href = mpData.init_point; }
+    try {
+      const fnRes = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardId: card.id, cardName: card.name, amount: total, buyerEmail: user.email, shippingMethod: shipping })
+      });
+      const mpData = await fnRes.json();
+      if (mpData?.init_point) { window.location.href = mpData.init_point; return; }
+    } catch(e) { console.error('MP error:', e); }
     // Save purchase to Supabase
     await supabase.from("purchases").insert({
       card_id: card.id, buyer_id: user.id,
