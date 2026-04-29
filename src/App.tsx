@@ -303,27 +303,40 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
 
   const pay = async () => {
     setStep(2);
-    await new Promise(r=>setTimeout(r,2200));
-    // Call MP payment function
-    const fnUrl = `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`;
-    try {
-      const fnRes = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardId: card.id, cardName: card.name, amount: total, buyerEmail: user.email, shippingMethod: shipping })
-      });
-      const mpData = await fnRes.json();
-      if (mpData?.init_point) { window.location.href = mpData.init_point; return; }
-    } catch(e) { console.error('MP error:', e); }
-    // Save purchase to Supabase
+    // Save pending purchase first
     await supabase.from("purchases").insert({
       card_id: card.id, buyer_id: user.id,
       seller_id: card.seller_id || card.sellerId,
       card_name: card.name, amount: total,
-      commission, shipping_method: shipping, status: "approved"
+      commission, shipping_method: shipping, status: "pending"
     });
-    // Mark card as sold
+    // Mark card as reserved
     await supabase.from("cards").update({ sold: true }).eq("id", card.id);
+    // Call MP edge function
+    try {
+      const fnRes = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cardId: card.id, cardName: card.name, amount: total,
+          buyerEmail: user.email, shippingMethod: shipping,
+          sellerName: card.seller_name || card.sellerName,
+          sellerProvince: card.province
+        })
+      });
+      const mpData = await fnRes.json();
+      if (mpData?.init_point) {
+        // Store card info in sessionStorage for confirmation page
+        sessionStorage.setItem('lastPurchase', JSON.stringify({
+          cardName: card.name, cardImg: card.img_url || card.imgUrl,
+          sellerName: card.seller_name || card.sellerName,
+          sellerProvince: card.province, shipping, total,
+          set: card.set_name || card.set
+        }));
+        window.location.href = mpData.init_point;
+        return;
+      }
+    } catch(e) { console.error('MP error:', e); }
     setStep(3);
     setTimeout(()=>{onSuccess();onClose();},2400);
   };
@@ -622,8 +635,29 @@ export default function App() {
   const [loadingCards, setLoadingCards] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Load session on mount
+  const [paymentStatus, setPaymentStatus] = useState(null); // null | 'approved' | 'failed' | 'pending'
+  const [lastPurchase, setLastPurchase] = useState(null);
+
+  // Detect MP return params
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status');
+    if (status) {
+      setPaymentStatus(status);
+      const stored = sessionStorage.getItem('lastPurchase');
+      if (stored) { setLastPurchase(JSON.parse(stored)); sessionStorage.removeItem('lastPurchase'); }
+      // Update purchase status in DB
+      if (status === 'approved') {
+        const paymentId = params.get('payment_id');
+        if (paymentId) {
+          supabase.from("purchases").update({ status: 'approved', mp_payment_id: paymentId })
+            .eq("status", "pending").order("created_at", { ascending: false }).limit(1);
+        }
+      }
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         supabase.from("profiles").select("*").eq("id", session.user.id).single()
@@ -733,6 +767,68 @@ export default function App() {
       </nav>
 
       <div style={{maxWidth:1200,margin:"0 auto",padding:"0 24px 80px"}}>
+
+        {/* PAYMENT CONFIRMATION */}
+        {paymentStatus && (
+          <div className="modal-bg">
+            <div className="modal" style={{maxWidth:480}}>
+              {paymentStatus === 'approved' ? <>
+                <div style={{textAlign:"center",marginBottom:24}}>
+                  <div style={{fontSize:60,marginBottom:12,animation:"float 1.5s ease-in-out infinite"}}>🎉</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#27AE60",letterSpacing:1,marginBottom:6}}>¡PAGO APROBADO!</div>
+                  <div style={{color:"#888",fontSize:14,fontFamily:"'DM Sans',sans-serif"}}>Tu compra fue confirmada por Mercado Pago</div>
+                </div>
+                {lastPurchase && (
+                  <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:24}}>
+                    <div style={{display:"flex",gap:14,alignItems:"center",background:"rgba(255,255,255,.04)",borderRadius:12,padding:14,border:"1px solid rgba(255,255,255,.07)"}}>
+                      {lastPurchase.cardImg
+                        ?<img src={lastPurchase.cardImg} alt="" style={{width:52,height:72,objectFit:"contain",borderRadius:8,flexShrink:0}}/>
+                        :<div style={{width:52,height:72,background:"rgba(255,255,255,.05)",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>🃏</div>
+                      }
+                      <div style={{fontFamily:"'DM Sans',sans-serif"}}>
+                        <div style={{fontWeight:700,fontSize:15}}>{lastPurchase.cardName}</div>
+                        <div style={{color:"#666",fontSize:12,marginTop:2}}>{lastPurchase.set}</div>
+                        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520",marginTop:4}}>{fmt(lastPurchase.total)}</div>
+                      </div>
+                    </div>
+                    <div style={{background:"rgba(218,165,32,.06)",border:"1px solid rgba(218,165,32,.15)",borderRadius:12,padding:14,fontFamily:"'DM Sans',sans-serif"}}>
+                      <div style={{fontWeight:700,fontSize:13,color:"#DAA520",marginBottom:10}}>📦 DATOS PARA EL ENVÍO</div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:13}}><span style={{color:"#888"}}>Vendedor</span><span style={{fontWeight:600}}>{lastPurchase.sellerName}</span></div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:13}}><span style={{color:"#888"}}>Provincia</span><span style={{fontWeight:600}}>📍 {lastPurchase.sellerProvince}</span></div>
+                      <div style={{display:"flex",justifyContent:"space-between",fontSize:13}}><span style={{color:"#888"}}>Envío elegido</span><span style={{fontWeight:600,color:"#DAA520"}}>{lastPurchase.shipping}</span></div>
+                    </div>
+                    <div style={{background:"rgba(0,158,227,.05)",border:"1px solid rgba(0,158,227,.12)",borderRadius:12,padding:14,fontFamily:"'DM Sans',sans-serif",fontSize:13}}>
+                      <div style={{fontWeight:700,color:"#009EE3",marginBottom:6}}>📋 ¿Qué pasa ahora?</div>
+                      <div style={{color:"#888",lineHeight:1.8}}>
+                        1. El vendedor fue notificado de tu compra<br/>
+                        2. Coordinarán el envío por <strong style={{color:"#E8E8F0"}}>{lastPurchase.shipping}</strong><br/>
+                        3. El costo del envío lo acordás con el vendedor<br/>
+                        4. Cuando recibas la carta, dejá tu reseña ⭐
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <button className="btn btn-gold" style={{width:"100%",padding:"14px"}} onClick={()=>{setPaymentStatus(null);loadCards();loadPurchases();}}>
+                  Volver al marketplace
+                </button>
+              </> : paymentStatus === 'failed' ? <>
+                <div style={{textAlign:"center",padding:"20px 0 24px"}}>
+                  <div style={{fontSize:54,marginBottom:12}}>❌</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#E74C3C",letterSpacing:1,marginBottom:8}}>PAGO FALLIDO</div>
+                  <div style={{color:"#888",fontSize:14,fontFamily:"'DM Sans',sans-serif",marginBottom:24}}>El pago no pudo procesarse.</div>
+                  <button className="btn btn-gold" style={{width:"100%",padding:"14px"}} onClick={()=>{setPaymentStatus(null);loadCards();}}>Volver al marketplace</button>
+                </div>
+              </> : <>
+                <div style={{textAlign:"center",padding:"20px 0 24px"}}>
+                  <div style={{fontSize:54,marginBottom:12}}>⏳</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#F39C12",letterSpacing:1,marginBottom:8}}>PAGO PENDIENTE</div>
+                  <div style={{color:"#888",fontSize:14,fontFamily:"'DM Sans',sans-serif",marginBottom:24}}>Tu pago está siendo procesado.</div>
+                  <button className="btn btn-gold" style={{width:"100%",padding:"14px"}} onClick={()=>{setPaymentStatus(null);loadCards();}}>Volver al marketplace</button>
+                </div>
+              </>}
+            </div>
+          </div>
+        )}
 
         {/* MARKETPLACE */}
         {tab==="marketplace"&&<>
