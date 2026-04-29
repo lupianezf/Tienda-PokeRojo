@@ -57,45 +57,191 @@ const PRODUCT_TYPE_COLORS = {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#080A12;}::-webkit-scrollbar-thumb{background:#DAA520;border-radius:3px;}
-.card{background:#10131F;border:1px solid rgba(255,255,255,.07);border-radius:16px;transition:all .25s;}
-.card:hover{border-color:rgba(218,165,32,.3);box-shadow:0 0 28px rgba(218,165,32,.07);transform:translateY(-3px);}
-.btn{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:10px;font-weight:700;transition:all .2s;}
-.btn-gold{background:linear-gradient(135deg,#DAA520,#B8860B);color:#fff;padding:11px 24px;font-size:14px;}
-.btn-gold:hover{box-shadow:0 4px 22px rgba(218,165,32,.4);transform:scale(1.04);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#050709;}::-webkit-scrollbar-thumb{background:linear-gradient(#DAA520,#B8860B);border-radius:3px;}
+
+/* Base */
+body{background:#050709;}
+
+/* Hexagon background pattern */
+.hex-bg{
+  background-color:#050709;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='none' stroke='rgba(218,165,32,0.04)' stroke-width='1'%3E%3Cpath d='M14 0 L28 8 L28 24 L14 32 L0 24 L0 8 Z'/%3E%3Cpath d='M14 17 L28 25 L28 41 L14 49 L0 41 L0 25 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Cards */
+.card{
+  background:linear-gradient(145deg,#13161F,#0E1019);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(218,165,32,.04) 0%,transparent 50%);
+  pointer-events:none;
+}
+.card:hover{
+  border-color:rgba(218,165,32,.4);
+  box-shadow:0 8px 40px rgba(218,165,32,.12),0 0 0 1px rgba(218,165,32,.1);
+  transform:translateY(-4px);
+}
+
+/* Pokemon card holo effect on card images */
+.card-img-wrap{
+  position:relative;
+  overflow:hidden;
+}
+.card-img-wrap::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.04) 50%,transparent 70%);
+  pointer-events:none;
+}
+
+/* Buttons */
+.btn{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;border-radius:10px;font-weight:700;transition:all .2s cubic-bezier(.4,0,.2,1);}
+.btn-gold{
+  background:linear-gradient(135deg,#DAA520,#B8860B);
+  color:#050709;
+  padding:11px 24px;
+  font-size:14px;
+  position:relative;
+  overflow:hidden;
+}
+.btn-gold::after{
+  content:'';
+  position:absolute;
+  top:-50%;left:-60%;
+  width:40%;height:200%;
+  background:rgba(255,255,255,.15);
+  transform:skewX(-20deg);
+  transition:left .4s;
+}
+.btn-gold:hover::after{left:120%;}
+.btn-gold:hover{box-shadow:0 4px 24px rgba(218,165,32,.5);transform:scale(1.04);}
 .btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn-ghost{background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.12);padding:10px 20px;font-size:14px;}
-.btn-ghost:hover{border-color:#DAA520;color:#DAA520;}
+.btn-ghost:hover{border-color:#DAA520;color:#DAA520;box-shadow:0 0 12px rgba(218,165,32,.15);}
 .btn-outline{background:transparent;color:#DAA520;border:1px solid #DAA520;padding:10px 20px;font-size:14px;}
-.btn-outline:hover{background:rgba(218,165,32,.1);}
+.btn-outline:hover{background:rgba(218,165,32,.08);box-shadow:0 0 12px rgba(218,165,32,.2);}
 .btn-mp{background:linear-gradient(135deg,#009EE3,#0066B2);color:#fff;padding:16px;font-size:15px;width:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;}
 .btn-mp:hover{box-shadow:0 4px 22px rgba(0,158,227,.4);transform:scale(1.02);}
-.btn-danger{background:rgba(231,76,60,.12);color:#E74C3C;border:1px solid rgba(231,76,60,.25);padding:8px 16px;font-size:13px;}
-.btn-danger:hover{background:rgba(231,76,60,.22);}
-.input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:border-color .2s;}
-.input:focus{border-color:#DAA520;}
-.input::placeholder{color:#555;}
-.select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
-.select:focus{border-color:#DAA520;}
+.btn-danger{background:rgba(231,76,60,.1);color:#E74C3C;border:1px solid rgba(231,76,60,.2);padding:8px 16px;font-size:13px;}
+.btn-danger:hover{background:rgba(231,76,60,.2);}
+
+/* Inputs */
+.input{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:none;transition:all .2s;}
+.input:focus{border-color:#DAA520;background:rgba(218,165,32,.04);box-shadow:0 0 0 3px rgba(218,165,32,.08);}
+.input::placeholder{color:#444;}
+.select{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:#E8E8F0;padding:13px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+.select:focus{border-color:#DAA520;box-shadow:0 0 0 3px rgba(218,165,32,.08);}
 .select option{background:#10131F;}
-label{display:block;font-size:11px;font-weight:700;color:#555;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px;font-family:'DM Sans',sans-serif;}
-.filter-chip{background:rgba(255,255,255,.04);color:#666;border:1px solid rgba(255,255,255,.08);padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.filter-chip.active{color:#080A12;font-weight:700;border-color:transparent;background:#DAA520;}
-.filter-chip:hover{transform:scale(1.04);border-color:rgba(218,165,32,.4);color:#DAA520;}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .2s;}
-.modal{background:#10131F;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px;width:100%;max-width:520px;position:relative;animation:slidein .25s ease;max-height:90vh;overflow-y:auto;}
+label{display:block;font-size:11px;font-weight:700;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;font-family:'DM Sans',sans-serif;}
+
+/* Filter chips */
+.filter-chip{background:rgba(255,255,255,.03);color:#555;border:1px solid rgba(255,255,255,.07);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filter-chip.active{color:#050709;font-weight:700;border-color:transparent;}
+.filter-chip:hover{border-color:rgba(218,165,32,.3);color:#DAA520;}
+
+/* Modals */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .2s;}
+.modal{
+  background:linear-gradient(145deg,#13161F,#0E1019);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:32px;
+  width:100%;
+  max-width:520px;
+  position:relative;
+  animation:slidein .25s ease;
+  max-height:90vh;
+  overflow-y:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 0 1px rgba(218,165,32,.05);
+}
 .modal::-webkit-scrollbar{width:4px;}
+
+/* Navbar glow line */
+.nav-glow{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(218,165,32,.3),transparent);
+}
+
+/* Price tag style */
+.price-tag{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  color:#DAA520;
+  line-height:1;
+  text-shadow:0 0 20px rgba(218,165,32,.3);
+}
+
+/* Hot badge */
+.badge-hot{
+  background:linear-gradient(135deg,#CC0000,#990000);
+  color:#fff;
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:700;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 2px 8px rgba(204,0,0,.4);
+  letter-spacing:.5px;
+}
+
+/* Section divider */
+.section-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(218,165,32,.15),transparent);
+  margin:0;
+}
+
+/* Animations */
 @keyframes fadein{from{opacity:0;}to{opacity:1;}}
 @keyframes slidein{from{transform:translateY(18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-@keyframes glow{0%,100%{opacity:.2;}50%{opacity:.5;}}
+@keyframes glow{0%,100%{opacity:.15;}50%{opacity:.4;}}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-.spinner{width:26px;height:26px;border:3px solid rgba(218,165,32,.2);border-top-color:#DAA520;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+@keyframes pulse-border{0%,100%{border-color:rgba(218,165,32,.2);}50%{border-color:rgba(218,165,32,.5);}}
+
+.spinner{width:26px;height:26px;border:2px solid rgba(218,165,32,.15);border-top-color:#DAA520;border-radius:50%;animation:spin .8s linear infinite;}
+
+/* Autocomplete */
 .autocomplete-item{padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s;}
-.autocomplete-item:hover{background:rgba(218,165,32,.08);}
-.upload-zone{border:2px dashed rgba(255,255,255,.1);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;}
-.upload-zone:hover,.upload-zone.drag{border-color:#DAA520;background:rgba(218,165,32,.04);}
+.autocomplete-item:hover{background:rgba(218,165,32,.06);}
+
+/* Upload zone */
+.upload-zone{border:2px dashed rgba(255,255,255,.08);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;}
+.upload-zone:hover,.upload-zone.drag{border-color:#DAA520;background:rgba(218,165,32,.03);box-shadow:inset 0 0 24px rgba(218,165,32,.04);}
+
+/* Stat cards */
+.stat-card{
+  background:linear-gradient(145deg,#13161F,#0E1019);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  padding:16px 20px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.stat-card::before{
+  content:'';
+  position:absolute;
+  top:-30px;left:-30px;
+  width:80px;height:80px;
+  background:radial-gradient(circle,rgba(218,165,32,.1),transparent 70%);
+  border-radius:50%;
+}
 `;
+
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 function Stars({ rating, size=14, interactive=false, onRate }) {
@@ -583,8 +729,8 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
 
   return (
     <div className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
-      {card.hot&&<span style={{position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#E53935,#B71C1C)",color:"#fff",padding:"2px 8px",borderRadius:5,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif",zIndex:2}}>🔥 HOT</span>}
-      <div style={{height:160,background:`linear-gradient(160deg,${setColor}18,${setColor}30)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
+      {card.hot&&<span className="badge-hot" style={{position:"absolute",top:10,right:10,zIndex:2}}>🔥 HOT</span>}
+      <div className="card-img-wrap" style={{height:160,background:`linear-gradient(160deg,${setColor}22,${setColor}35)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
         {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:52,opacity:.6}}>🃏</div>}
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(16,19,31,1),transparent)"}}/>
       </div>
@@ -604,8 +750,8 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
         </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
-            <div style={{fontSize:10,color:"#444"}}>ARS</div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",lineHeight:1}}>{fmt(card.price)}</div>
+            <div style={{fontSize:10,color:"#444",letterSpacing:.5}}>ARS</div>
+            <div className="price-tag">{fmt(card.price)}</div>
           </div>
           {userId==null
             ?<button className="btn btn-ghost" style={{padding:"8px 14px",fontSize:12}} onClick={onLogin}>Ingresar</button>
@@ -890,12 +1036,13 @@ export default function App() {
     .sort((a,b) => sortBy==="asc" ? a.price-b.price : sortBy==="desc" ? b.price-a.price : 0);
 
   return (
-    <div style={{minHeight:"100vh",background:"#080A12",color:"#E8E8F0",fontFamily:"'DM Sans',sans-serif",position:"relative"}}>
+    <div className="hex-bg" style={{minHeight:"100vh",color:"#E8E8F0",fontFamily:"'DM Sans',sans-serif",position:"relative"}}>
       <style>{CSS}</style>
       <div style={{position:"fixed",top:-280,right:-180,width:560,height:560,borderRadius:"50%",background:"radial-gradient(circle,rgba(218,165,32,.06) 0%,transparent 70%)",pointerEvents:"none",animation:"glow 5s ease-in-out infinite"}}/>
 
       {/* NAV */}
-      <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.06)",padding:"0 24px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(8,10,18,.92)",backdropFilter:"blur(20px)"}}>
+      <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.05)",padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(5,7,9,.94)",backdropFilter:"blur(24px)",boxShadow:"0 4px 32px rgba(0,0,0,.4)"}}>
+        <div className="nav-glow"/>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
           <PokeBall size={22}/>
           <div>
@@ -1027,9 +1174,9 @@ export default function App() {
             </div>
             <div style={{display:"flex",gap:10}}>
               {[{v:`${cards.length}`,l:"Cartas",i:"🃏"},{v:`${new Set(cards.map(c=>c.seller_id)).size}`,l:"Vendedores",i:"👤"},{v:`${reviews.length}`,l:"Reseñas",i:"⭐"}].map(s=>(
-                <div key={s.l} className="card" style={{padding:"14px 18px",textAlign:"center",minWidth:88}}>
+                <div key={s.l} className="stat-card">
                   <div style={{fontSize:18,marginBottom:2}}>{s.i}</div>
-                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#DAA520"}}>{s.v}</div>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#DAA520",textShadow:"0 0 16px rgba(218,165,32,.3)"}}>{s.v}</div>
                   <div style={{fontSize:11,color:"#555"}}>{s.l}</div>
                 </div>
               ))}
