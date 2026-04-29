@@ -309,7 +309,7 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
     const { data: mpData } = await supabase.functions.invoke('bright-task', {
       body: { cardId: card.id, cardName: card.name, amount: total, buyerEmail: user.email, shippingMethod: shipping }
     });
-    if (mpData?.init_point) { window.open(mpData.init_point, '_blank'); }
+    if (mpData?.init_point) { window.location.href = mpData.init_point; }
     // Save purchase to Supabase
     await supabase.from("purchases").insert({
       card_id: card.id, buyer_id: user.id,
