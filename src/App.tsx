@@ -304,12 +304,16 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
   const pay = async () => {
     setStep(2);
     // Save pending purchase first
-    await supabase.from("purchases").insert({
+    const { data: purchaseData } = await supabase.from("purchases").insert({
       card_id: card.id, buyer_id: user.id,
       seller_id: card.seller_id || card.sellerId,
       card_name: card.name, amount: total,
-      commission, shipping_method: shipping, status: "pending"
-    });
+      commission, shipping_method: shipping, status: "pending",
+      seller_name: card.seller_name || card.sellerName,
+      seller_province: card.province,
+      card_img_url: card.img_url || card.imgUrl,
+      card_set: card.set_name || card.set
+    }).select().single();
     // Mark card as reserved
     await supabase.from("cards").update({ sold: true }).eq("id", card.id);
     // Call MP edge function
@@ -326,13 +330,6 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
       });
       const mpData = await fnRes.json();
       if (mpData?.init_point) {
-        // Store card info in sessionStorage for confirmation page
-        sessionStorage.setItem('lastPurchase', JSON.stringify({
-          cardName: card.name, cardImg: card.img_url || card.imgUrl,
-          sellerName: card.seller_name || card.sellerName,
-          sellerProvince: card.province, shipping, total,
-          set: card.set_name || card.set
-        }));
         window.location.href = mpData.init_point;
         return;
       }
@@ -644,17 +641,28 @@ export default function App() {
     const status = params.get('status');
     if (status) {
       setPaymentStatus(status);
-      const stored = sessionStorage.getItem('lastPurchase');
-      if (stored) { setLastPurchase(JSON.parse(stored)); sessionStorage.removeItem('lastPurchase'); }
-      // Update purchase status in DB
-      if (status === 'approved') {
-        const paymentId = params.get('payment_id');
-        if (paymentId) {
-          supabase.from("purchases").update({ status: 'approved', mp_payment_id: paymentId })
-            .eq("status", "pending").order("created_at", { ascending: false }).limit(1);
+      // Load last purchase from Supabase
+      supabase.auth.getSession().then(async ({ data: { session } }) => {
+        if (session) {
+          const { data } = await supabase.from("purchases")
+            .select("*").eq("buyer_id", session.user.id)
+            .order("created_at", { ascending: false }).limit(1).single();
+          if (data) {
+            setLastPurchase({
+              cardName: data.card_name,
+              cardImg: data.card_img_url,
+              sellerName: data.seller_name,
+              sellerProvince: data.seller_province,
+              shipping: data.shipping_method,
+              total: data.amount,
+              set: data.card_set
+            });
+            if (status === 'approved') {
+              await supabase.from("purchases").update({ status: 'approved' }).eq("id", data.id);
+            }
+          }
         }
-      }
-      // Clean URL
+      });
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, []);
