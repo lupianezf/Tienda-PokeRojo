@@ -84,6 +84,7 @@ body{background:#050709;}
   border-radius:16px;
   background:linear-gradient(135deg,rgba(218,165,32,.04) 0%,transparent 50%);
   pointer-events:none;
+  z-index:0;
 }
 .card:hover{
   border-color:rgba(218,165,32,.4);
