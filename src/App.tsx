@@ -666,7 +666,7 @@ export default function App() {
           });
       }
     });
-  }, []);
+  } [];
 
   // Load cards
   const loadCards = async () => {
@@ -968,5 +968,4 @@ export default function App() {
       {sellerModal&&<SellerModal seller={sellerModal} allCards={cards} onClose={()=>setSellerModal(null)} onBuy={onBuy} userId={user?.id}/>}
       {reviewTarget&&<ReviewModal purchase={reviewTarget} userId={user?.id} onClose={()=>setReviewTarget(null)} onSubmit={()=>{loadReviews();setPurchases(p=>p.map((x,i)=>i===reviewTarget.idx?{...x,reviewed:true}:x));}}/>}
     </div>
-  );
-}
+  )
