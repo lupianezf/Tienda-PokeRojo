@@ -49,7 +49,11 @@ const SETS = ["Todos","151","Scarlet & Violet","Paradox Rift","Evolving Skies","
   "Temporal Forces","Twilight Masquerade","Shrouded Fable","Stellar Crown",
   "Surging Sparks","Prismatic Evolutions"];
 
-// ── CSS ────────────────────────────────────────────────────────────────────────
+const PRODUCT_TYPES = ["Todos","Caja","Lata","Bundle","Mazo","Sobre","Colección Especial","ETB","Blister"];
+const PRODUCT_TYPE_COLORS = {
+  "Caja":"#E53935","Lata":"#8E24AA","Bundle":"#1E88E5","Mazo":"#43A047",
+  "Sobre":"#FB8C00","Colección Especial":"#DAA520","ETB":"#00ACC1","Blister":"#F06292",
+};
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -615,6 +619,155 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
   );
 }
 
+// ── SEALED PRODUCT ITEM ────────────────────────────────────────────────────────
+function SealedItem({ product, userId, onBuy, onLogin, onSellerClick, reviews }) {
+  const rep = reviews.filter(r => r.seller_id === product.seller_id);
+  const typeColor = PRODUCT_TYPE_COLORS[product.product_type] || "#DAA520";
+
+  return (
+    <div className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
+      <div style={{height:160,background:`linear-gradient(160deg,${typeColor}18,${typeColor}30)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
+        {product.img_url
+          ?<img src={product.img_url} alt={product.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>
+          :<div style={{fontSize:52,opacity:.6}}>📦</div>
+        }
+        <div style={{position:"absolute",top:10,left:10,background:typeColor,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{product.product_type}</div>
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(16,19,31,1),transparent)"}}/>
+      </div>
+      <div style={{padding:"14px 14px 16px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'DM Sans',sans-serif"}}>
+        <div style={{fontWeight:700,fontSize:14,marginBottom:2}}>{product.name}</div>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+          {product.set_name&&<span style={{background:"rgba(255,255,255,.06)",color:"#888",padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700}}>{product.set_name}</span>}
+          <span style={{background:product.condition==="Sellado"?"rgba(39,174,96,.15)":"rgba(243,156,18,.15)",color:product.condition==="Sellado"?"#27AE60":"#F39C12",padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:700}}>{product.condition}</span>
+          {product.quantity>1&&<span style={{fontSize:10,color:"#DAA520",fontWeight:700}}>x{product.quantity}</span>}
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+          <span style={{fontSize:10,color:"#444"}}>📍{product.province}</span>
+        </div>
+        <button onClick={()=>onSellerClick(product)} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"6px 10px",marginBottom:10,cursor:"pointer",textAlign:"left",width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <span style={{fontSize:12,color:"#888"}}>@{product.seller_name}</span>
+          <SellerBadge reviews={rep}/>
+        </button>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
+          <div>
+            <div style={{fontSize:10,color:"#444"}}>ARS</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",lineHeight:1}}>{fmt(product.price)}</div>
+          </div>
+          {userId==null
+            ?<button className="btn btn-ghost" style={{padding:"8px 14px",fontSize:12}} onClick={onLogin}>Ingresar</button>
+            :userId===product.seller_id
+              ?<span style={{fontSize:11,color:"#444"}}>Tu producto</span>
+              :<button className="btn btn-gold" style={{padding:"8px 14px",fontSize:12}} onClick={()=>onBuy(product)}>Comprar</button>
+          }
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── PUBLISH SEALED FORM ────────────────────────────────────────────────────────
+function PublishSealedForm({ user, onPublish }) {
+  const [form, setForm] = useState({ name:"", product_type:"Caja", set_name:"", condition:"Sellado", price:"", description:"", quantity:"1", uploadedImg:"" });
+  const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileRef = useRef(null);
+  const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
+
+  const handleFile = (file) => {
+    if (!file||!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = e => setForm(p=>({...p, uploadedImg:e.target.result}));
+    reader.readAsDataURL(file);
+  };
+
+  const publish = async () => {
+    if (!form.name||!form.price) return;
+    setLoading(true);
+    const { data, error } = await supabase.from("sealed_products").insert({
+      seller_id: user.id, seller_name: user.name,
+      name: form.name, product_type: form.product_type,
+      set_name: form.set_name, condition: form.condition,
+      price: Number(form.price), img_url: form.uploadedImg||"",
+      province: user.province, description: form.description,
+      quantity: Number(form.quantity)||1,
+      shipping: ["Andreani","OCA","Correo Argentino"],
+      hot: false, sold: false
+    }).select().single();
+    setLoading(false);
+    if (!error && data) { onPublish(data); setStep(1); }
+  };
+
+  if (step===1) return (
+    <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
+      <div className="card" style={{padding:48}}>
+        <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡PRODUCTO PUBLICADO!</div>
+        <div style={{color:"#888",fontSize:14,marginBottom:24}}>Ya está visible en el marketplace.</div>
+        <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",product_type:"Caja",set_name:"",condition:"Sellado",price:"",description:"",quantity:"1",uploadedImg:""});}}>Publicar otro</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{maxWidth:600,paddingTop:28}}>
+      <div style={{marginBottom:22}}>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:34,letterSpacing:1}}>PUBLICAR PRODUCTO SELLADO</div>
+        <div style={{color:"#555",fontSize:13,marginTop:3}}>Cajas, latas, bundles y más.</div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:16}}>
+        {/* Image upload */}
+        {form.uploadedImg
+          ?<div style={{position:"relative",display:"inline-block"}}>
+            <img src={form.uploadedImg} alt="" style={{width:160,borderRadius:12,boxShadow:"0 4px 20px rgba(0,0,0,.5)"}}/>
+            <button className="btn btn-danger" style={{position:"absolute",top:8,right:8,padding:"4px 10px",fontSize:11}} onClick={()=>setForm(p=>({...p,uploadedImg:""}))}>✕</button>
+          </div>
+          :<div className={`upload-zone${dragOver?" drag":""}`}
+            onDragOver={e=>{e.preventDefault();setDragOver(true);}}
+            onDragLeave={()=>setDragOver(false)}
+            onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
+            onClick={()=>fileRef.current?.click()}>
+            <div style={{fontSize:28,marginBottom:8}}>📷</div>
+            <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Subí una foto del producto</div>
+            <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
+          </div>
+        }
+        <div><label>Nombre del producto *</label><input className="input" placeholder="Ej: Caja Scarlet & Violet 151" value={form.name} onChange={ff("name")}/></div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+          <div><label>Tipo de producto *</label>
+            <select className="select" style={{width:"100%"}} value={form.product_type} onChange={ff("product_type")}>
+              {PRODUCT_TYPES.filter(t=>t!=="Todos").map(t=><option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div><label>Estado</label>
+            <select className="select" style={{width:"100%"}} value={form.condition} onChange={ff("condition")}>
+              <option>Sellado</option>
+              <option>Abierto</option>
+            </select>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+          <div><label>Set / Expansión</label><input className="input" placeholder="Ej: 151" value={form.set_name} onChange={ff("set_name")}/></div>
+          <div><label>Cantidad *</label><input className="input" type="number" min="1" placeholder="1" value={form.quantity} onChange={ff("quantity")}/></div>
+        </div>
+        <div><label>Precio (ARS) *</label><input className="input" type="number" placeholder="Ej: 25000" value={form.price} onChange={ff("price")}/></div>
+        {Number(form.price)>0&&(
+          <div style={{background:"rgba(218,165,32,.05)",border:"1px solid rgba(218,165,32,.12)",borderRadius:9,padding:"12px 14px",fontSize:13,fontFamily:"'DM Sans',sans-serif"}}>
+            <div style={{display:"flex",justifyContent:"space-between",color:"#888",marginBottom:6}}><span>Precio producto</span><span>{fmt(form.price)}</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",color:"#888",marginBottom:6}}><span>Comisión (3%)</span><span>+{fmt(Math.round(Number(form.price)*COMMISSION))}</span></div>
+            <div style={{borderTop:"1px solid rgba(218,165,32,.1)",paddingTop:8,display:"flex",justifyContent:"space-between",fontWeight:700}}><span>Total comprador</span><span style={{color:"#DAA520"}}>{fmt(Math.round(Number(form.price)*(1+COMMISSION)))}</span></div>
+            <div style={{color:"#444",fontSize:11,marginTop:4}}>✓ Vos recibís {fmt(form.price)}</div>
+          </div>
+        )}
+        <div><label>Descripción</label><textarea className="input" rows={3} placeholder="Contenido, idioma, estado detallado..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
+        <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={publish} disabled={!form.name||!form.price||loading}>
+          {loading?<><div className="spinner"/>Publicando...</>:"📦 Publicar producto"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [user, setUser] = useState(null);
@@ -627,6 +780,7 @@ export default function App() {
   const [filterSet, setFilterSet] = useState("Todos");
   const [sortBy, setSortBy] = useState("reciente");
   const [cards, setCards] = useState([]);
+  const [sealedProducts, setSealedProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [loadingCards, setLoadingCards] = useState(true);
@@ -687,6 +841,12 @@ export default function App() {
     setLoadingCards(false);
   };
 
+  // Load sealed products
+  const loadSealedProducts = async () => {
+    const { data } = await supabase.from("sealed_products").select("*").eq("sold", false).order("listed_at", { ascending: false });
+    if (data) setSealedProducts(data);
+  };
+
   // Load reviews
   const loadReviews = async () => {
     const { data } = await supabase.from("reviews").select("*");
@@ -700,7 +860,7 @@ export default function App() {
     if (data) setPurchases(data.map(p => ({ ...p, reviewed: false })));
   };
 
-  useEffect(() => { loadCards(); loadReviews(); }, []);
+  useEffect(() => { loadCards(); loadSealedProducts(); loadReviews(); }, []);
   useEffect(() => { if (user) loadPurchases(); }, [user]);
 
   const login = u => { setUser(u); setShowAuth(false); };
@@ -745,7 +905,8 @@ export default function App() {
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {user?<>
-            <button className="btn btn-outline" style={{padding:"8px 16px",fontSize:13}} onClick={()=>setTab("vender")}>+ Publicar</button>
+            <button className="btn btn-outline" style={{padding:"8px 16px",fontSize:13}} onClick={()=>setTab("vender")}>+ Carta</button>
+            <button className="btn btn-outline" style={{padding:"8px 16px",fontSize:13}} onClick={()=>setTab("vender-sellado")}>+ Sellado</button>
             <div style={{position:"relative"}}>
               <button onClick={()=>setMenuOpen(o=>!o)} className="btn btn-ghost" style={{padding:"7px 14px",fontSize:13,display:"flex",alignItems:"center",gap:8}}>
                 <div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#DAA520,#B8860B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",flexShrink:0}}>{user.name[0]}</div>
@@ -841,7 +1002,20 @@ export default function App() {
           </div>
         )}
 
-        {/* MARKETPLACE */}
+        {/* MARKETPLACE TABS */}
+        {(tab==="marketplace"||tab==="sellado")&&<>
+          {/* Section switcher */}
+          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20}}>
+            <button onClick={()=>setTab("marketplace")} style={{background:"none",border:"none",color:tab==="marketplace"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,cursor:"pointer",padding:"14px 24px",borderBottom:tab==="marketplace"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s"}}>
+              🃏 Cartas individuales <span style={{background:"rgba(218,165,32,.15)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
+            </button>
+            <button onClick={()=>setTab("sellado")} style={{background:"none",border:"none",color:tab==="sellado"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,cursor:"pointer",padding:"14px 24px",borderBottom:tab==="sellado"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s"}}>
+              📦 Producto sellado <span style={{background:"rgba(218,165,32,.15)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sealedProducts.length}</span>
+            </button>
+          </div>
+        </>}
+
+        {/* MARKETPLACE - CARTAS */}
         {tab==="marketplace"&&<>
           <div style={{padding:"30px 0 22px",display:"flex",gap:24,alignItems:"center",flexWrap:"wrap",borderBottom:"1px solid rgba(255,255,255,.05)",marginBottom:22}}>
             <div style={{flex:1,minWidth:240}}>
@@ -909,7 +1083,48 @@ export default function App() {
           ):<PublishForm user={user} onPublish={onPublish}/>}
         </>}
 
-        {/* MIS PUBLICACIONES */}
+        {/* VENDER SELLADO */}
+        {tab==="vender-sellado"&&<>
+          {!user?(
+            <div style={{textAlign:"center",padding:"80px 0"}}>
+              <div style={{fontSize:44,marginBottom:14}}>🔒</div>
+              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:8,letterSpacing:1}}>NECESITÁS INICIAR SESIÓN</div>
+              <div style={{color:"#555",marginBottom:20}}>Para publicar productos primero tenés que registrarte.</div>
+              <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
+            </div>
+          ):<PublishSealedForm user={user} onPublish={()=>loadSealedProducts()}/>}
+        </>}
+
+        {/* SELLADO MARKETPLACE */}
+        {tab==="sellado"&&<>
+          <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
+            <div style={{flex:1,minWidth:200,position:"relative"}}>
+              <span style={{position:"absolute",left:13,top:"50%",transform:"translateY(-50%)"}}>🔍</span>
+              <input className="input" style={{paddingLeft:38}} placeholder="Buscar producto, set o vendedor..." value={search} onChange={e=>setSearch(e.target.value)}/>
+            </div>
+            <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
+              <option value="reciente">Más recientes</option>
+              <option value="asc">Menor precio</option>
+              <option value="desc">Mayor precio</option>
+            </select>
+          </div>
+          <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
+            {PRODUCT_TYPES.map(t=>(
+              <button key={t} className={`filter-chip ${filterSet===t?"active":""}`}
+                style={filterSet===t?{background:PRODUCT_TYPE_COLORS[t]||"#DAA520",color:"#fff",borderColor:"transparent"}:{}}
+                onClick={()=>setFilterSet(t)}>{t}</button>
+            ))}
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16}}>
+            {sealedProducts
+              .filter(p=>filterSet==="Todos"||p.product_type===filterSet)
+              .filter(p=>[p.name,p.seller_name,p.set_name].join(" ").toLowerCase().includes(search.toLowerCase()))
+              .sort((a,b)=>sortBy==="asc"?a.price-b.price:sortBy==="desc"?b.price-a.price:0)
+              .map(p=><SealedItem key={p.id} product={p} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)
+            }
+          </div>
+          {sealedProducts.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>📦</div><div>No hay productos sellados publicados todavía.</div></div>}
+        </>}
         {tab==="mis-publicaciones"&&user&&<div style={{paddingTop:28}}>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:3,letterSpacing:1}}>MIS PUBLICACIONES</div>
           <div style={{color:"#555",fontSize:13,marginBottom:20}}>{myListings.length} carta{myListings.length!==1?"s":""} activa{myListings.length!==1?"s":""}</div>
