@@ -292,7 +292,7 @@ function AuthModal({ onLogin, onClose }) {
         if (form.password.length < 6) { setError("Mínimo 6 caracteres."); setLoading(false); return; }
         const { data, error: err } = await supabase.auth.signUp({ email: form.email, password: form.password });
         if (err) { setError(err.message); setLoading(false); return; }
-        await supabase.from("profiles").insert({ id: data.user.id, name: form.name, province: form.province });
+        await supabase.from("profiles").insert({ id: data.user.id, name: form.name, province: form.province, email: form.email });
         onLogin({ id: data.user.id, email: form.email, name: form.name, province: form.province });
       }
     } catch(e) { setError("Error inesperado. Intentá de nuevo."); }
@@ -466,6 +466,26 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
     }).select().single();
     // Mark card as reserved
     await supabase.from("cards").update({ sold: true }).eq("id", card.id);
+    // Send notification to seller
+    try {
+      const sellerProfile = await supabase.from("profiles").select("*").eq("id", card.seller_id || card.sellerId).single();
+      if (sellerProfile.data) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/send-notification`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sellerEmail: sellerProfile.data.email || "",
+            sellerName: sellerProfile.data.name,
+            buyerEmail: user.email,
+            cardName: card.name,
+            cardSet: card.set_name || card.set,
+            amount: base,
+            shipping
+          })
+        });
+      }
+    } catch(e) { console.error('Notification error:', e); }
     // Call MP edge function
     try {
       const fnRes = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`, {
