@@ -1379,12 +1379,12 @@ export default function App() {
                 🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
-              <div className="pokemon-dropdown" style={{display:"none",position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,minWidth:280,zIndex:100,boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
+              <div className="pokemon-dropdown" style={{display:"none",position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,minWidth:320,zIndex:100,boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
                 {/* Buscar por Set */}
                 <div style={{padding:"6px 10px 4px",fontSize:10,color:"#555",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar por Set</div>
-                <div style={{maxHeight:200,overflowY:"auto",marginBottom:8}}>
+                <div style={{maxHeight:360,overflowY:"auto",marginBottom:8}}>
                   {SETS.map(s=>(
-                    <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");}} style={{display:"block",width:"100%",background:"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"7px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:500}}
+                    <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");}} style={{display:"block",width:"100%",background:"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"8px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:500}}
                       onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
                       onMouseLeave={e=>e.currentTarget.style.background="none"}>
                       {s === "Todos" ? "📋 Ver todos los sets" : s}
