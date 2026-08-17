@@ -1127,7 +1127,9 @@ export default function App() {
   const [tab, setTab] = useState("marketplace");
   const [search, setSearch] = useState("");
   const [filterSet, setFilterSet] = useState("Todos");
-  const [pokemonSearchMode, setPokemonSearchMode] = useState(null); // null | "set" | "name"
+  const [pokemonDropdown, setPokemonDropdown] = useState(false);
+  const [sportDropdown, setSportDropdown] = useState(false);
+  const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
   const [sortBy, setSortBy] = useState("reciente");
   const [cards, setCards] = useState([]);
@@ -1372,77 +1374,86 @@ export default function App() {
           <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,overflowX:"auto",position:"relative",zIndex:10}}>
 
             {/* POKÉMON TAB */}
-            <div style={{position:"relative"}}
-              onMouseEnter={e=>e.currentTarget.querySelector('.pokemon-dropdown').style.display='block'}
-              onMouseLeave={e=>e.currentTarget.querySelector('.pokemon-dropdown').style.display='none'}>
-              <button onClick={()=>{setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);}} style={{background:"none",border:"none",color:tab==="marketplace"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+            <div style={{position:"relative"}}>
+              <button
+                onMouseEnter={()=>setPokemonDropdown(true)}
+                onMouseLeave={()=>setPokemonDropdown(false)}
+                onClick={()=>{setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);}}
+                style={{background:"none",border:"none",color:tab==="marketplace"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
-              <div className="pokemon-dropdown" style={{display:"none",position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,minWidth:320,zIndex:100,boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
-                {/* Buscar por Set */}
-                <div style={{padding:"6px 10px 4px",fontSize:10,color:"#555",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar por Set</div>
-                <div style={{maxHeight:360,overflowY:"auto",marginBottom:8}}>
-                  {SETS.map(s=>(
-                    <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");}} style={{display:"block",width:"100%",background:"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"8px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:500}}
-                      onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
-                      onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                      {s === "Todos" ? "📋 Ver todos los sets" : s}
-                    </button>
-                  ))}
-                </div>
-                {/* Buscar por Pokémon */}
-                <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
-                  <div style={{padding:"4px 10px 6px",fontSize:10,color:"#555",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar por Pokémon</div>
-                  <div style={{padding:"0 8px 8px",position:"relative"}}>
-                    <span style={{position:"absolute",left:22,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555"}}>🔍</span>
-                    <input
-                      className="input"
-                      style={{paddingLeft:36,fontSize:13,padding:"9px 12px 9px 32px"}}
-                      placeholder="Ej: Charizard, Pikachu..."
-                      value={pokemonNameSearch}
-                      onChange={e=>{setPokemonNameSearch(e.target.value);setTab("marketplace");setPokemonSearchMode("name");}}
-                      onClick={e=>e.stopPropagation()}
-                    />
+              {pokemonDropdown && (
+                <div
+                  onMouseEnter={()=>setPokemonDropdown(true)}
+                  onMouseLeave={()=>setPokemonDropdown(false)}
+                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:320,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.8)",marginTop:2}}>
+                  <div style={{padding:"4px 8px 8px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:8}}>📋 Buscar por Set</div>
+                  <div style={{height:280,overflowY:"auto",marginBottom:12}}>
+                    {SETS.map(s=>(
+                      <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
+                        style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400,transition:"all .15s"}}
+                        onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
+                        {s === "Todos" ? "📋 Ver todos" : s}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:10}}>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
+                      <input className="input" style={{paddingLeft:36,fontSize:13}}
+                        placeholder="Ej: Charizard, Pikachu, Nidoran..."
+                        value={pokemonNameSearch}
+                        onChange={e=>{setPokemonNameSearch(e.target.value);setTab("marketplace");setPokemonSearchMode("name");}}
+                        onClick={e=>e.stopPropagation()}/>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* DEPORTES TAB */}
-            <div style={{position:"relative"}}
-              onMouseEnter={e=>e.currentTarget.querySelector('.sport-dropdown').style.display='block'}
-              onMouseLeave={e=>e.currentTarget.querySelector('.sport-dropdown').style.display='none'}>
-              <button onClick={()=>{setTab("deportivas");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="deportivas"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+            <div style={{position:"relative"}}>
+              <button
+                onMouseEnter={()=>setSportDropdown(true)}
+                onMouseLeave={()=>setSportDropdown(false)}
+                onClick={()=>{setTab("deportivas");setFilterSet("Todos");}}
+                style={{background:"none",border:"none",color:tab==="deportivas"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 🏆 Deportes <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
-              <div className="sport-dropdown" style={{display:"none",position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,minWidth:220,zIndex:100,boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
-                {[
-                  {label:"⚽ Mundiales", filter:"Fútbol"},
-                  {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
-                  {label:"🇪🇸 La Liga", filter:"Fútbol"},
-                  {label:"🇦🇷 Liga Argentina", filter:"Fútbol"},
-                  {label:"🏀 NBA", filter:"Básquet"},
-                  {label:"🏈 NFL", filter:"Fútbol Americano"},
-                  {label:"⚾ MLB", filter:"Béisbol"},
-                  {label:"🏆 Ver todo", filter:"Todos"},
-                ].map(item=>(
-                  <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);}} style={{display:"block",width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
-                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
-                    onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                    {item.label}
-                  </button>
-                ))}
-              </div>
+              {sportDropdown && (
+                <div
+                  onMouseEnter={()=>setSportDropdown(true)}
+                  onMouseLeave={()=>setSportDropdown(false)}
+                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:230,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.8)",marginTop:2}}>
+                  {[
+                    {label:"⚽ Mundiales", filter:"Fútbol"},
+                    {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
+                    {label:"🇪🇸 La Liga", filter:"Fútbol"},
+                    {label:"🇦🇷 Liga Argentina", filter:"Fútbol"},
+                    {label:"🏀 NBA", filter:"Básquet"},
+                    {label:"🏈 NFL", filter:"Fútbol Americano"},
+                    {label:"⚾ MLB", filter:"Béisbol"},
+                    {label:"🏆 Ver todo", filter:"Todos"},
+                  ].map(item=>(
+                    <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
+                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500,transition:"all .15s"}}
+                      onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                      onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* SELLADO TAB */}
             <button onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
               📦 Sellado <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sealedProducts.length}</span>
             </button>
-
-          </div>
         </>}
 
         {/* MARKETPLACE - CARTAS */}
