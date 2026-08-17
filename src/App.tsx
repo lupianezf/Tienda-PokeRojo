@@ -319,7 +319,7 @@ function AuthModal({ onLogin, onClose }) {
       <div className="modal">
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{textAlign:"center",marginBottom:24}}>
-          <div style={{marginBottom:6,display:"flex",justifyContent:"center"}}><PokeBall size={36}/></div>
+          <div style={{fontSize:36,marginBottom:6}}>🃏</div>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:2}}>COLECCIONES FACU</div>
           <div style={{fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3}}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
@@ -554,7 +554,7 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
           <div style={{fontSize:11,color:"#333",textAlign:"center",marginTop:10,fontFamily:"'DM Sans',sans-serif"}}>🔒 Pago seguro · Compra garantizada</div>
         </>}
         {step===2&&<div style={{textAlign:"center",padding:"44px 20px"}}>
-          <div style={{marginBottom:16,animation:"spin 1s linear infinite",display:"inline-block"}}><PokeBall size={44}/></div>
+          <div style={{marginBottom:16,display:"inline-block"}}><div className="spinner" style={{width:44,height:44,borderWidth:4}}/></div>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",marginBottom:8,letterSpacing:2}}>PROCESANDO PAGO</div>
           <div style={{color:"#555",fontFamily:"'DM Sans',sans-serif",fontSize:14,marginBottom:22}}>Conectando con Mercado Pago...</div>
           <div style={{display:"flex",justifyContent:"center"}}><div className="spinner" style={{width:34,height:34,borderWidth:4}}/></div>
@@ -1254,10 +1254,10 @@ export default function App() {
       <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.05)",padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(5,7,9,.94)",backdropFilter:"blur(24px)",boxShadow:"0 4px 32px rgba(0,0,0,.4)"}}>
         <div className="nav-glow"/>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
-          <PokeBall size={22}/>
+          <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#DAA520,#B8860B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:900,color:"#050709",flexShrink:0,letterSpacing:-1}}>CF</div>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#DAA520",lineHeight:1}}>COLECCIONES FACU</div>
-            <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Pokémon & Deportivas</div>
+            <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -1366,9 +1366,32 @@ export default function App() {
             <button onClick={()=>setTab("marketplace")} style={{background:"none",border:"none",color:tab==="marketplace"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
               🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
             </button>
-            <button onClick={()=>setTab("deportivas")} style={{background:"none",border:"none",color:tab==="deportivas"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-              🏆 Deportivas <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
-            </button>
+            <div style={{position:"relative"}} 
+              onMouseEnter={e=>e.currentTarget.querySelector('.sport-dropdown').style.display='block'}
+              onMouseLeave={e=>e.currentTarget.querySelector('.sport-dropdown').style.display='none'}>
+              <button onClick={()=>{setTab("deportivas");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="deportivas"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                🏆 Deportes <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
+                <span style={{fontSize:10,color:"#555"}}>▾</span>
+              </button>
+              <div className="sport-dropdown" style={{display:"none",position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,minWidth:220,zIndex:100,boxShadow:"0 8px 32px rgba(0,0,0,.6)"}}>
+                {[
+                  {label:"⚽ Mundiales", filter:"Fútbol", league:"Copa del Mundo"},
+                  {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol", league:"Premier League"},
+                  {label:"🇪🇸 La Liga", filter:"Fútbol", league:"La Liga"},
+                  {label:"🇦🇷 Liga Argentina", filter:"Fútbol", league:"Liga Profesional AR"},
+                  {label:"🏀 NBA", filter:"Básquet", league:"NBA"},
+                  {label:"🏈 NFL", filter:"Fútbol Americano", league:"NFL"},
+                  {label:"⚾ MLB", filter:"Béisbol", league:"MLB"},
+                  {label:"🏆 Ver todo", filter:"Todos", league:""},
+                ].map(item=>(
+                  <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);}} style={{display:"block",width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                    onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <button onClick={()=>setTab("sellado")} style={{background:"none",border:"none",color:tab==="sellado"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
               📦 Sellado <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sealedProducts.length}</span>
             </button>
@@ -1589,7 +1612,7 @@ export default function App() {
       </div>
 
       <div style={{borderTop:"1px solid rgba(255,255,255,.05)",padding:"16px 24px",textAlign:"center",color:"#333",fontSize:12}}>
-        ⬤ Colecciones Facu · Argentina · Cartas Pokémon y Deportivas · Pagos seguros vía Mercado Pago
+        ⬤ Colecciones Facu · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
       </div>
 
       {showAuth&&<AuthModal onLogin={login} onClose={()=>setShowAuth(false)}/>}
