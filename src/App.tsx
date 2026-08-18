@@ -1281,11 +1281,11 @@ export default function App() {
         <div className="nav-glow"/>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
                   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="18" cy="18" r="17" fill="#0A0C14" stroke="#DAA520" strokeWidth="1.5"/>
-          <path d="M8 22 Q18 6 28 22" stroke="#DAA520" strokeWidth="2" fill="none" strokeLinecap="round"/>
-          <text x="18" y="28" textAnchor="middle" fontFamily="'Bebas Neue',sans-serif" fontSize="11" fontWeight="900" fill="#DAA520" letterSpacing="1">CF</text>
-          <circle cx="18" cy="10" r="2" fill="#DAA520"/>
-          <path d="M14 10 L18 8 L22 10" stroke="#DAA520" strokeWidth="1" fill="none" strokeLinecap="round"/>
+          <circle cx="18" cy="18" r="17" fill="#1a3a6b" stroke="#ffffff" strokeWidth="1.5"/>
+          <path d="M8 22 Q18 6 28 22" stroke="#ffffff" strokeWidth="2" fill="none" strokeLinecap="round"/>
+          <text x="18" y="28" textAnchor="middle" fontFamily="'Bebas Neue',sans-serif" fontSize="11" fontWeight="900" fill="#ffffff" letterSpacing="1">CF</text>
+          <circle cx="18" cy="10" r="2" fill="#ffffff"/>
+          <path d="M14 10 L18 8 L22 10" stroke="#ffffff" strokeWidth="1" fill="none" strokeLinecap="round"/>
         </svg>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#DAA520",lineHeight:1}}>COLECCIONES FACU</div>
@@ -1517,7 +1517,7 @@ export default function App() {
             <div style={{flex:1,minWidth:240}}>
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:50,lineHeight:.88,marginBottom:10}}>
                 <span style={{color:"#DAA520"}}>COMPRÁ</span> Y <span style={{color:"#DAA520"}}>VENDÉ</span><br/>
-                <span style={{color:"#888",fontSize:30}}>CARTAS POKÉMON</span>
+                <span style={{color:"#888",fontSize:30}}>CARTAS & COLECCIONES</span>
               </div>
               <div style={{color:"#555",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
             </div>
