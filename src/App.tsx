@@ -1,10 +1,6 @@
 // @ts-nocheck
-import { useState, useEffect, useRef, createPortal } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabase";
-
-function DropdownPortal({ children }) {
-  return createPortal(children, document.body);
-}
 
 function PokeBall({ size = 22 }) {
   return (
@@ -1379,7 +1375,7 @@ export default function App() {
 
         {/* MARKETPLACE TABS */}
         {(tab==="marketplace"||tab==="deportivas"||tab==="sellado")&&<>
-          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,overflowX:"auto",position:"sticky",top:62,zIndex:40,background:"rgba(5,7,9,.96)",backdropFilter:"blur(20px)",boxShadow:"0 4px 20px rgba(0,0,0,.4)"}}>
+          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"rgba(5,7,9,.96)",backdropFilter:"blur(20px)",boxShadow:"0 4px 20px rgba(0,0,0,.4)"}}>
 
             {/* POKÉMON TAB */}
             <div style={{position:"relative"}}>
@@ -1399,7 +1395,6 @@ export default function App() {
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {pokemonDropdown && pokemonPos.top > 0 && (
-                <DropdownPortal>
                 <div
                   onMouseEnter={()=>setPokemonDropdown(true)}
                   onMouseLeave={()=>setPokemonDropdown(false)}
@@ -1429,7 +1424,6 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                </DropdownPortal>
               )}
             </div>
 
@@ -1451,7 +1445,6 @@ export default function App() {
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {sportDropdown && sportPos.top > 0 && (
-                <DropdownPortal>
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
@@ -1474,7 +1467,6 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                </DropdownPortal>
               )}
             </div>
 
