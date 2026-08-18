@@ -1126,6 +1126,8 @@ export default function App() {
   const [reviewTarget, setReviewTarget] = useState(null);
   const [tab, setTab] = useState("marketplace");
   const [search, setSearch] = useState("");
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState("");
   const [filterSet, setFilterSet] = useState("Todos");
   const [pokemonDropdown, setPokemonDropdown] = useState(false);
   const [sportDropdown, setSportDropdown] = useState(false);
@@ -1251,10 +1253,10 @@ export default function App() {
   const filtered = cards
     .filter(c => filterSet==="Todos" || (c.set_name||c.set)===filterSet)
     .filter(c => {
-      if (pokemonSearchMode==="name" && pokemonNameSearch) {
-        return c.name.toLowerCase().includes(pokemonNameSearch.toLowerCase());
-      }
-      return [c.name, c.seller_name, c.set_name].join(" ").toLowerCase().includes(search.toLowerCase());
+      const q = globalSearch || pokemonNameSearch || search;
+      if (!q) return true;
+      if (pokemonSearchMode==="name" && pokemonNameSearch) return c.name.toLowerCase().includes(pokemonNameSearch.toLowerCase());
+      return [c.name, c.seller_name, c.set_name].join(" ").toLowerCase().includes(q.toLowerCase());
     })
     .sort((a,b) => sortBy==="asc" ? a.price-b.price : sortBy==="desc" ? b.price-a.price : 0);
 
@@ -1275,6 +1277,7 @@ export default function App() {
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {user?<>
+            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={()=>setGlobalSearchOpen(o=>!o)} title="Buscar">🔍</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender")}>+ Pokémon</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sport")}>+ Deportiva</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sellado")}>+ Sellado</button>
@@ -1303,6 +1306,7 @@ export default function App() {
               )}
             </div>
           </>:<>
+            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={()=>setGlobalSearchOpen(o=>!o)} title="Buscar">🔍</button>
             <button className="btn btn-ghost" onClick={()=>setShowAuth(true)}>Iniciar sesión</button>
             <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Registrarse</button>
           </>}
@@ -1448,24 +1452,40 @@ export default function App() {
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
-                  style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:220,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
-                  {[
-                    {label:"⚽ Mundiales", filter:"Fútbol"},
-                    {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
-                    {label:"🇪🇸 La Liga", filter:"Fútbol"},
-                    {label:"🇦🇷 Liga Argentina", filter:"Fútbol"},
-                    {label:"🏀 NBA", filter:"Básquet"},
-                    {label:"🏈 NFL", filter:"Fútbol Americano"},
-                    {label:"⚾ MLB", filter:"Béisbol"},
-                    {label:"🏆 Ver todo", filter:"Todos"},
-                  ].map(item=>(
-                    <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
-                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
-                      onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
-                      onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                      {item.label}
-                    </button>
-                  ))}
+                  style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,minWidth:260,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  {/* Buscador */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar jugador o marca</div>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
+                      <input className="input" style={{paddingLeft:36,fontSize:13}}
+                        placeholder="Ej: Messi, LeBron, Topps..."
+                        value={search}
+                        onChange={e=>{setSearch(e.target.value);setTab("deportivas");}}
+                        onClick={e=>e.stopPropagation()}/>
+                    </div>
+                  </div>
+                  {/* Ligas */}
+                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
+                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🏆 Filtrar por deporte</div>
+                    {[
+                      {label:"⚽ Mundiales", filter:"Fútbol"},
+                      {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
+                      {label:"🇪🇸 La Liga", filter:"Fútbol"},
+                      {label:"🇦🇷 Liga Argentina", filter:"Fútbol"},
+                      {label:"🏀 NBA", filter:"Básquet"},
+                      {label:"🏈 NFL", filter:"Fútbol Americano"},
+                      {label:"⚾ MLB", filter:"Béisbol"},
+                      {label:"🏆 Ver todo", filter:"Todos"},
+                    ].map(item=>(
+                      <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
+                        style={{display:"block",width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#DAA520":"#aaa",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                        onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none"}>
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -1499,11 +1519,7 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
-            <div style={{flex:1,minWidth:200,position:"relative"}}>
-              <span style={{position:"absolute",left:13,top:"50%",transform:"translateY(-50%)"}}>🔍</span>
-              <input className="input" style={{paddingLeft:38}} placeholder="Buscar carta, set o vendedor..." value={search} onChange={e=>setSearch(e.target.value)}/>
-            </div>
+          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
             <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
               <option value="reciente">Más recientes</option>
               <option value="asc">Menor precio</option>
@@ -1548,11 +1564,7 @@ export default function App() {
 
         {/* DEPORTIVAS MARKETPLACE */}
         {tab==="deportivas"&&<>
-          <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
-            <div style={{flex:1,minWidth:200,position:"relative"}}>
-              <span style={{position:"absolute",left:13,top:"50%",transform:"translateY(-50%)"}}>🔍</span>
-              <input className="input" style={{paddingLeft:38}} placeholder="Buscar jugador, marca o liga..." value={search} onChange={e=>setSearch(e.target.value)}/>
-            </div>
+          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
             <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
               <option value="reciente">Más recientes</option>
               <option value="asc">Menor precio</option>
@@ -1603,11 +1615,7 @@ export default function App() {
 
         {/* SELLADO MARKETPLACE */}
         {tab==="sellado"&&<>
-          <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
-            <div style={{flex:1,minWidth:200,position:"relative"}}>
-              <span style={{position:"absolute",left:13,top:"50%",transform:"translateY(-50%)"}}>🔍</span>
-              <input className="input" style={{paddingLeft:38}} placeholder="Buscar producto, set o vendedor..." value={search} onChange={e=>setSearch(e.target.value)}/>
-            </div>
+          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
             <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
               <option value="reciente">Más recientes</option>
               <option value="asc">Menor precio</option>
@@ -1694,6 +1702,77 @@ export default function App() {
       <div style={{borderTop:"1px solid rgba(255,255,255,.05)",padding:"16px 24px",textAlign:"center",color:"#333",fontSize:12}}>
         ⬤ Colecciones Facu · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
       </div>
+
+      {/* GLOBAL SEARCH OVERLAY */}
+      {globalSearchOpen && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",backdropFilter:"blur(8px)",zIndex:300,display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:100}} onClick={()=>{setGlobalSearchOpen(false);setGlobalSearch("");}}>
+          <div style={{width:"100%",maxWidth:600,padding:"0 24px"}} onClick={e=>e.stopPropagation()}>
+            <div style={{position:"relative"}}>
+              <span style={{position:"absolute",left:18,top:"50%",transform:"translateY(-50%)",fontSize:20,color:"#555"}}>🔍</span>
+              <input
+                autoFocus
+                className="input"
+                style={{paddingLeft:52,fontSize:18,padding:"18px 18px 18px 52px",borderRadius:16,border:"1px solid rgba(218,165,32,.4)",background:"#13161F",boxShadow:"0 24px 64px rgba(0,0,0,.8)"}}
+                placeholder="Buscar carta, set, jugador, competencia..."
+                value={globalSearch}
+                onChange={e=>setGlobalSearch(e.target.value)}
+                onKeyDown={e=>{
+                  if(e.key==="Enter"){
+                    setSearch(globalSearch);
+                    setGlobalSearchOpen(false);
+                    if(tab!=="marketplace"&&tab!=="deportivas"&&tab!=="sellado") setTab("marketplace");
+                  }
+                  if(e.key==="Escape"){setGlobalSearchOpen(false);setGlobalSearch("");}
+                }}
+              />
+            </div>
+            {globalSearch && (
+              <div style={{marginTop:8,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:8,maxHeight:400,overflowY:"auto"}}>
+                {/* Pokémon results */}
+                {cards.filter(c=>[c.name,c.set_name,c.seller_name].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,4).map(c=>(
+                  <button key={c.id} onClick={()=>{setSearch(globalSearch);setTab("marketplace");setGlobalSearchOpen(false);}}
+                    style={{display:"flex",gap:12,alignItems:"center",width:"100%",background:"none",border:"none",padding:"10px 12px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                    onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                    {c.img_url?<img src={c.img_url} style={{width:32,height:44,objectFit:"contain",borderRadius:4,flexShrink:0}}/>:<div style={{width:32,height:44,background:"rgba(255,255,255,.05)",borderRadius:4,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>🃏</div>}
+                    <div style={{fontFamily:"'DM Sans',sans-serif"}}>
+                      <div style={{fontWeight:700,fontSize:13,color:"#E8E8F0"}}>{c.name}</div>
+                      <div style={{fontSize:11,color:"#555"}}>{c.set_name} · 🃏 Pokémon</div>
+                    </div>
+                    <div style={{marginLeft:"auto",fontFamily:"'Bebas Neue',sans-serif",fontSize:18,color:"#DAA520"}}>{fmt(c.price)}</div>
+                  </button>
+                ))}
+                {/* Sport results */}
+                {sportCards.filter(c=>[c.player_name,c.card_name,c.brand,c.league].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,4).map(c=>(
+                  <button key={c.id} onClick={()=>{setSearch(globalSearch);setTab("deportivas");setGlobalSearchOpen(false);}}
+                    style={{display:"flex",gap:12,alignItems:"center",width:"100%",background:"none",border:"none",padding:"10px 12px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                    onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                    {c.img_url?<img src={c.img_url} style={{width:32,height:44,objectFit:"contain",borderRadius:4,flexShrink:0}}/>:<div style={{width:32,height:44,background:"rgba(255,255,255,.05)",borderRadius:4,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>🏆</div>}
+                    <div style={{fontFamily:"'DM Sans',sans-serif"}}>
+                      <div style={{fontWeight:700,fontSize:13,color:"#E8E8F0"}}>{c.player_name}</div>
+                      <div style={{fontSize:11,color:"#555"}}>{c.brand} {c.year} · 🏆 Deportes</div>
+                    </div>
+                    <div style={{marginLeft:"auto",fontFamily:"'Bebas Neue',sans-serif",fontSize:18,color:"#DAA520"}}>{fmt(c.price)}</div>
+                  </button>
+                ))}
+                {cards.filter(c=>[c.name,c.set_name].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).length === 0 &&
+                 sportCards.filter(c=>[c.player_name,c.card_name].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).length === 0 && (
+                  <div style={{textAlign:"center",padding:"24px",color:"#444",fontFamily:"'DM Sans',sans-serif",fontSize:14}}>No se encontraron resultados</div>
+                )}
+                <div style={{borderTop:"1px solid rgba(255,255,255,.07)",marginTop:4,paddingTop:8,paddingBottom:4}}>
+                  <button onClick={()=>{setSearch(globalSearch);setTab("marketplace");setGlobalSearchOpen(false);}} style={{display:"block",width:"100%",background:"none",border:"none",color:"#DAA520",padding:"8px 12px",fontSize:13,textAlign:"center",cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:600}}>
+                    Ver todos los resultados para "{globalSearch}" →
+                  </button>
+                </div>
+              </div>
+            )}
+            <div style={{textAlign:"center",marginTop:12,fontSize:12,color:"#444",fontFamily:"'DM Sans',sans-serif"}}>
+              Enter para buscar · Esc para cerrar
+            </div>
+          </div>
+        </div>
+      )}
 
       {showAuth&&<AuthModal onLogin={login} onClose={()=>setShowAuth(false)}/>}
       {checkoutCard&&<CheckoutModal card={checkoutCard} user={user} onClose={()=>setCheckoutCard(null)} onSuccess={onPurchaseSuccess}/>}
