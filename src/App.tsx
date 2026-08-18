@@ -1280,7 +1280,13 @@ export default function App() {
       <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.05)",padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(5,7,9,.94)",backdropFilter:"blur(24px)",boxShadow:"0 4px 32px rgba(0,0,0,.4)"}}>
         <div className="nav-glow"/>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
-          <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#DAA520,#B8860B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:900,color:"#050709",flexShrink:0,letterSpacing:-1}}>CF</div>
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="17" fill="#0A0C14" stroke="#DAA520" strokeWidth="1.5"/>
+          <path d="M8 22 Q18 6 28 22" stroke="#DAA520" strokeWidth="2" fill="none" strokeLinecap="round"/>
+          <text x="18" y="28" textAnchor="middle" fontFamily="'Bebas Neue',sans-serif" fontSize="11" fontWeight="900" fill="#DAA520" letterSpacing="1">CF</text>
+          <circle cx="18" cy="10" r="2" fill="#DAA520"/>
+          <path d="M14 10 L18 8 L22 10" stroke="#DAA520" strokeWidth="1" fill="none" strokeLinecap="round"/>
+        </svg>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#DAA520",lineHeight:1}}>COLECCIONES FACU</div>
             <div style={{fontSize:9,color:"#444",letterSpacing:2,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
@@ -1288,7 +1294,7 @@ export default function App() {
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {user?<>
-            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={()=>setGlobalSearchOpen(o=>!o)} title="Buscar">🔍</button>
+            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={e=>{e.stopPropagation();setGlobalSearchOpen(o=>!o);}} title="Buscar">🔍</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender")}>+ Pokémon</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sport")}>+ Deportiva</button>
             <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sellado")}>+ Sellado</button>
@@ -1317,7 +1323,7 @@ export default function App() {
               )}
             </div>
           </>:<>
-            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={()=>setGlobalSearchOpen(o=>!o)} title="Buscar">🔍</button>
+            <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={e=>{e.stopPropagation();setGlobalSearchOpen(o=>!o);}} title="Buscar">🔍</button>
             <button className="btn btn-ghost" onClick={()=>setShowAuth(true)}>Iniciar sesión</button>
             <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Registrarse</button>
           </>}
