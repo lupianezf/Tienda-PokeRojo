@@ -1,6 +1,10 @@
 // @ts-nocheck
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createPortal } from "react";
 import { supabase } from "./supabase";
+
+function DropdownPortal({ children }) {
+  return createPortal(children, document.body);
+}
 
 function PokeBall({ size = 22 }) {
   return (
@@ -1396,6 +1400,7 @@ export default function App() {
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {pokemonDropdown && (
+                <DropdownPortal>
                 <div
                   onMouseEnter={()=>setPokemonDropdown(true)}
                   onMouseLeave={()=>setPokemonDropdown(false)}
@@ -1425,6 +1430,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+                </DropdownPortal>
               )}
             </div>
 
@@ -1444,6 +1450,7 @@ export default function App() {
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {sportDropdown && (
+                <DropdownPortal>
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
@@ -1466,6 +1473,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+                </DropdownPortal>
               )}
             </div>
 
