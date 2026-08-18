@@ -1387,27 +1387,31 @@ export default function App() {
                 <div
                   onMouseEnter={()=>setPokemonDropdown(true)}
                   onMouseLeave={()=>setPokemonDropdown(false)}
-                  style={{position:"fixed",top:62,left:24,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:320,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
-                  <div style={{padding:"4px 8px 8px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:8}}>📋 Buscar por Set</div>
-                  <div style={{height:300,overflowY:"auto",marginBottom:12}}>
-                    {SETS.map(s=>(
-                      <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
-                        style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400,transition:"all .15s"}}
-                        onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
-                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
-                        {s === "Todos" ? "📋 Ver todos" : s}
-                      </button>
-                    ))}
-                  </div>
-                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:10}}>
+                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:300,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)",marginTop:2}}>
+                  {/* Buscador arriba */}
+                  <div style={{marginBottom:10}}>
                     <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
                     <div style={{position:"relative"}}>
                       <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
                       <input className="input" style={{paddingLeft:36,fontSize:13}}
-                        placeholder="Ej: Charizard, Pikachu, Nidoran..."
+                        placeholder="Ej: Charizard, Nidoran..."
                         value={pokemonNameSearch}
                         onChange={e=>{setPokemonNameSearch(e.target.value);setTab("marketplace");setPokemonSearchMode("name");}}
                         onClick={e=>e.stopPropagation()}/>
+                    </div>
+                  </div>
+                  {/* Sets abajo */}
+                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
+                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>📋 Buscar por Set</div>
+                    <div style={{height:180,overflowY:"auto"}}>
+                      {SETS.map(s=>(
+                        <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
+                          style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400,transition:"all .15s"}}
+                          onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                          onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
+                          {s === "Todos" ? "📋 Ver todos" : s}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1428,7 +1432,7 @@ export default function App() {
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
-                  style={{position:"fixed",top:62,left:160,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:230,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:220,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)",marginTop:2}}>
                   {[
                     {label:"⚽ Mundiales", filter:"Fútbol"},
                     {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
