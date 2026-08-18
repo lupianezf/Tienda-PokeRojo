@@ -1375,7 +1375,7 @@ export default function App() {
 
         {/* MARKETPLACE TABS */}
         {(tab==="marketplace"||tab==="deportivas"||tab==="sellado")&&<>
-          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"rgba(5,7,9,.96)",backdropFilter:"blur(20px)",boxShadow:"0 4px 20px rgba(0,0,0,.4)"}}>
+          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"rgba(5,7,9,1)",boxShadow:"0 4px 20px rgba(0,0,0,.4)"}}>
 
             {/* POKÉMON TAB */}
             <div style={{position:"relative"}}>
