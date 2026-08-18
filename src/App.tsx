@@ -1130,6 +1130,11 @@ export default function App() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [filterSet, setFilterSet] = useState("Todos");
   const [pokemonDropdown, setPokemonDropdown] = useState(false);
+  useEffect(() => {
+    const close = () => { setPokemonDropdown(false); setSportDropdown(false); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, []);
   const [sportDropdown, setSportDropdown] = useState(false);
   const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
@@ -1392,16 +1397,13 @@ export default function App() {
                   }
                   setPokemonDropdown(true);
                 }}
-                onMouseLeave={()=>setPokemonDropdown(false)}
-                onClick={()=>{setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);}}
+                onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
                 style={{background:"none",border:"none",color:tab==="marketplace"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {pokemonDropdown && pokemonPos.top > 0 && (
                 <div
-                  onMouseEnter={()=>setPokemonDropdown(true)}
-                  onMouseLeave={()=>setPokemonDropdown(false)}
                   style={{position:"fixed",top:pokemonPos.top+"px",left:pokemonPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:300,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   <div style={{marginBottom:10}}>
                     <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
@@ -1442,16 +1444,13 @@ export default function App() {
                   }
                   setSportDropdown(true);
                 }}
-                onMouseLeave={()=>setSportDropdown(false)}
-                onClick={()=>{setTab("deportivas");setFilterSet("Todos");}}
+                onClick={(e)=>{e.stopPropagation();setTab("deportivas");setFilterSet("Todos");setSportDropdown(false);}}
                 style={{background:"none",border:"none",color:tab==="deportivas"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 🏆 Deportes <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
               {sportDropdown && sportPos.top > 0 && (
                 <div
-                  onMouseEnter={()=>setSportDropdown(true)}
-                  onMouseLeave={()=>setSportDropdown(false)}
                   style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,minWidth:260,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   {/* Buscador */}
                   <div style={{marginBottom:10}}>
@@ -1519,14 +1518,6 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
-            <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
-              <option value="reciente">Más recientes</option>
-              <option value="asc">Menor precio</option>
-              <option value="desc">Mayor precio</option>
-            </select>
-          </div>
-
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SETS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
@@ -1564,13 +1555,6 @@ export default function App() {
 
         {/* DEPORTIVAS MARKETPLACE */}
         {tab==="deportivas"&&<>
-          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
-            <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
-              <option value="reciente">Más recientes</option>
-              <option value="asc">Menor precio</option>
-              <option value="desc">Mayor precio</option>
-            </select>
-          </div>
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SPORTS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
@@ -1615,13 +1599,6 @@ export default function App() {
 
         {/* SELLADO MARKETPLACE */}
         {tab==="sellado"&&<>
-          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:14}}>
-            <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
-              <option value="reciente">Más recientes</option>
-              <option value="asc">Menor precio</option>
-              <option value="desc">Mayor precio</option>
-            </select>
-          </div>
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {PRODUCT_TYPES.map(t=>(
               <button key={t} className={`filter-chip ${filterSet===t?"active":""}`}
