@@ -1387,9 +1387,9 @@ export default function App() {
                 <div
                   onMouseEnter={()=>setPokemonDropdown(true)}
                   onMouseLeave={()=>setPokemonDropdown(false)}
-                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:320,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.8)",marginTop:2}}>
+                  style={{position:"fixed",top:62,left:24,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:320,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   <div style={{padding:"4px 8px 8px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:8}}>📋 Buscar por Set</div>
-                  <div style={{height:280,overflowY:"auto",marginBottom:12}}>
+                  <div style={{height:300,overflowY:"auto",marginBottom:12}}>
                     {SETS.map(s=>(
                       <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
                         style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400,transition:"all .15s"}}
@@ -1428,7 +1428,7 @@ export default function App() {
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
-                  style={{position:"absolute",top:"100%",left:0,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:230,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.8)",marginTop:2}}>
+                  style={{position:"fixed",top:62,left:160,background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:230,zIndex:9999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   {[
                     {label:"⚽ Mundiales", filter:"Fútbol"},
                     {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
