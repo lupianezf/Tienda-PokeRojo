@@ -1135,6 +1135,10 @@ export default function App() {
   const [sportDropdown, setSportDropdown] = useState(false);
   const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
+  const pokemonBtnRef = useRef(null);
+  const sportBtnRef = useRef(null);
+  const [pokemonPos, setPokemonPos] = useState({top:0,left:0});
+  const [sportPos, setSportPos] = useState({top:0,left:0});
   const [sortBy, setSortBy] = useState("reciente");
   const [cards, setCards] = useState([]);
   const [sportCards, setSportCards] = useState([]);
@@ -1380,17 +1384,12 @@ export default function App() {
             {/* POKÉMON TAB */}
             <div style={{position:"relative"}}>
               <button
-                ref={el => {
-                  if (el && pokemonDropdown) {
-                    const rect = el.getBoundingClientRect();
-                    window._pokemonDropdownLeft = rect.left;
-                    window._pokemonDropdownTop = rect.bottom;
+                ref={pokemonBtnRef}
+                onMouseEnter={() => {
+                  if (pokemonBtnRef.current) {
+                    const r = pokemonBtnRef.current.getBoundingClientRect();
+                    setPokemonPos({top: r.bottom, left: r.left});
                   }
-                }}
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  window._pokemonDropdownLeft = rect.left;
-                  window._pokemonDropdownTop = rect.bottom;
                   setPokemonDropdown(true);
                 }}
                 onMouseLeave={()=>setPokemonDropdown(false)}
@@ -1399,12 +1398,12 @@ export default function App() {
                 🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
-              {pokemonDropdown && (
+              {pokemonDropdown && pokemonPos.top > 0 && (
                 <DropdownPortal>
                 <div
                   onMouseEnter={()=>setPokemonDropdown(true)}
                   onMouseLeave={()=>setPokemonDropdown(false)}
-                  style={{position:"fixed",top:(window._pokemonDropdownTop||130)+"px",left:(window._pokemonDropdownLeft||24)+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:300,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  style={{position:"fixed",top:pokemonPos.top+"px",left:pokemonPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:12,width:300,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   <div style={{marginBottom:10}}>
                     <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
                     <div style={{position:"relative"}}>
@@ -1437,10 +1436,12 @@ export default function App() {
             {/* DEPORTES TAB */}
             <div style={{position:"relative"}}>
               <button
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  window._sportDropdownLeft = rect.left;
-                  window._sportDropdownTop = rect.bottom;
+                ref={sportBtnRef}
+                onMouseEnter={() => {
+                  if (sportBtnRef.current) {
+                    const r = sportBtnRef.current.getBoundingClientRect();
+                    setSportPos({top: r.bottom, left: r.left});
+                  }
                   setSportDropdown(true);
                 }}
                 onMouseLeave={()=>setSportDropdown(false)}
@@ -1449,12 +1450,12 @@ export default function App() {
                 🏆 Deportes <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
                 <span style={{fontSize:10,color:"#555"}}>▾</span>
               </button>
-              {sportDropdown && (
+              {sportDropdown && sportPos.top > 0 && (
                 <DropdownPortal>
                 <div
                   onMouseEnter={()=>setSportDropdown(true)}
                   onMouseLeave={()=>setSportDropdown(false)}
-                  style={{position:"fixed",top:(window._sportDropdownTop||130)+"px",left:(window._sportDropdownLeft||160)+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:220,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:220,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
                   {[
                     {label:"⚽ Mundiales", filter:"Fútbol"},
                     {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
