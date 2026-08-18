@@ -1696,7 +1696,7 @@ export default function App() {
 
       {/* GLOBAL SEARCH — mini bar near button */}
       {globalSearchOpen && (
-        <div style={{position:"fixed",top:10,right:180,zIndex:300,display:"flex",alignItems:"center",gap:8,animation:"slidein .2s ease"}} onClick={e=>e.stopPropagation()}>
+        <div style={{position:"fixed",top:10,right:260,zIndex:300,display:"flex",alignItems:"center",gap:8,animation:"slidein .2s ease"}} onClick={e=>e.stopPropagation()}>
           <div style={{position:"relative",width:340}}>
             <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
             <input
