@@ -64,9 +64,16 @@ const SPORT_COLORS = {
 };
 
 ["Todos","Caja","Lata","Bundle","Mazo","Sobre","Colección Especial","ETB","Blister"];
+const PRODUCT_TYPES = ["Todos","Caja","Lata","Bundle","Mazo","Sobre","Colección Especial","ETB","Blister"];
 const PRODUCT_TYPE_COLORS = {
   "Caja":"#E53935","Lata":"#8E24AA","Bundle":"#1E88E5","Mazo":"#43A047",
   "Sobre":"#FB8C00","Colección Especial":"#DAA520","ETB":"#00ACC1","Blister":"#F06292",
+};
+const OTROS_TYPES = ["Todos","Disney","Magic: The Gathering","Yu-Gi-Oh","Digimon","Dragon Ball","One Piece","Naruto","Star Wars","Marvel","DC Comics","Otros"];
+const OTROS_COLORS = {
+  "Disney":"#1565C0","Magic: The Gathering":"#6A0DAD","Yu-Gi-Oh":"#B8860B",
+  "Digimon":"#1976D2","Dragon Ball":"#E65100","One Piece":"#C62828",
+  "Naruto":"#EF6C00","Star Wars":"#1A1A2E","Marvel":"#CC0000","DC Comics":"#1565C0","Otros":"#555"
 };
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
