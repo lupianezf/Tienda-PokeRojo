@@ -1235,11 +1235,14 @@ export default function App() {
   const [filterSet, setFilterSet] = useState("Todos");
   const [pokemonDropdown, setPokemonDropdown] = useState(false);
   useEffect(() => {
-    const close = () => { setPokemonDropdown(false); setSportDropdown(false); };
+    const close = () => { setPokemonDropdown(false); setSportDropdown(false); setOtrosDropdown(false); };
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, []);
   const [sportDropdown, setSportDropdown] = useState(false);
+  const [otrosDropdown, setOtrosDropdown] = useState(false);
+  const otrosBtnRef = useRef(null);
+  const [otrosPos, setOtrosPos] = useState({top:0,left:0});
   const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
   const pokemonBtnRef = useRef(null);
@@ -1514,6 +1517,7 @@ export default function App() {
                     setPokemonPos({top: r.bottom, left: r.left});
                   }
                   setSportDropdown(false);
+                  setOtrosDropdown(false);
                   setPokemonDropdown(true);
                 }}
                 onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
@@ -1562,6 +1566,7 @@ export default function App() {
                     setSportPos({top: r.bottom, left: r.left});
                   }
                   setPokemonDropdown(false);
+                  setOtrosDropdown(false);
                   setSportDropdown(true);
                 }}
                 onClick={(e)=>{e.stopPropagation();setTab("deportivas");setFilterSet("Todos");setSportDropdown(false);}}
@@ -1611,14 +1616,38 @@ export default function App() {
             </div>
 
             {/* SELLADO TAB */}
-            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);}} onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(false);}} onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
               📦 Sellado <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sealedProducts.length}</span>
             </button>
 
             {/* OTROS TAB */}
-            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);}} onClick={()=>{setTab("otros");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="otros"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-              ✨ Otros <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{otrosCards.length}</span>
-            </button>
+            <div style={{position:"relative"}}>
+              <button
+                ref={otrosBtnRef}
+                onMouseEnter={()=>{
+                  if(otrosBtnRef.current){const r=otrosBtnRef.current.getBoundingClientRect();setOtrosPos({top:r.bottom,left:r.left});}
+                  setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(true);
+                }}
+                onClick={(e)=>{e.stopPropagation();setTab("otros");setFilterSet("Todos");setOtrosDropdown(false);}}
+                style={{background:"none",border:"none",color:tab==="otros"?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #DAA520":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                ✨ Otros <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{otrosCards.length}</span>
+                <span style={{fontSize:10,color:"#555"}}>▾</span>
+              </button>
+              {otrosDropdown && otrosPos.top > 0 && (
+                <div
+                  onClick={e=>e.stopPropagation()}
+                  style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#13161F",border:"1px solid rgba(218,165,32,.25)",borderRadius:14,padding:8,minWidth:220,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  {OTROS_TYPES.map(t=>(
+                    <button key={t} onClick={()=>{setTab("otros");setFilterSet(t);setOtrosDropdown(false);}}
+                      style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===t&&tab==="otros"?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                      onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                      onMouseLeave={e=>e.currentTarget.style.background=filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none"}>
+                      {t === "Todos" ? "✨ Ver todo" : t}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
           </div>
         </>}
@@ -1745,27 +1774,36 @@ export default function App() {
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16}}>
             {otrosCards
-              .filter(c=>filterSet==="Todos"||c.categoria===filterSet)
-              .filter(c=>[c.name,c.seller_name,c.categoria].join(" ").toLowerCase().includes(search.toLowerCase()))
-              .map(c=>(
-                <div key={c.id} className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
-                  <div style={{height:160,background:`linear-gradient(160deg,${OTROS_COLORS[c.categoria]||"#333"}22,${OTROS_COLORS[c.categoria]||"#333"}35)`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-                    {c.img_url?<img src={c.img_url} alt={c.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:44,opacity:.6}}>✨</div>}
-                    <div style={{position:"absolute",top:10,left:10,background:OTROS_COLORS[c.categoria]||"#DAA520",color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{c.categoria}</div>
-                  </div>
-                  <div style={{padding:"14px 14px 16px",flex:1,display:"flex",flexDirection:"column",fontFamily:"'DM Sans',sans-serif"}}>
-                    <div style={{fontWeight:700,fontSize:14,marginBottom:6}}>{c.name}</div>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-                      <span style={{background:COND_COLOR[c.condition]+"22",color:COND_COLOR[c.condition],padding:"3px 8px",borderRadius:5,fontSize:11,fontWeight:700}}>{COND_LABEL[c.condition]}</span>
-                      <span style={{fontSize:10,color:"#444"}}>📍{c.province}</span>
+              .filter(c=>filterSet==="Todos"||(c.categoria||"")=== filterSet)
+              .filter(c=>[c.name||"",c.seller_name||"",c.categoria||""].join(" ").toLowerCase().includes(search.toLowerCase()))
+              .map(c=>{
+                const catColor = OTROS_COLORS[c.categoria]||"#555";
+                const condColor = COND_COLOR[c.condition]||"#888";
+                const condLabel = COND_LABEL[c.condition]||c.condition||"";
+                return (
+                  <div key={c.id} className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
+                    <div style={{height:160,background:`linear-gradient(160deg,${catColor}22,${catColor}35)`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+                      {c.img_url?<img src={c.img_url} alt={c.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:44,opacity:.6}}>✨</div>}
+                      <div style={{position:"absolute",top:10,left:10,background:catColor,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{c.categoria||"Otros"}</div>
+                      <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(5,7,9,1),transparent)"}}/>
                     </div>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
-                      <div><div style={{fontSize:10,color:"#444"}}>ARS</div><div className="price-tag">{fmt(c.price)}</div></div>
-                      {user?.id===c.seller_id?<span style={{fontSize:11,color:"#444"}}>Tu carta</span>:<button className="btn btn-gold" style={{padding:"8px 14px",fontSize:12}} onClick={()=>user?onBuy(c):setShowAuth(true)}>{user?"Comprar":"Ingresar"}</button>}
+                    <div style={{padding:"14px 14px 16px",flex:1,display:"flex",flexDirection:"column",fontFamily:"'DM Sans',sans-serif"}}>
+                      <div style={{fontWeight:700,fontSize:14,marginBottom:6}}>{c.name}</div>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                        {condLabel&&<span style={{background:condColor+"22",color:condColor,padding:"3px 8px",borderRadius:5,fontSize:11,fontWeight:700}}>{condLabel}</span>}
+                        <span style={{fontSize:10,color:"#444"}}>📍{c.province||""}</span>
+                      </div>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
+                        <div><div style={{fontSize:10,color:"#444"}}>ARS</div><div className="price-tag">{fmt(c.price||0)}</div></div>
+                        {user?.id===c.seller_id
+                          ?<span style={{fontSize:11,color:"#444"}}>Tu carta</span>
+                          :<button className="btn btn-gold" style={{padding:"8px 14px",fontSize:12}} onClick={()=>user?onBuy(c):setShowAuth(true)}>{user?"Comprar":"Ingresar"}</button>
+                        }
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             }
           </div>
           {otrosCards.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>✨</div><div>No hay cartas publicadas en esta categoría todavía.</div></div>}
