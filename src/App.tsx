@@ -565,12 +565,20 @@ function PublishForm({ user, onPublish }) {
     setSuggestions([]);
   };
 
-  const handleFile = (file) => {
+  const handleFile = async (file) => {
     if (!file||!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = e => setForm(p=>({...p, uploadedImg:e.target.result}));
-    reader.readAsDataURL(file);
-    setImgMode("upload");
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from('card-images').upload(fileName, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('card-images').getPublicUrl(fileName);
+        setForm(p=>({...p, uploadedImg: urlData.publicUrl}));
+        setImgMode("upload");
+      }
+    } catch(e) { console.error('Upload error:', e); }
+    setLoading(false);
   };
 
   const finalImg = imgMode==="upload" ? form.uploadedImg : form.imgUrl;
@@ -819,11 +827,19 @@ function PublishSportForm({ user, onPublish }) {
   const fileRef = useRef(null);
   const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
 
-  const handleFile = (file) => {
+  const handleFile = async (file) => {
     if (!file||!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = e => setForm(p=>({...p, uploadedImg:e.target.result}));
-    reader.readAsDataURL(file);
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from('card-images').upload(fileName, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('card-images').getPublicUrl(fileName);
+        setForm(p=>({...p, uploadedImg: urlData.publicUrl}));
+      }
+    } catch(e) { console.error('Upload error:', e); }
+    setLoading(false);
   };
 
   const publish = async () => {
@@ -939,11 +955,19 @@ function PublishOtrosForm({ user, onPublish }) {
   const fileRef = useRef(null);
   const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
 
-  const handleFile = (file) => {
+  const handleFile = async (file) => {
     if (!file||!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = e => setForm(p=>({...p, uploadedImg:e.target.result}));
-    reader.readAsDataURL(file);
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from('card-images').upload(fileName, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('card-images').getPublicUrl(fileName);
+        setForm(p=>({...p, uploadedImg: urlData.publicUrl}));
+      }
+    } catch(e) { console.error('Upload error:', e); }
+    setLoading(false);
   };
 
   const publish = async () => {
@@ -1084,11 +1108,19 @@ function PublishSealedForm({ user, onPublish }) {
   const fileRef = useRef(null);
   const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
 
-  const handleFile = (file) => {
+  const handleFile = async (file) => {
     if (!file||!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = e => setForm(p=>({...p, uploadedImg:e.target.result}));
-    reader.readAsDataURL(file);
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from('card-images').upload(fileName, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('card-images').getPublicUrl(fileName);
+        setForm(p=>({...p, uploadedImg: urlData.publicUrl}));
+      }
+    } catch(e) { console.error('Upload error:', e); }
+    setLoading(false);
   };
 
   const publish = async () => {
@@ -1471,55 +1503,6 @@ export default function App() {
         {(tab==="marketplace"||tab==="deportivas"||tab==="sellado"||tab==="otros")&&<>
           <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"#ffffff",borderBottom:"1px solid #E5E7EB"}}>
 
-            {/* POKÉMON TAB */}
-            <div style={{position:"relative"}}>
-              <button
-                ref={pokemonBtnRef}
-                onMouseEnter={() => {
-                  if (pokemonBtnRef.current) {
-                    const r = pokemonBtnRef.current.getBoundingClientRect();
-                    setPokemonPos({top: r.bottom, left: r.left});
-                  }
-                  setSportDropdown(false);
-                  setOtrosDropdown(false);
-                  setPokemonDropdown(true);
-                }}
-                onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
-                <span style={{fontSize:10,color:"#555"}}>▾</span>
-              </button>
-              {pokemonDropdown && pokemonPos.top > 0 && (
-                <div
-                  style={{position:"fixed",top:pokemonPos.top+"px",left:pokemonPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:12,width:300,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
-                  <div style={{marginBottom:10}}>
-                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
-                    <div style={{position:"relative"}}>
-                      <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
-                      <input className="input" style={{paddingLeft:36,fontSize:13}}
-                        placeholder="Ej: Charizard, Nidoran..."
-                        value={pokemonNameSearch}
-                        onChange={e=>{setPokemonNameSearch(e.target.value);setTab("marketplace");setPokemonSearchMode("name");}}
-                        onClick={e=>e.stopPropagation()}/>
-                    </div>
-                  </div>
-                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
-                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>📋 Buscar por Set</div>
-                    <div style={{height:200,overflowY:"auto"}}>
-                      {SETS.map(s=>(
-                        <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
-                          style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
-                          onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
-                          onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
-                          {s === "Todos" ? "📋 Ver todos" : s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* DEPORTES TAB */}
             <div style={{position:"relative"}}>
               <button
@@ -1574,6 +1557,55 @@ export default function App() {
                         {item.label}
                       </button>
                     ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* POKÉMON TAB */}
+            <div style={{position:"relative"}}>
+              <button
+                ref={pokemonBtnRef}
+                onMouseEnter={() => {
+                  if (pokemonBtnRef.current) {
+                    const r = pokemonBtnRef.current.getBoundingClientRect();
+                    setPokemonPos({top: r.bottom, left: r.left});
+                  }
+                  setSportDropdown(false);
+                  setOtrosDropdown(false);
+                  setPokemonDropdown(true);
+                }}
+                onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
+                style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
+                <span style={{fontSize:10,color:"#555"}}>▾</span>
+              </button>
+              {pokemonDropdown && pokemonPos.top > 0 && (
+                <div
+                  style={{position:"fixed",top:pokemonPos.top+"px",left:pokemonPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:12,width:300,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  <div style={{marginBottom:10}}>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
+                      <input className="input" style={{paddingLeft:36,fontSize:13}}
+                        placeholder="Ej: Charizard, Nidoran..."
+                        value={pokemonNameSearch}
+                        onChange={e=>{setPokemonNameSearch(e.target.value);setTab("marketplace");setPokemonSearchMode("name");}}
+                        onClick={e=>e.stopPropagation()}/>
+                    </div>
+                  </div>
+                  <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
+                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>📋 Buscar por Set</div>
+                    <div style={{height:200,overflowY:"auto"}}>
+                      {SETS.map(s=>(
+                        <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
+                          style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
+                          onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                          onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
+                          {s === "Todos" ? "📋 Ver todos" : s}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
