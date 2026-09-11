@@ -721,7 +721,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
     <div className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative",width:"100%"}}>
       {card.hot&&<span className="badge-hot" style={{position:"absolute",top:8,right:8,zIndex:2}}>HOT</span>}
       <div style={{height:240,background:`#F9FAFB`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative",borderBottom:"1px solid #F3F4F6"}}>
-        {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:44,opacity:.2,color:"#9CA3AF"}}>🃏</div>}
+        {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
       </div>
       <div style={{padding:"10px 12px 12px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'Geist',sans-serif"}}>
         <div style={{fontWeight:600,fontSize:13,color:"#111827",lineHeight:1.3,marginBottom:2}}>{card.name}</div>
@@ -756,7 +756,7 @@ function SportCardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews })
       <div className="card-img-wrap" style={{height:160,background:`linear-gradient(160deg,${sportColor}22,${sportColor}35)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
         {card.img_url
           ?<img src={card.img_url} alt={card.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>
-          :<div style={{fontSize:52,opacity:.6}}>🏆</div>
+          :<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>
         }
         <div style={{position:"absolute",top:10,left:10,background:sportColor,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{card.sport}</div>
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(5,7,9,1),transparent)"}}/>
@@ -1699,7 +1699,7 @@ export default function App() {
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
                 {filtered.map(c=><CardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)}
               </div>
-              {filtered.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>🃏</div><div>No hay cartas con ese filtro.</div></div>}
+              {filtered.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div>No hay cartas con ese filtro.</div></div>}
             </>
           )}
         </>}
@@ -1801,7 +1801,7 @@ export default function App() {
               .map(p=><SealedItem key={p.id} product={p} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)
             }
           </div>
-          {sealedProducts.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>📦</div><div>No hay productos sellados publicados todavía.</div></div>}
+          {sealedProducts.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div>No hay productos sellados publicados todavía.</div></div>}
         </>}
         {/* OTROS MARKETPLACE */}
         {tab==="otros"&&<>
@@ -1823,7 +1823,7 @@ export default function App() {
                 return (
                   <div key={c.id} className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
                     <div style={{height:160,background:`linear-gradient(160deg,${catColor}22,${catColor}35)`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-                      {c.img_url?<img src={c.img_url} alt={c.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{fontSize:44,opacity:.6}}>✨</div>}
+                      {c.img_url?<img src={c.img_url} alt={c.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
                       <div style={{position:"absolute",top:10,left:10,background:catColor,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{c.categoria||"Otros"}</div>
                       <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(5,7,9,1),transparent)"}}/>
                     </div>
@@ -1846,7 +1846,7 @@ export default function App() {
               })
             }
           </div>
-          {otrosCards.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>✨</div><div>No hay cartas publicadas en esta categoría todavía.</div></div>}
+          {otrosCards.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div>No hay cartas publicadas en esta categoría todavía.</div></div>}
         </>}
 
         {/* VENDER OTROS */}
@@ -1865,7 +1865,7 @@ export default function App() {
           <div style={{color:"#555",fontSize:13,marginBottom:20}}>{myListings.length} carta{myListings.length!==1?"s":""} activa{myListings.length!==1?"s":""}</div>
           {myListings.length===0?(
             <div style={{textAlign:"center",padding:"60px 0",color:"#333"}}>
-              <div style={{fontSize:44,marginBottom:10}}>📭</div>
+              
               <div style={{marginBottom:16}}>No tenés cartas publicadas todavía.</div>
               <button className="btn btn-gold" onClick={()=>setTab("vender")}>Publicar primera carta</button>
             </div>
@@ -1892,7 +1892,7 @@ export default function App() {
           <div style={{color:"#555",fontSize:13,marginBottom:20}}>{purchases.length} compra{purchases.length!==1?"s":""} realizadas</div>
           {purchases.length===0?(
             <div style={{textAlign:"center",padding:"60px 0",color:"#333"}}>
-              <div style={{fontSize:44,marginBottom:10}}>🛒</div>
+              
               <div style={{marginBottom:16}}>Todavía no realizaste ninguna compra.</div>
               <button className="btn btn-gold" onClick={()=>setTab("marketplace")}>Explorar marketplace</button>
             </div>
