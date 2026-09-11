@@ -378,7 +378,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
           </div>
         </div>
         <div style={{display:"flex",borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:20}}>
-          {["cartas","reseñas"].map(t=>(
+          {["cartas"].map(t=>(
             <button key={t} onClick={()=>setTab(t)} style={{background:"none",border:"none",color:tab===t?"#DAA520":"#555",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 18px",borderBottom:tab===t?"2px solid #DAA520":"2px solid transparent",transition:"all .2s"}}>
               {t==="cartas"?`🃏 Cartas (${sellerCards.length})`:`⭐ Reseñas (${sellerReviews.length})`}
             </button>
@@ -401,17 +401,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
             ))}
           </div>
         )}
-        {tab==="reseñas"&&(sellerReviews.length===0?<div style={{textAlign:"center",padding:"40px 0",color:"#444",fontFamily:"'DM Sans',sans-serif"}}>Sin reseñas todavía.</div>:
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {sellerReviews.map(r=>(
-              <div key={r.id} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:12,padding:14,fontFamily:"'DM Sans',sans-serif"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><Stars rating={r.rating} size={14}/><span style={{fontSize:11,color:"#444"}}>{r.created_at?.split("T")[0]}</span></div>
-                <div style={{fontSize:13,color:"#aaa",marginBottom:4}}>Carta: <strong style={{color:"#E8E8F0"}}>{r.card_name}</strong></div>
-                {r.comment&&<div style={{fontSize:13,color:"#888",fontStyle:"italic"}}>"{r.comment}"</div>}
-              </div>
-            ))}
-          </div>
-        )}
+
       </div>
     </div>
   );
@@ -744,10 +734,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
           <span style={{background:COND_COLOR[card.condition]+"22",color:COND_COLOR[card.condition],padding:"3px 8px",borderRadius:5,fontSize:11,fontWeight:700}}>{COND_LABEL[card.condition]}</span>
           <span style={{fontSize:10,color:"#444"}}>📍{card.province}</span>
         </div>
-        <button onClick={()=>onSellerClick(card)} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"6px 10px",marginBottom:10,cursor:"pointer",textAlign:"left",width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <span style={{fontSize:12,color:"#888"}}>@{sellerName}</span>
-          <SellerBadge reviews={cardReviews}/>
-        </button>
+        <div style={{fontSize:12,color:"#9CA3AF",marginBottom:10,fontFamily:"'Inter',sans-serif"}}>@{sellerName} · 📍{card.province}</div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
             <div style={{fontSize:10,color:"#444",letterSpacing:.5}}>ARS</div>
@@ -799,7 +786,6 @@ function SportCardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews })
         </div>
         <button onClick={()=>onSellerClick(card)} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"6px 10px",marginBottom:10,cursor:"pointer",textAlign:"left",width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <span style={{fontSize:12,color:"#888"}}>@{card.seller_name}</span>
-          <SellerBadge reviews={rep}/>
         </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
@@ -1080,7 +1066,6 @@ function SealedItem({ product, userId, onBuy, onLogin, onSellerClick, reviews })
         </div>
         <button onClick={()=>onSellerClick(product)} style={{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:8,padding:"6px 10px",marginBottom:10,cursor:"pointer",textAlign:"left",width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <span style={{fontSize:12,color:"#888"}}>@{product.seller_name}</span>
-          <SellerBadge reviews={rep}/>
         </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
@@ -1414,7 +1399,7 @@ export default function App() {
                     <div style={{fontWeight:700,fontSize:14}}>{user.name}</div>
                     <div style={{fontSize:12,color:"#555"}}>{user.email}</div>
                     <div style={{fontSize:12,color:"#555",marginTop:2}}>📍 {user.province}</div>
-                    <div style={{marginTop:6}}><SellerBadge reviews={reviews.filter(r=>r.seller_id===user.id)} size="md"/></div>
+
                   </div>
                   {[{l:"🏪 Mis publicaciones",a:()=>{setTab("mis-publicaciones");setMenuOpen(false);}},{l:"📦 Mis compras",a:()=>{setTab("mis-compras");setMenuOpen(false);}}].map(i=>(
                     <button key={i.l} onClick={i.a} className="btn" style={{width:"100%",background:"none",border:"none",color:"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
@@ -1659,13 +1644,11 @@ export default function App() {
               <div style={{color:"#9CA3AF",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
             </div>
             <div style={{display:"flex",gap:10}}>
-              {[{v:`${cards.length}`,l:"Cartas",i:"🃏"},{v:`${new Set(cards.map(c=>c.seller_id)).size}`,l:"Vendedores",i:"👤"},{v:`${reviews.length}`,l:"Reseñas",i:"⭐"}].map(s=>(
-                <div key={s.l} className="stat-card">
-                  <div style={{fontSize:18,marginBottom:2}}>{s.i}</div>
-                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,color:"#1a3a6b"}}>{s.v}</div>
-                  <div style={{fontSize:11,color:"#6B7280"}}>{s.l}</div>
-                </div>
-              ))}
+              <div style={{display:"flex",gap:24,alignItems:"center",fontFamily:"'Inter',sans-serif"}}>
+                <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>publicaciones</span></div>
+                <div style={{width:1,height:20,background:"#E5E7EB"}}/>
+                <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>vendedores</span></div>
+              </div>
             </div>
           </div>
 
@@ -1888,11 +1871,7 @@ export default function App() {
                     <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:22,color:"#DAA520"}}>{fmt(c.amount)}</div>
                     <div style={{fontSize:11,color:"#27AE60",fontWeight:700}}>✓ PAGADO</div>
                   </div>
-                  {!c.reviewed?(
-                    <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12,flexShrink:0}} onClick={()=>setReviewTarget({...c,idx:i,sellerId:c.seller_id,name:c.card_name,sellerName:"Vendedor"})}>⭐ Calificar</button>
-                  ):(
-                    <span style={{fontSize:12,color:"#555",flexShrink:0}}>✓ Calificado</span>
-                  )}
+
                 </div>
               ))}
             </div>
@@ -1962,7 +1941,7 @@ export default function App() {
       {showAuth&&<AuthModal onLogin={login} onClose={()=>setShowAuth(false)}/>}
       {checkoutCard&&<CheckoutModal card={checkoutCard} user={user} onClose={()=>setCheckoutCard(null)} onSuccess={onPurchaseSuccess}/>}
       {sellerModal&&<SellerModal seller={sellerModal} allCards={cards} onClose={()=>setSellerModal(null)} onBuy={onBuy} userId={user?.id}/>}
-      {reviewTarget&&<ReviewModal purchase={reviewTarget} userId={user?.id} onClose={()=>setReviewTarget(null)} onSubmit={()=>{loadReviews();setPurchases(p=>p.map((x,i)=>i===reviewTarget.idx?{...x,reviewed:true}:x));}}/>}
+
     </div>
   );
 }
