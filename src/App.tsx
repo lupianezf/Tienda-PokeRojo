@@ -1217,12 +1217,18 @@ export default function App() {
   const [pokemonDropdown, setPokemonDropdown] = useState(false);
   const [sportDropdown, setSportDropdown] = useState(false);
   const [otrosDropdown, setOtrosDropdown] = useState(false);
+  const [sealedDropdown, setSealedDropdown] = useState(false);
   const pokemonBtnRef = useRef(null);
   const sportBtnRef = useRef(null);
   const otrosBtnRef = useRef(null);
+  const sealedBtnRef = useRef(null);
+  const closeTimer = useRef(null);
+  const startClose = (fn) => { closeTimer.current = setTimeout(fn, 200); };
+  const cancelClose = () => { if(closeTimer.current) clearTimeout(closeTimer.current); };
   const [pokemonPos, setPokemonPos] = useState({top:0,left:0});
   const [sportPos, setSportPos] = useState({top:0,left:0});
   const [otrosPos, setOtrosPos] = useState({top:0,left:0});
+  const [sealedPos, setSealedPos] = useState({top:0,left:0});
   const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
 
@@ -1497,7 +1503,7 @@ export default function App() {
                   setOtrosDropdown(false);
                   setSportDropdown(true);
                 }}
-                onMouseLeave={()=>setSportDropdown(false)}
+                onMouseLeave={()=>startClose(()=>setSportDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("deportivas");setFilterSet("Todos");setSportDropdown(false);}}
                 style={{background:"none",border:"none",color:tab==="deportivas"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 Deportes <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sportCards.length}</span>
@@ -1557,7 +1563,7 @@ export default function App() {
                   setOtrosDropdown(false);
                   setPokemonDropdown(true);
                 }}
-                onMouseLeave={()=>setPokemonDropdown(false)}
+                onMouseLeave={()=>startClose(()=>setPokemonDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
                 style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 Pokémon <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{cards.length}</span>
@@ -1594,11 +1600,6 @@ export default function App() {
               )}
             </div>
 
-            {/* SELLADO TAB */}
-            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(false);}} onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-              Sellado <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sealedProducts.length}</span>
-            </button>
-
             {/* OTROS TAB */}
             <div style={{position:"relative"}}>
               <button
@@ -1607,6 +1608,7 @@ export default function App() {
                   if(otrosBtnRef.current){const r=otrosBtnRef.current.getBoundingClientRect();setOtrosPos({top:r.bottom,left:r.left});}
                   setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(true);
                 }}
+                onMouseLeave={()=>startClose(()=>setOtrosDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("otros");setFilterSet("Todos");setOtrosDropdown(false);}}
                 style={{background:"none",border:"none",color:tab==="otros"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
                 Otros <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{otrosCards.length}</span>
@@ -1614,7 +1616,8 @@ export default function App() {
               </button>
               {otrosDropdown && otrosPos.top > 0 && (
                 <div
-                  onMouseLeave={()=>setOtrosDropdown(false)}
+                  onMouseEnter={cancelClose}
+                  onMouseLeave={()=>startClose(()=>setOtrosDropdown(false))}
                   style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:220,zIndex:99999}}>
                   {OTROS_TYPES.map(t=>(
                     <button key={t} onClick={()=>{setTab("otros");setFilterSet(t);setOtrosDropdown(false);}}
@@ -1627,6 +1630,49 @@ export default function App() {
                 </div>
               )}
             </div>
+
+            {/* SELLADO TAB */}
+            <div style={{position:"relative"}}>
+              <button
+                onMouseEnter={()=>{
+                  if(sealedBtnRef.current){const r=sealedBtnRef.current.getBoundingClientRect();setSealedPos({top:r.bottom,left:r.left});}
+                  setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(false);setSealedDropdown(true);
+                  cancelClose();
+                }}
+                onMouseLeave={()=>startClose(()=>setSealedDropdown(false))}
+                onClick={(e)=>{e.stopPropagation();setTab("sellado");setFilterSet("Todos");setSealedDropdown(false);}}
+                ref={sealedBtnRef}
+                style={{background:"none",border:"none",color:tab==="sellado"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Sellado <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sealedProducts.length}</span>
+                <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
+              </button>
+              {sealedDropdown && sealedPos.top > 0 && (
+                <div
+                  onMouseEnter={cancelClose}
+                  onMouseLeave={()=>startClose(()=>setSealedDropdown(false))}
+                  style={{position:"fixed",top:sealedPos.top+"px",left:sealedPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:200,zIndex:99999}}>
+                  {[
+                    {label:"Pokémon", filter:"Pokemon"},
+                    {label:"NBA", filter:"NBA"},
+                    {label:"Fútbol", filter:"Futbol"},
+                    {label:"Baseball", filter:"Baseball"},
+                    {label:"Fútbol Americano", filter:"Futbol Americano"},
+                    {label:"Disney", filter:"Disney"},
+                    {label:"Otros", filter:"Otros"},
+                    {label:"Ver todo", filter:"Todos"},
+                  ].map(item=>(
+                    <button key={item.label} onClick={()=>{setTab("sellado");setFilterSet(item.filter);setSealedDropdown(false);}}
+                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#374151",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
+                      onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
+                      onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+
 
           </div>
         </>}
