@@ -268,7 +268,7 @@ function AuthModal({ onLogin, onClose }) {
       <div className="modal">
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{textAlign:"center",marginBottom:24}}>
-          <div style={{fontSize:36,marginBottom:6}}>🃏</div>
+          
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:2}}>COLECCIONES FACU</div>
           <div style={{fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3}}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
@@ -325,7 +325,7 @@ function ReviewModal({ purchase, userId, onClose, onSubmit }) {
       <div className="modal" style={{maxWidth:420}}>
         {done ? (
           <div style={{textAlign:"center",padding:"32px 0"}}>
-            <div style={{fontSize:48,marginBottom:12,animation:"float 1.5s ease-in-out infinite"}}>⭐</div>
+            
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:1}}>¡GRACIAS POR TU RESEÑA!</div>
           </div>
         ) : <>
@@ -388,7 +388,7 @@ function SellerModal({ seller, allCards, onClose, onBuy, userId }) {
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             {sellerCards.map(c=>(
               <div key={c.id} style={{display:"flex",gap:12,alignItems:"center",background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:12,padding:12}}>
-                {c.img_url||c.imgUrl?<img src={c.img_url||c.imgUrl} alt={c.name} style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
+                {c.img_url||c.imgUrl?<img src={c.img_url||c.imgUrl} alt={c.name} style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"#F3F4F6",borderRadius:6,flexShrink:0}}></div>}
                 <div style={{flex:1,fontFamily:"'DM Sans',sans-serif"}}>
                   <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
                   <div style={{color:"#555",fontSize:12}}>{c.set_name||c.set} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span></div>
@@ -477,7 +477,7 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
           <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:24,letterSpacing:1,marginBottom:20}}>RESUMEN DE COMPRA</div>
           <div style={{display:"flex",gap:14,alignItems:"center",background:"rgba(255,255,255,.04)",borderRadius:12,padding:14,marginBottom:16,border:"1px solid rgba(255,255,255,.07)"}}>
-            {(card.img_url||card.imgUrl)?<img src={card.img_url||card.imgUrl} alt={card.name} style={{width:56,height:78,objectFit:"contain",borderRadius:8,flexShrink:0}}/>:<div style={{width:56,height:78,background:"rgba(255,255,255,.05)",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🃏</div>}
+            {(card.img_url||card.imgUrl)?<img src={card.img_url||card.imgUrl} alt={card.name} style={{width:56,height:78,objectFit:"contain",borderRadius:8,flexShrink:0}}/>:<div style={{width:42,height:58,background:"#F3F4F6",borderRadius:6,flexShrink:0}}></div>}
             <div style={{fontFamily:"'DM Sans',sans-serif"}}>
               <div style={{fontWeight:700,fontSize:15}}>{card.name}</div>
               <div style={{color:"#666",fontSize:12,marginTop:2}}>{card.set_name||card.set} · <span style={{color:COND_COLOR[card.condition]}}>{COND_LABEL[card.condition]}</span></div>
@@ -498,7 +498,7 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
             <div style={{display:"flex",justifyContent:"space-between",fontWeight:700}}><span style={{fontSize:15}}>Total</span><span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520"}}>{fmt(total)}</span></div>
           </div>
           <button className="btn btn-mp" onClick={pay}><span style={{fontWeight:900,fontSize:16,background:"#fff",color:"#009EE3",borderRadius:5,padding:"1px 7px"}}>MP</span>Pagar con Mercado Pago</button>
-          <div style={{fontSize:11,color:"#333",textAlign:"center",marginTop:10,fontFamily:"'DM Sans',sans-serif"}}>🔒 Pago seguro · Compra garantizada</div>
+          <div style={{fontSize:11,color:"#333",textAlign:"center",marginTop:10,fontFamily:"'DM Sans',sans-serif"}}>Pago seguro · Compra garantizada</div>
         </>}
         {step===2&&<div style={{textAlign:"center",padding:"44px 20px"}}>
           <div style={{marginBottom:16,display:"inline-block"}}><div className="spinner" style={{width:44,height:44,borderWidth:4}}/></div>
@@ -507,7 +507,7 @@ function CheckoutModal({ card, user, onClose, onSuccess }) {
           <div style={{display:"flex",justifyContent:"center"}}><div className="spinner" style={{width:34,height:34,borderWidth:4}}/></div>
         </div>}
         {step===3&&<div style={{textAlign:"center",padding:"44px 20px"}}>
-          <div style={{fontSize:60,marginBottom:12,animation:"float 1.5s ease-in-out infinite"}}>🎉</div>
+          
           <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"#27AE60",letterSpacing:1,marginBottom:8}}>¡PAGO APROBADO!</div>
           <div style={{color:"#888",fontFamily:"'DM Sans',sans-serif",fontSize:14,lineHeight:1.7}}>Compraste <strong style={{color:"#E8E8F0"}}>{card.name}</strong> exitosamente.<br/>El vendedor te contactará para el envío por {shipping}.</div>
         </div>}
@@ -593,7 +593,7 @@ function PublishForm({ user, onPublish }) {
   if (step===1) return (
     <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
       <div className="card" style={{padding:48}}>
-        <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
+        
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Tu carta ya está visible en el marketplace.</div>
         <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",set:"",setId:"",condition:"NM",price:"",type:"",rarity:"",description:"",imgUrl:"",uploadedImg:"",quantity:"1"});setQuery("");setSelectedCard(null);}}>Publicar otra</button>
@@ -622,7 +622,7 @@ function PublishForm({ user, onPublish }) {
                       onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.08)";e.currentTarget.style.background="rgba(255,255,255,.04)";}}>
                       {s.images?.small
                         ?<img src={s.images.small} alt="" style={{width:60,height:84,objectFit:"contain",borderRadius:6}}/>
-                        :<div style={{width:60,height:84,background:"rgba(255,255,255,.05)",borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>
+                        :<div style={{width:60,height:84,background:"#F3F4F6",borderRadius:6}}></div>
                       }
                       <div style={{fontFamily:"'DM Sans',sans-serif",textAlign:"center"}}>
                         <div style={{fontWeight:700,fontSize:11,color:"#E8E8F0",lineHeight:1.2}}>{s.name}</div>
@@ -640,7 +640,7 @@ function PublishForm({ user, onPublish }) {
         {(selectedCard||form.name)&&(
           <div style={{display:"flex",gap:16,background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.07)",borderRadius:14,padding:16,alignItems:"flex-start"}}>
             <div style={{flexShrink:0,width:100}}>
-              {finalImg?<img src={finalImg} alt="" style={{width:100,borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,.5)"}}/>:<div style={{width:100,height:140,background:"rgba(255,255,255,.04)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30}}>🃏</div>}
+              {finalImg?<img src={finalImg} alt="" style={{width:100,borderRadius:10,boxShadow:"0 4px 20px rgba(0,0,0,.5)"}}/>:<div style={{width:100,height:140,background:"#F3F4F6",borderRadius:10}}></div>}
               <div style={{display:"flex",gap:6,marginTop:10}}>
                 {form.imgUrl&&<button className="btn" onClick={()=>setImgMode("official")} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="official"?"rgba(218,165,32,.15)":"rgba(255,255,255,.04)",color:imgMode==="official"?"#DAA520":"#666",border:`1px solid ${imgMode==="official"?"#DAA520":"rgba(255,255,255,.1)"}`,borderRadius:6}}>Oficial</button>}
                 <button className="btn" onClick={()=>fileRef.current?.click()} style={{flex:1,padding:"5px",fontSize:10,background:imgMode==="upload"?"rgba(218,165,32,.15)":"rgba(255,255,255,.04)",color:imgMode==="upload"?"#DAA520":"#666",border:`1px solid ${imgMode==="upload"?"#DAA520":"rgba(255,255,255,.1)"}`,borderRadius:6}}>📷 Tuya</button>
@@ -670,7 +670,7 @@ function PublishForm({ user, onPublish }) {
             onDragLeave={()=>setDragOver(false)}
             onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
             onClick={()=>fileRef.current?.click()}>
-            <div style={{fontSize:28,marginBottom:8}}>📷</div>
+            Subí una foto
             <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Arrastrá una foto o <span style={{color:"#DAA520",cursor:"pointer"}}>hacé clic para subir</span></div>
             <div style={{fontSize:11,color:"#444",marginTop:4}}>JPG, PNG, WEBP · Máx 5MB</div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
@@ -839,7 +839,7 @@ function PublishSportForm({ user, onPublish }) {
   if (step===1) return (
     <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
       <div className="card" style={{padding:48}}>
-        <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
+        
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡CARTA PUBLICADA!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Ya está visible en el marketplace.</div>
         <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({player_name:"",card_name:"",sport:"Fútbol",league:"",brand:"Topps",year:new Date().getFullYear().toString(),parallel:"Base",condition:"NM",price:"",description:"",quantity:"1",uploadedImg:""});}}>Publicar otra</button>
@@ -865,7 +865,7 @@ function PublishSportForm({ user, onPublish }) {
             onDragLeave={()=>setDragOver(false)}
             onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
             onClick={()=>fileRef.current?.click()}>
-            <div style={{fontSize:28,marginBottom:8}}>🏆</div>
+            
             <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Subí una foto de la carta</div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
           </div>
@@ -914,7 +914,7 @@ function PublishSportForm({ user, onPublish }) {
         )}
         <div><label>Descripción adicional</label><textarea className="input" rows={3} placeholder="Graded, numerada, firmada, estado detallado..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
         <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={publish} disabled={!form.player_name||!form.price||loading}>
-          {loading?<><div className="spinner"/>Publicando...</>:"🏆 Publicar carta deportiva"}
+          {loading?<><div className="spinner"/>Publicando...</>:"Publicar carta deportiva"}
         </button>
       </div>
     </div>
@@ -965,7 +965,7 @@ function PublishOtrosForm({ user, onPublish }) {
   if (step===1) return (
     <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
       <div className="card" style={{padding:48}}>
-        <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
+        
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡PUBLICADO!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Ya está visible en el marketplace.</div>
         <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",categoria:"Disney",condition:"NM",price:"",description:"",quantity:"1",uploadedImg:""});}}>Publicar otro</button>
@@ -990,7 +990,7 @@ function PublishOtrosForm({ user, onPublish }) {
             onDragLeave={()=>setDragOver(false)}
             onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
             onClick={()=>fileRef.current?.click()}>
-            <div style={{fontSize:28,marginBottom:8}}>✨</div>
+            
             <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Subí una foto</div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
           </div>
@@ -1021,7 +1021,7 @@ function PublishOtrosForm({ user, onPublish }) {
         )}
         <div><label>Descripción</label><textarea className="input" rows={3} placeholder="Idioma, estado, edición especial..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
         <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={publish} disabled={!form.name||!form.price||loading}>
-          {loading?<><div className="spinner"/>Publicando...</>:"✨ Publicar"}
+          {loading?<><div className="spinner"/>Publicando...</>:"Publicar"}
         </button>
       </div>
     </div>
@@ -1038,7 +1038,7 @@ function SealedItem({ product, userId, onBuy, onLogin, onSellerClick, reviews })
       <div style={{height:160,background:`linear-gradient(160deg,${typeColor}18,${typeColor}30)`,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
         {product.img_url
           ?<img src={product.img_url} alt={product.name} style={{height:"100%",maxWidth:"100%",objectFit:"contain",filter:"drop-shadow(0 4px 12px rgba(0,0,0,.5))"}} onError={e=>e.target.style.display="none"}/>
-          :<div style={{fontSize:52,opacity:.6}}>📦</div>
+          :<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB",margin:"0 auto"}}></div>
         }
         <div style={{position:"absolute",top:10,left:10,background:typeColor,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,fontFamily:"'DM Sans',sans-serif"}}>{product.product_type}</div>
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:40,background:"linear-gradient(to top,rgba(16,19,31,1),transparent)"}}/>
@@ -1118,7 +1118,7 @@ function PublishSealedForm({ user, onPublish }) {
   if (step===1) return (
     <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
       <div className="card" style={{padding:48}}>
-        <div style={{fontSize:54,marginBottom:12,animation:"float 2s ease-in-out infinite"}}>🎉</div>
+        
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#DAA520",marginBottom:8,letterSpacing:1}}>¡PRODUCTO PUBLICADO!</div>
         <div style={{color:"#888",fontSize:14,marginBottom:24}}>Ya está visible en el marketplace.</div>
         <button className="btn btn-gold" onClick={()=>{setStep(0);setForm({name:"",product_type:"Caja",set_name:"",condition:"Sellado",price:"",description:"",quantity:"1",uploadedImg:""});}}>Publicar otro</button>
@@ -1144,7 +1144,7 @@ function PublishSealedForm({ user, onPublish }) {
             onDragLeave={()=>setDragOver(false)}
             onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
             onClick={()=>fileRef.current?.click()}>
-            <div style={{fontSize:28,marginBottom:8}}>📷</div>
+            Subí una foto
             <div style={{fontFamily:"'DM Sans',sans-serif",color:"#555",fontSize:13}}>Subí una foto del producto</div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
           </div>
@@ -1178,7 +1178,7 @@ function PublishSealedForm({ user, onPublish }) {
         )}
         <div><label>Descripción</label><textarea className="input" rows={3} placeholder="Contenido, idioma, estado detallado..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
         <button className="btn btn-gold" style={{width:"100%",padding:"15px",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",gap:10}} onClick={publish} disabled={!form.name||!form.price||loading}>
-          {loading?<><div className="spinner"/>Publicando...</>:"📦 Publicar producto"}
+          {loading?<><div className="spinner"/>Publicando...</>:"Publicar producto"}
         </button>
       </div>
     </div>
@@ -1419,7 +1419,7 @@ export default function App() {
             <div className="modal" style={{maxWidth:480}}>
               {paymentStatus === 'approved' ? <>
                 <div style={{textAlign:"center",marginBottom:24}}>
-                  <div style={{fontSize:60,marginBottom:12,animation:"float 1.5s ease-in-out infinite"}}>🎉</div>
+                  
                   <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,color:"#27AE60",letterSpacing:1,marginBottom:6}}>¡PAGO APROBADO!</div>
                   <div style={{color:"#888",fontSize:14,fontFamily:"'DM Sans',sans-serif"}}>Tu compra fue confirmada por Mercado Pago</div>
                 </div>
@@ -1428,7 +1428,7 @@ export default function App() {
                     <div style={{display:"flex",gap:14,alignItems:"center",background:"rgba(255,255,255,.04)",borderRadius:12,padding:14,border:"1px solid rgba(255,255,255,.07)"}}>
                       {lastPurchase.cardImg
                         ?<img src={lastPurchase.cardImg} alt="" style={{width:52,height:72,objectFit:"contain",borderRadius:8,flexShrink:0}}/>
-                        :<div style={{width:52,height:72,background:"rgba(255,255,255,.05)",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>🃏</div>
+                        :<div style={{width:42,height:58,background:"#F3F4F6",borderRadius:6,flexShrink:0}}></div>
                       }
                       <div style={{fontFamily:"'DM Sans',sans-serif"}}>
                         <div style={{fontWeight:700,fontSize:15}}>{lastPurchase.cardName}</div>
@@ -1437,7 +1437,7 @@ export default function App() {
                       </div>
                     </div>
                     <div style={{background:"rgba(218,165,32,.06)",border:"1px solid rgba(218,165,32,.15)",borderRadius:12,padding:14,fontFamily:"'DM Sans',sans-serif"}}>
-                      <div style={{fontWeight:700,fontSize:13,color:"#DAA520",marginBottom:10}}>📦 DATOS PARA EL ENVÍO</div>
+                      <div style={{fontWeight:700,fontSize:13,color:"#1a3a6b",marginBottom:10,textTransform:"uppercase",letterSpacing:".5px"}}>Datos para el envío</div>
                       <div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:13}}><span style={{color:"#888"}}>Vendedor</span><span style={{fontWeight:600}}>{lastPurchase.sellerName}</span></div>
                       <div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:13}}><span style={{color:"#888"}}>Provincia</span><span style={{fontWeight:600}}>📍 {lastPurchase.sellerProvince}</span></div>
                       <div style={{display:"flex",justifyContent:"space-between",fontSize:13}}><span style={{color:"#888"}}>Envío elegido</span><span style={{fontWeight:600,color:"#DAA520"}}>{lastPurchase.shipping}</span></div>
@@ -1505,7 +1505,7 @@ export default function App() {
                   style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:12,minWidth:260,zIndex:99999}}>
                   {/* Buscador */}
                   <div style={{marginBottom:10}}>
-                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar jugador o marca</div>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar jugador o marca</div>
                     <div style={{position:"relative"}}>
                       <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
                       <input className="input" style={{paddingLeft:36,fontSize:13}}
@@ -1517,7 +1517,7 @@ export default function App() {
                   </div>
                   {/* Ligas */}
                   <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
-                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🏆 Filtrar por deporte</div>
+                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Filtrar por deporte</div>
                     {[
                       {label:"⚽ Mundiales", filter:"Fútbol"},
                       {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
@@ -1566,7 +1566,7 @@ export default function App() {
                   onMouseLeave={()=>startClose(()=>setPokemonDropdown(false))}
                   style={{position:"fixed",top:pokemonPos.top+"px",left:pokemonPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:12,width:300,zIndex:99999}}>
                   <div style={{marginBottom:10}}>
-                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>🔍 Buscar por Pokémon</div>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar por Pokémon</div>
                     <div style={{position:"relative"}}>
                       <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
                       <input className="input" style={{paddingLeft:36,fontSize:13}}
@@ -1577,7 +1577,7 @@ export default function App() {
                     </div>
                   </div>
                   <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
-                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>📋 Buscar por Set</div>
+                    <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar por Set</div>
                     <div style={{height:200,overflowY:"auto"}}>
                       {SETS.map(s=>(
                         <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
@@ -1617,7 +1617,7 @@ export default function App() {
                       style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===t&&tab==="otros"?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
                       onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
                       onMouseLeave={e=>e.currentTarget.style.background=filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none"}>
-                      {t === "Todos" ? "✨ Ver todo" : t}
+                      {t === "Todos" ? "Ver todo" : t}
                     </button>
                   ))}
                 </div>
@@ -1708,14 +1708,14 @@ export default function App() {
         {tab==="vender"&&<>
           {!user?(
             <div style={{textAlign:"center",padding:"80px 0"}}>
-              <div style={{fontSize:44,marginBottom:14}}>🔒</div>
+              
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:8,letterSpacing:1}}>NECESITÁS INICIAR SESIÓN</div>
               <div style={{color:"#555",marginBottom:20}}>Para publicar cartas primero tenés que registrarte.</div>
               <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
             </div>
           ):!user.subscribed?(
             <div style={{textAlign:"center",padding:"60px 24px",maxWidth:500,margin:"0 auto"}}>
-              <div style={{fontSize:54,marginBottom:16}}>🔑</div>
+              
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:34,color:"#DAA520",marginBottom:8,letterSpacing:1}}>ACTIVÁ TU CUENTA DE VENDEDOR</div>
               <div style={{color:"#888",fontFamily:"'DM Sans',sans-serif",fontSize:15,lineHeight:1.7,marginBottom:28}}>
                 Por <strong style={{color:"#DAA520"}}>{fmt(PRECIO_SUSCRIPCION)}/mes</strong> podés publicar todas las cartas que quieras y recibir consultas por WhatsApp directamente de los compradores.
@@ -1724,7 +1724,7 @@ export default function App() {
                 <div style={{fontWeight:700,color:"#DAA520",marginBottom:12,fontSize:14}}>✅ ¿Qué incluye?</div>
                 {["Publicaciones ilimitadas por mes","Botón de WhatsApp para que te contacten","Aparecer en el marketplace de Colecciones Facu","Soporte para cartas Pokémon, deportivas, sellados y más"].map(item=>(
                   <div key={item} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,fontSize:13,color:"#aaa"}}>
-                    <span style={{color:"#DAA520",flexShrink:0}}>⚡</span>{item}
+                    ·{item}
                   </div>
                 ))}
               </div>
@@ -1757,14 +1757,14 @@ export default function App() {
               .map(c=><SportCardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)
             }
           </div>
-          {sportCards.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{fontSize:44,marginBottom:10}}>🏆</div><div>No hay cartas deportivas publicadas todavía.</div></div>}
+          {sportCards.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div style={{color:"#9CA3AF",fontSize:14}}>No hay cartas deportivas publicadas todavía.</div></div>}
         </>}
 
         {/* VENDER DEPORTIVA */}
         {tab==="vender-sport"&&<>
           {!user?(
             <div style={{textAlign:"center",padding:"80px 0"}}>
-              <div style={{fontSize:44,marginBottom:14}}>🔒</div>
+              
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:8,letterSpacing:1}}>NECESITÁS INICIAR SESIÓN</div>
               <div style={{color:"#555",marginBottom:20}}>Para publicar cartas primero tenés que registrarte.</div>
               <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
@@ -1776,7 +1776,7 @@ export default function App() {
         {tab==="vender-sellado"&&<>
           {!user?(
             <div style={{textAlign:"center",padding:"80px 0"}}>
-              <div style={{fontSize:44,marginBottom:14}}>🔒</div>
+              
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:8,letterSpacing:1}}>NECESITÁS INICIAR SESIÓN</div>
               <div style={{color:"#555",marginBottom:20}}>Para publicar productos primero tenés que registrarte.</div>
               <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
@@ -1853,7 +1853,7 @@ export default function App() {
         {tab==="vender-otros"&&<>
           {!user?(
             <div style={{textAlign:"center",padding:"80px 0"}}>
-              <div style={{fontSize:44,marginBottom:14}}>🔒</div>
+              
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:30,marginBottom:8}}>NECESITÁS INICIAR SESIÓN</div>
               <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
             </div>
@@ -1873,7 +1873,7 @@ export default function App() {
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               {myListings.map(c=>(
                 <div key={c.id} className="card" style={{padding:14,display:"flex",gap:12,alignItems:"center"}}>
-                  {c.img_url?<img src={c.img_url} alt="" style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"rgba(255,255,255,.05)",borderRadius:6,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🃏</div>}
+                  {c.img_url?<img src={c.img_url} alt="" style={{width:42,height:58,objectFit:"contain",borderRadius:6,flexShrink:0}}/>:<div style={{width:42,height:58,background:"#F3F4F6",borderRadius:6,flexShrink:0}}></div>}
                   <div style={{flex:1}}>
                     <div style={{fontWeight:700,fontSize:14}}>{c.name}</div>
                     <div style={{color:"#555",fontSize:12}}>{c.set_name} · <span style={{color:COND_COLOR[c.condition]}}>{COND_LABEL[c.condition]}</span> · {c.rarity}</div>
@@ -1944,7 +1944,7 @@ export default function App() {
                     style={{display:"flex",gap:10,alignItems:"center",width:"100%",background:"none",border:"none",padding:"8px 10px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
                     onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                    {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<span style={{fontSize:18,flexShrink:0}}>🃏</span>}
+                    {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
                     <div style={{fontFamily:"'DM Sans',sans-serif",flex:1,minWidth:0}}>
                       <div style={{fontWeight:700,fontSize:12,color:"#E8E8F0",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.name}</div>
                       <div style={{fontSize:10,color:"#555"}}>{c.set_name} · Pokémon</div>
