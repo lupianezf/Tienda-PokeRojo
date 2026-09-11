@@ -1225,11 +1225,7 @@ export default function App() {
   const [otrosPos, setOtrosPos] = useState({top:0,left:0});
   const [pokemonSearchMode, setPokemonSearchMode] = useState(null);
   const [pokemonNameSearch, setPokemonNameSearch] = useState("");
-  useEffect(() => {
-    const close = () => { setPokemonDropdown(false); setSportDropdown(false); setOtrosDropdown(false); };
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, []);
+
   const [sortBy, setSortBy] = useState("reciente");
   const [cards, setCards] = useState([]);
   const [sportCards, setSportCards] = useState([]);
@@ -1501,10 +1497,11 @@ export default function App() {
                   setOtrosDropdown(false);
                   setSportDropdown(true);
                 }}
+                onMouseLeave={()=>setSportDropdown(false)}
                 onClick={(e)=>{e.stopPropagation();setTab("deportivas");setFilterSet("Todos");setSportDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="deportivas"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                🏆 Deportes <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sportCards.length}</span>
-                <span style={{fontSize:10,color:"#555"}}>▾</span>
+                style={{background:"none",border:"none",color:tab==="deportivas"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Deportes <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sportCards.length}</span>
+                <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {sportDropdown && sportPos.top > 0 && (
                 <div
@@ -1560,10 +1557,11 @@ export default function App() {
                   setOtrosDropdown(false);
                   setPokemonDropdown(true);
                 }}
+                onMouseLeave={()=>setPokemonDropdown(false)}
                 onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                🃏 Pokémon <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{cards.length}</span>
-                <span style={{fontSize:10,color:"#555"}}>▾</span>
+                style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Pokémon <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{cards.length}</span>
+                <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {pokemonDropdown && pokemonPos.top > 0 && (
                 <div
@@ -1597,8 +1595,8 @@ export default function App() {
             </div>
 
             {/* SELLADO TAB */}
-            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(false);}} onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-              📦 Sellado <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{sealedProducts.length}</span>
+            <button onMouseEnter={()=>{setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(false);}} onClick={()=>{setTab("sellado");setFilterSet("Todos");}} style={{background:"none",border:"none",color:tab==="sellado"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+              Sellado <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sealedProducts.length}</span>
             </button>
 
             {/* OTROS TAB */}
@@ -1610,14 +1608,14 @@ export default function App() {
                   setPokemonDropdown(false);setSportDropdown(false);setOtrosDropdown(true);
                 }}
                 onClick={(e)=>{e.stopPropagation();setTab("otros");setFilterSet("Todos");setOtrosDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="otros"?"#1a3a6b":"#6B7280",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                ✨ Otros <span style={{background:"rgba(218,165,32,.12)",color:"#DAA520",padding:"2px 8px",borderRadius:20,fontSize:11}}>{otrosCards.length}</span>
-                <span style={{fontSize:10,color:"#555"}}>▾</span>
+                style={{background:"none",border:"none",color:tab==="otros"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Otros <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{otrosCards.length}</span>
+                <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {otrosDropdown && otrosPos.top > 0 && (
                 <div
-                  onClick={e=>e.stopPropagation()}
-                  style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:220,zIndex:99999,boxShadow:"0 16px 48px rgba(0,0,0,.9)"}}>
+                  onMouseLeave={()=>setOtrosDropdown(false)}
+                  style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:220,zIndex:99999}}>
                   {OTROS_TYPES.map(t=>(
                     <button key={t} onClick={()=>{setTab("otros");setFilterSet(t);setOtrosDropdown(false);}}
                       style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===t&&tab==="otros"?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
