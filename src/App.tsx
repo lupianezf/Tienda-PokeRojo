@@ -77,11 +77,11 @@ const OTROS_COLORS = {
   "Naruto":"#EF6C00","Star Wars":"#1A1A2E","Marvel":"#CC0000","DC Comics":"#1565C0","Otros":"#555"
 };
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#f1f5f9;}::-webkit-scrollbar-thumb{background:#1a3a6b;border-radius:3px;}
 
-body{background:#ffffff;font-family:'Inter',sans-serif;color:#111827;}
+body{background:#ffffff;font-family:'Geist',sans-serif;color:#111827;}
 
 .hex-bg{background:#ffffff;}
 
@@ -105,7 +105,7 @@ body{background:#ffffff;font-family:'Inter',sans-serif;color:#111827;}
 .card-img-wrap::after{display:none;}
 
 /* Buttons */
-.btn{font-family:'Inter',sans-serif;cursor:pointer;border:none;border-radius:8px;font-weight:600;transition:all .15s ease;}
+.btn{font-family:'Geist',sans-serif;cursor:pointer;border:none;border-radius:8px;font-weight:600;transition:all .15s ease;}
 .btn-gold{
   background:#1a3a6b;
   color:#ffffff;
@@ -125,16 +125,16 @@ body{background:#ffffff;font-family:'Inter',sans-serif;color:#111827;}
 .btn-danger:hover{background:#FEE2E2;}
 
 /* Inputs */
-.input{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;width:100%;outline:none;transition:all .15s;}
+.input{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Geist',sans-serif;width:100%;outline:none;transition:all .15s;}
 .input:focus{border-color:#1a3a6b;box-shadow:0 0 0 3px rgba(26,58,107,.1);}
 .input::placeholder{color:#9CA3AF;}
-.select{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;}
+.select{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Geist',sans-serif;outline:none;cursor:pointer;}
 .select:focus{border-color:#1a3a6b;box-shadow:0 0 0 3px rgba(26,58,107,.1);}
 .select option{background:#ffffff;color:#111827;}
-label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:.3px;margin-bottom:6px;font-family:'Inter',sans-serif;}
+label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:.3px;margin-bottom:6px;font-family:'Geist',sans-serif;}
 
 /* Filter chips */
-.filter-chip{background:#ffffff;color:#6B7280;border:1px solid #E5E7EB;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Inter',sans-serif;}
+.filter-chip{background:#ffffff;color:#6B7280;border:1px solid #E5E7EB;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Geist',sans-serif;}
 .filter-chip.active{background:#1a3a6b;color:#ffffff;border-color:#1a3a6b;font-weight:600;}
 .filter-chip:hover{border-color:#1a3a6b;color:#1a3a6b;}
 
@@ -159,7 +159,7 @@ label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:
 
 /* Price tag */
 .price-tag{
-  font-family:'Inter',sans-serif;
+  font-family:'Geist',sans-serif;
   font-size:20px;
   font-weight:700;
   color:#111827;
@@ -174,7 +174,7 @@ label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:
   border-radius:4px;
   font-size:10px;
   font-weight:600;
-  font-family:'Inter',sans-serif;
+  font-family:'Geist',sans-serif;
   letter-spacing:.3px;
 }
 
@@ -734,7 +734,7 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
           <span style={{background:COND_COLOR[card.condition]+"22",color:COND_COLOR[card.condition],padding:"3px 8px",borderRadius:5,fontSize:11,fontWeight:700}}>{COND_LABEL[card.condition]}</span>
           <span style={{fontSize:10,color:"#444"}}>📍{card.province}</span>
         </div>
-        <div style={{fontSize:12,color:"#9CA3AF",marginBottom:10,fontFamily:"'Inter',sans-serif"}}>@{sellerName} · 📍{card.province}</div>
+        <div style={{fontSize:12,color:"#9CA3AF",marginBottom:10,fontFamily:"'Geist',sans-serif"}}>@{sellerName} · 📍{card.province}</div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div>
             <div style={{fontSize:10,color:"#444",letterSpacing:.5}}>ARS</div>
@@ -1361,7 +1361,7 @@ export default function App() {
     .sort((a,b) => sortBy==="asc" ? a.price-b.price : sortBy==="desc" ? b.price-a.price : 0);
 
   return (
-    <div className="hex-bg" style={{minHeight:"100vh",color:"#111827",fontFamily:"'Inter',sans-serif",position:"relative"}}>
+    <div className="hex-bg" style={{minHeight:"100vh",color:"#111827",fontFamily:"'Geist',sans-serif",position:"relative"}}>
       <style>{CSS}</style>
       
 
@@ -1644,7 +1644,7 @@ export default function App() {
               <div style={{color:"#9CA3AF",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
             </div>
             <div style={{display:"flex",gap:10}}>
-              <div style={{display:"flex",gap:24,alignItems:"center",fontFamily:"'Inter',sans-serif"}}>
+              <div style={{display:"flex",gap:24,alignItems:"center",fontFamily:"'Geist',sans-serif"}}>
                 <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>publicaciones</span></div>
                 <div style={{width:1,height:20,background:"#E5E7EB"}}/>
                 <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>vendedores</span></div>
