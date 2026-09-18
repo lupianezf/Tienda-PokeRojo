@@ -1296,6 +1296,16 @@ function PublishSealedForm({ user, onPublish }) {
   );
 }
 
+const SELLADO_ICONS = {
+  "Pokémon": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="3"/></svg>`,
+  "NBA": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><path d="M4.93 4.93c2 3 2 9.14 0 14.14M19.07 4.93c-2 3-2 9.14 0 14.14"/></svg>`,
+  "Fútbol": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  "Baseball": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M5.64 5.64c3.5 2.5 9.22 2.5 12.72 0M5.64 18.36c3.5-2.5 9.22-2.5 12.72 0"/></svg>`,
+  "Futbol Americano": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(-30 12 12)"/><path d="M5 7l14 10M7 5l10 14" strokeWidth="1"/></svg>`,
+  "Disney": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>`,
+  "Otros": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`,
+  "Ver todo": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
+};
 // ── MAIN APP ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [user, setUser] = useState(null);
@@ -1494,7 +1504,7 @@ export default function App() {
         </svg>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#1a3a6b",lineHeight:1}}>COLECCIONES FACU</div>
-            <div style={{fontSize:9,color:"#9CA3AF",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
+            <div style={{fontSize:9,color:"#111827",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -1644,20 +1654,21 @@ export default function App() {
                   <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
                     <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Filtrar por deporte</div>
                     {[
-                      {label:"Mundiales", filter:"Fútbol"},
-                      {label:"Premier League", filter:"Fútbol"},
-                      {label:"La Liga", filter:"Fútbol"},
-                      {label:"Liga Argentina", filter:"Fútbol"},
-                      {label:"NBA", filter:"Básquet"},
-                      {label:"NFL", filter:"Fútbol Americano"},
-                      {label:"MLB", filter:"Béisbol"},
-                      {label:"Ver todo", filter:"Todos"},
-                    {label:"Fórmula 1", filter:"F1"},
+                      {label:"Mundiales", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`, filter:"Fútbol"},
+                      {label:"Premier League", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`, filter:"Fútbol"},
+                      {label:"La Liga", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`, filter:"Fútbol"},
+                      {label:"Liga Argentina", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`, filter:"Fútbol"},
+                      {label:"NBA", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><path d="M4.93 4.93c2 3 2 9.14 0 14.14M19.07 4.93c-2 3-2 9.14 0 14.14"/></svg>`, filter:"Básquet"},
+                      {label:"NFL", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(-30 12 12)"/><path d="M5 7l14 10M7 5l10 14" strokeWidth="1"/></svg>`, filter:"Fútbol Americano"},
+                      {label:"MLB", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M5.64 5.64c3.5 2.5 9.22 2.5 12.72 0M5.64 18.36c3.5-2.5 9.22-2.5 12.72 0"/></svg>`, filter:"Béisbol"},
+                      {label:"Ver todo", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, filter:"Todos"},
+                    {label:"Fórmula 1", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 17h4l2-6h6l2 6h4"/><path d="M8 11V7h8v4"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg>`, filter:"F1"},
                     ].map(item=>(
                       <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
-                        style={{display:"block",width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#1a3a6b":"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                        style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#1a3a6b":"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
                         onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
-                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none"}>
+                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none"}>
+                        {item.icon&&<span style={{opacity:.5,display:"flex",alignItems:"center"}} dangerouslySetInnerHTML={{__html:item.icon}}/>}
                         {item.label}
                       </button>
                     ))}
@@ -1771,18 +1782,19 @@ export default function App() {
                   style={{position:"fixed",top:sealedPos.top+"px",left:sealedPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:200,zIndex:99999}}>
                   {[
                     {label:"Pokémon", filter:"Pokemon"},
-                    {label:"NBA", filter:"NBA"},
+                    {label:"NBA", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><path d="M4.93 4.93c2 3 2 9.14 0 14.14M19.07 4.93c-2 3-2 9.14 0 14.14"/></svg>`, filter:"NBA"},
                     {label:"Fútbol", filter:"Futbol"},
                     {label:"Baseball", filter:"Baseball"},
                     {label:"Fútbol Americano", filter:"Futbol Americano"},
                     {label:"Disney", filter:"Disney"},
                     {label:"Otros", filter:"Otros"},
-                    {label:"Ver todo", filter:"Todos"},
+                    {label:"Ver todo", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, filter:"Todos"},
                   ].map(item=>(
                     <button key={item.label} onClick={()=>{setTab("sellado");setFilterSet(item.filter);setSealedDropdown(false);}}
-                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
+                      style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:"none",border:"none",color:"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
                       onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                       onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                      <span style={{opacity:.4,display:"flex",alignItems:"center"}} dangerouslySetInnerHTML={{__html:SELLADO_ICONS[item.label]||""}}/>
                       {item.label}
                     </button>
                   ))}
