@@ -1296,6 +1296,237 @@ function PublishSealedForm({ user, onPublish }) {
   );
 }
 
+// ── UNIFIED PUBLISH FORM ───────────────────────────────────────────────────────
+function UnifiedPublishForm({ user, onPublish }) {
+  const [categoria, setCategoria] = useState(null); // null | "pokemon" | "sport" | "sellado" | "otros"
+  const [form, setForm] = useState({
+    carta:"", condition:"NM", price:"", description:"",
+    uploadedImg:"", imgUrl:"",
+    // sport/otros
+    sport:"Fútbol", league:"N/A", brand:"Topps", categoria_otros:"Disney",
+    // sellado
+    product_type:"Caja", set_name:"",
+    // numbered
+    numerada:false, tirada:"",
+    // pokemon
+    query:"", setId:"",
+  });
+  const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileRef = useRef(null);
+  const ff = k => e => setForm(p=>({...p,[k]:e.target.value}));
+
+  // Pokemon TCG search
+  useEffect(() => {
+    if (categoria !== "pokemon" || form.query.length < 2) { setSuggestions([]); return; }
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const apiKey = import.meta.env.VITE_TCG_API_KEY || "";
+        const res = await fetch(`${TCG_API}/cards?q=name:${encodeURIComponent(form.query)}*&pageSize=24&select=id,name,set,types,rarity,number,images`, {
+          headers: apiKey ? { "X-Api-Key": apiKey } : {}
+        });
+        const data = await res.json();
+        setSuggestions(data.data||[]);
+      } catch { setSuggestions([]); }
+      setSearching(false);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [form.query, categoria]);
+
+  const pickCard = (c) => {
+    const typeEs = c.types ? TYPE_EN_TO_ES[c.types[0]]||c.types[0] : "Incoloro";
+    setForm(p=>({...p, carta:c.name, setId:c.set?.id||"", imgUrl:c.images?.large||c.images?.small||"", query:c.name}));
+    setSuggestions([]);
+  };
+
+  const handleFile = async (file) => {
+    if (!file||!file.type.startsWith("image/")) return;
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { data, error } = await supabase.storage.from('card-images').upload(fileName, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = supabase.storage.from('card-images').getPublicUrl(fileName);
+        setForm(p=>({...p, uploadedImg: urlData.publicUrl}));
+      }
+    } catch(e) { console.error(e); }
+    setLoading(false);
+  };
+
+  const finalImg = form.uploadedImg || form.imgUrl;
+
+  const publish = async () => {
+    if (!form.carta||!form.price) return;
+    setLoading(true);
+    const base = { seller_id: user.id, seller_name: user.name, name: form.carta, condition: form.condition, price: Number(form.price), img_url: finalImg, province: user.province, seller_whatsapp: user.whatsapp||"", description: form.description, quantity: 1, shipping: ["Andreani","OCA","Correo Argentino"], hot: false, sold: false };
+    let error;
+    if (categoria === "pokemon") {
+      ({ error } = await supabase.from("cards").insert({ ...base, set_name: form.query !== form.carta ? "" : "", type:"Incoloro", rarity:"" }));
+    } else if (categoria === "sport") {
+      ({ error } = await supabase.from("sport_cards").insert({ ...base, player_name: form.carta, card_name: "", sport: form.sport, league: form.league, brand: form.brand, year: "", parallel: form.numerada ? `Numerada /${form.tirada}` : "" }));
+    } else if (categoria === "sellado") {
+      ({ error } = await supabase.from("sealed_products").insert({ ...base, product_type: form.product_type, set_name: form.set_name }));
+    } else if (categoria === "otros") {
+      ({ error } = await supabase.from("otros_cards").insert({ ...base, categoria: form.categoria_otros }));
+    }
+    setLoading(false);
+    if (!error) { onPublish(); setStep(1); }
+  };
+
+  if (step===1) return (
+    <div style={{maxWidth:500,margin:"60px auto",textAlign:"center"}}>
+      <div className="card" style={{padding:48}}>
+        <div style={{fontFamily:"'Geist',sans-serif",fontSize:22,fontWeight:600,marginBottom:8}}>Publicación exitosa</div>
+        <div style={{color:"#9CA3AF",fontSize:14,marginBottom:24}}>Tu carta ya está visible en el marketplace.</div>
+        <button className="btn btn-gold" onClick={()=>{setStep(0);setCategoria(null);setForm({carta:"",condition:"NM",price:"",description:"",uploadedImg:"",imgUrl:"",sport:"Fútbol",league:"N/A",brand:"Topps",categoria_otros:"Disney",product_type:"Caja",set_name:"",numerada:false,tirada:"",query:"",setId:""});}}>Publicar otra</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{maxWidth:560,paddingTop:28}}>
+      <div style={{marginBottom:24}}>
+        <div style={{fontFamily:"'Geist',sans-serif",fontSize:22,fontWeight:600,color:"#111827",marginBottom:4}}>Nueva publicación</div>
+        <div style={{fontSize:13,color:"#9CA3AF"}}>¿Qué querés publicar?</div>
+      </div>
+
+      {/* Category selector */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:28}}>
+        {[{k:"pokemon",l:"Pokémon"},{k:"sport",l:"Deportiva"},{k:"sellado",l:"Sellado"},{k:"otros",l:"Otros"}].map(c=>(
+          <button key={c.k} onClick={()=>setCategoria(c.k)}
+            style={{padding:"10px",border:`1px solid ${categoria===c.k?"#1a3a6b":"#E5E7EB"}`,borderRadius:8,background:categoria===c.k?"#EFF6FF":"#fff",color:categoria===c.k?"#1a3a6b":"#374151",fontFamily:"'Geist',sans-serif",fontSize:13,fontWeight:categoria===c.k?600:400,cursor:"pointer",transition:"all .15s"}}>
+            {c.l}
+          </button>
+        ))}
+      </div>
+
+      {!categoria && <div style={{textAlign:"center",padding:"40px 0",color:"#9CA3AF",fontSize:14}}>Seleccioná una categoría para continuar.</div>}
+
+      {categoria && <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        {/* Image upload */}
+        {finalImg
+          ?<div style={{position:"relative",display:"inline-block"}}>
+            <img src={finalImg} alt="" style={{width:120,borderRadius:10,border:"1px solid #E5E7EB"}}/>
+            <button className="btn btn-danger" style={{position:"absolute",top:6,right:6,padding:"3px 8px",fontSize:11}} onClick={()=>setForm(p=>({...p,uploadedImg:"",imgUrl:""}))}>✕</button>
+          </div>
+          :<div className={`upload-zone${dragOver?" drag":""}`}
+            onDragOver={e=>{e.preventDefault();setDragOver(true);}}
+            onDragLeave={()=>setDragOver(false)}
+            onDrop={e=>{e.preventDefault();setDragOver(false);e.dataTransfer.files[0]&&handleFile(e.dataTransfer.files[0]);}}
+            onClick={()=>fileRef.current?.click()}>
+            <div style={{fontFamily:"'Geist',sans-serif",color:"#9CA3AF",fontSize:13}}>Subí una foto</div>
+            <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files&&handleFile(e.target.files[0])}/>
+          </div>
+        }
+
+        {/* Pokemon search */}
+        {categoria==="pokemon" && (
+          <div style={{position:"relative"}}>
+            <label>Buscar en base de datos Pokémon TCG</label>
+            <input className="input" placeholder="Charizard, Pikachu VMAX..." value={form.query}
+              onChange={e=>setForm(p=>({...p,query:e.target.value,carta:e.target.value}))}
+              onBlur={()=>setTimeout(()=>setSuggestions([]),150)}/>
+            {searching&&<div style={{position:"absolute",right:12,top:36,fontSize:12,color:"#9CA3AF"}}>...</div>}
+            {suggestions.length>0&&(
+              <div style={{position:"absolute",top:"100%",left:0,right:0,background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,zIndex:50,boxShadow:"0 4px 16px rgba(0,0,0,.1)",maxHeight:280,overflowY:"auto",padding:8}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(80px,1fr))",gap:6}}>
+                  {suggestions.map(s=>(
+                    <div key={s.id} onMouseDown={e=>{e.preventDefault();pickCard(s);}} style={{cursor:"pointer",border:"1px solid #E5E7EB",borderRadius:8,padding:6,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}
+                      onMouseEnter={e=>e.currentTarget.style.borderColor="#1a3a6b"}
+                      onMouseLeave={e=>e.currentTarget.style.borderColor="#E5E7EB"}>
+                      {s.images?.small?<img src={s.images.small} alt="" style={{width:54,height:75,objectFit:"contain",borderRadius:4}}/>:<div style={{width:54,height:75,background:"#F9FAFB",borderRadius:4}}/>}
+                      <div style={{fontFamily:"'Geist',sans-serif",textAlign:"center"}}>
+                        <div style={{fontWeight:600,fontSize:10,color:"#111827",lineHeight:1.2}}>{s.name}</div>
+                        <div style={{color:"#9CA3AF",fontSize:9,marginTop:1}}>{s.set?.name}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Unified carta field for sport/sellado/otros */}
+        {categoria!=="pokemon"&&(
+          <div><label>Carta *</label>
+            <input className="input" placeholder={categoria==="sport"?"Ej: Diego Maradona Panini Prizm 2022 o Ginobili Upperdeck auto":categoria==="sellado"?"Ej: Caja Scarlet & Violet 151":"Ej: Mickey Mouse Disney Lorcana Foil"}
+              value={form.carta} onChange={ff("carta")}/></div>
+        )}
+
+        {/* Sport specific fields */}
+        {categoria==="sport"&&<>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+            <div><label>Deporte</label>
+              <select className="select" style={{width:"100%"}} value={form.sport} onChange={ff("sport")}>
+                {SPORTS.filter(s=>s!=="Todos").map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div><label>Liga</label>
+              <select className="select" style={{width:"100%"}} value={form.league} onChange={ff("league")}>
+                <option>N/A</option>
+                {(SPORT_LEAGUES[form.sport]||[]).filter(l=>l!=="Todas").map(l=><option key={l}>{l}</option>)}
+              </select>
+            </div>
+          </div>
+          <div><label>Marca</label>
+            <select className="select" style={{width:"100%"}} value={form.brand} onChange={ff("brand")}>
+              {SPORT_BRANDS.filter(b=>b!=="Todas").map(b=><option key={b}>{b}</option>)}
+            </select>
+          </div>
+          {/* Numerada check */}
+          <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",border:"1px solid #E5E7EB",borderRadius:8,cursor:"pointer"}} onClick={()=>setForm(p=>({...p,numerada:!p.numerada}))}>
+            <div style={{width:18,height:18,border:`1px solid ${form.numerada?"#1a3a6b":"#D1D5DB"}`,borderRadius:4,background:form.numerada?"#1a3a6b":"#fff",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              {form.numerada&&<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>}
+            </div>
+            <span style={{fontFamily:"'Geist',sans-serif",fontSize:13,color:"#374151"}}>Carta numerada</span>
+          </div>
+          {form.numerada&&<div><label>Tirada (opcional)</label><input className="input" placeholder="Ej: 99, 249, 1000..." value={form.tirada} onChange={ff("tirada")}/></div>}
+        </>}
+
+        {/* Sellado specific */}
+        {categoria==="sellado"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+          <div><label>Tipo</label>
+            <select className="select" style={{width:"100%"}} value={form.product_type} onChange={ff("product_type")}>
+              {PRODUCT_TYPES.filter(t=>t!=="Todos").map(t=><option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div><label>Set / Expansión</label><input className="input" placeholder="Ej: 151" value={form.set_name} onChange={ff("set_name")}/></div>
+        </div>}
+
+        {/* Otros specific */}
+        {categoria==="otros"&&<div><label>Categoría</label>
+          <select className="select" style={{width:"100%"}} value={form.categoria_otros} onChange={ff("categoria_otros")}>
+            {OTROS_TYPES.filter(t=>t!=="Todos").map(t=><option key={t}>{t}</option>)}
+          </select>
+        </div>}
+
+        {/* Condition */}
+        <div><label>Condición</label>
+          <select className="select" style={{width:"100%"}} value={form.condition} onChange={ff("condition")}>
+            {CONDITIONS.map(c=><option key={c} value={c}>{COND_LABEL[c]} ({c})</option>)}
+          </select>
+        </div>
+
+        {/* Price */}
+        <div><label>Precio (ARS) *</label><input className="input" type="number" placeholder="Ej: 15000" value={form.price} onChange={ff("price")}/></div>
+
+        {/* Description */}
+        <div><label>Descripción (opcional)</label><textarea className="input" rows={3} placeholder="Detalles adicionales, estado, idioma..." value={form.description} onChange={ff("description")} style={{resize:"vertical"}}/></div>
+
+        <button className="btn btn-gold" style={{width:"100%",padding:"13px",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",gap:8}} onClick={publish} disabled={!form.carta||!form.price||loading}>
+          {loading?<><div className="spinner"/>Publicando...</>:"Publicar"}
+        </button>
+      </div>}
+    </div>
+  );
+}
+
 const SELLADO_ICONS = {
   "Pokémon": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="3"/></svg>`,
   "NBA": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><path d="M4.93 4.93c2 3 2 9.14 0 14.14M19.07 4.93c-2 3-2 9.14 0 14.14"/></svg>`,
@@ -1510,10 +1741,7 @@ export default function App() {
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {user?<>
             <button className="btn btn-ghost" style={{padding:"8px 12px",fontSize:18}} onClick={e=>{e.stopPropagation();setGlobalSearchOpen(o=>!o);}} title="Buscar">🔍</button>
-            <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender")}>+ Pokémon</button>
-            <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sport")}>+ Deportiva</button>
-            <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-sellado")}>+ Sellado</button>
-            <button className="btn btn-outline" style={{padding:"8px 14px",fontSize:12}} onClick={()=>setTab("vender-otros")}>+ Otros</button>
+            <button className="btn btn-outline" style={{padding:"8px 16px",fontSize:13}} onClick={()=>setTab("vender")}>+ Publicar</button>
             <div style={{position:"relative"}}>
               <button onClick={()=>setMenuOpen(o=>!o)} className="btn btn-ghost" style={{padding:"7px 14px",fontSize:13,display:"flex",alignItems:"center",gap:8}}>
                 <div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,#DAA520,#B8860B)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",flexShrink:0}}>{user.name[0]}</div>
@@ -1887,7 +2115,7 @@ export default function App() {
                 Una vez que pagues, avisanos por WhatsApp o email y activamos tu cuenta en minutos.
               </div>
             </div>
-          ):<PublishForm user={user} onPublish={onPublish}/>}
+          ):<UnifiedPublishForm user={user} onPublish={()=>{loadCards();loadSportCards();loadSealedProducts();loadOtrosCards();}}/>}
         </>}
 
         {/* DEPORTIVAS MARKETPLACE */}
@@ -2070,15 +2298,17 @@ export default function App() {
         ⬤ Colecciones Facu · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
       </div>
 
-      {/* GLOBAL SEARCH — mini bar near button */}
+      {/* GLOBAL SEARCH — below navbar, full width */}
       {globalSearchOpen && (
-        <div style={{position:"fixed",top:10,right:360,zIndex:300,display:"flex",alignItems:"center",gap:8,animation:"slidein .2s ease"}} onClick={e=>e.stopPropagation()}>
-          <div style={{position:"relative",width:340}}>
-            <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
+        <div style={{position:"fixed",top:62,left:0,right:0,zIndex:300,padding:"8px 24px",background:"#fff",borderBottom:"1px solid #E5E7EB",boxShadow:"0 4px 12px rgba(0,0,0,.06)",animation:"fadein .15s ease"}} onClick={e=>e.stopPropagation()}>
+          <div style={{maxWidth:600,margin:"0 auto",position:"relative"}}>
+            <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#9CA3AF",pointerEvents:"none"}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </span>
             <input
               autoFocus
               className="input"
-              style={{paddingLeft:36,fontSize:14,borderRadius:24,border:"1px solid rgba(218,165,32,.4)",background:"#ffffff",boxShadow:"0 8px 24px rgba(0,0,0,.1)",height:40}}
+              style={{paddingLeft:38,fontSize:14,borderRadius:8,border:"1px solid #E5E7EB",background:"#F9FAFB",height:40}}
               placeholder="Buscar carta, jugador, set..."
               value={globalSearch}
               onChange={e=>setGlobalSearch(e.target.value)}
@@ -2088,18 +2318,18 @@ export default function App() {
               }}
             />
             {globalSearch && (
-              <div style={{position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#13161F",border:"1px solid rgba(218,165,32,.2)",borderRadius:12,padding:6,zIndex:9999,boxShadow:"0 8px 32px rgba(0,0,0,.8)",maxHeight:320,overflowY:"auto"}}>
+              <div style={{position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,padding:6,zIndex:9999,boxShadow:"0 8px 24px rgba(0,0,0,.1)",maxHeight:300,overflowY:"auto"}}>
                 {cards.filter(c=>[c.name,c.set_name,c.seller_name].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,3).map(c=>(
                   <button key={c.id} onClick={()=>{setSearch(globalSearch);setTab("marketplace");setGlobalSearchOpen(false);}}
                     style={{display:"flex",gap:10,alignItems:"center",width:"100%",background:"none",border:"none",padding:"8px 10px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
                     onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
                     {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
-                    <div style={{fontFamily:"'DM Sans',sans-serif",flex:1,minWidth:0}}>
-                      <div style={{fontWeight:700,fontSize:12,color:"#E8E8F0",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.name}</div>
-                      <div style={{fontSize:10,color:"#555"}}>{c.set_name} · Pokémon</div>
+                    <div style={{fontFamily:"'Geist',sans-serif",flex:1,minWidth:0}}>
+                      <div style={{fontWeight:500,fontSize:12,color:"#111827",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.name}</div>
+                      <div style={{fontSize:10,color:"#9CA3AF"}}>{c.set_name} · Pokémon</div>
                     </div>
-                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:16,color:"#DAA520",flexShrink:0}}>{fmt(c.price)}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#111827",flexShrink:0}}>{fmt(c.price)}</div>
                   </button>
                 ))}
                 {sportCards.filter(c=>[c.player_name,c.card_name,c.brand].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,3).map(c=>(
@@ -2107,21 +2337,20 @@ export default function App() {
                     style={{display:"flex",gap:10,alignItems:"center",width:"100%",background:"none",border:"none",padding:"8px 10px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
                     onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                    {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<span style={{fontSize:18,flexShrink:0}}>🏆</span>}
-                    <div style={{fontFamily:"'DM Sans',sans-serif",flex:1,minWidth:0}}>
-                      <div style={{fontWeight:700,fontSize:12,color:"#E8E8F0",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.player_name}</div>
-                      <div style={{fontSize:10,color:"#555"}}>{c.brand} · Deportes</div>
+                    {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
+                    <div style={{fontFamily:"'Geist',sans-serif",flex:1,minWidth:0}}>
+                      <div style={{fontWeight:500,fontSize:12,color:"#111827",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.player_name}</div>
+                      <div style={{fontSize:10,color:"#9CA3AF"}}>{c.brand} · Deportes</div>
                     </div>
-                    <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:16,color:"#DAA520",flexShrink:0}}>{fmt(c.price)}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#111827",flexShrink:0}}>{fmt(c.price)}</div>
                   </button>
                 ))}
                 {cards.filter(c=>c.name.toLowerCase().includes(globalSearch.toLowerCase())).length===0 && sportCards.filter(c=>c.player_name.toLowerCase().includes(globalSearch.toLowerCase())).length===0 && (
-                  <div style={{textAlign:"center",padding:"16px",color:"#444",fontFamily:"'DM Sans',sans-serif",fontSize:13}}>Sin resultados</div>
+                  <div style={{textAlign:"center",padding:"16px",color:"#9CA3AF",fontFamily:"'Geist',sans-serif",fontSize:13}}>Sin resultados</div>
                 )}
               </div>
             )}
           </div>
-          <button className="btn btn-ghost" style={{padding:"6px 10px",fontSize:13,borderRadius:20,height:40}} onClick={()=>{setGlobalSearchOpen(false);setGlobalSearch("");}}>✕</button>
         </div>
       )}
 
