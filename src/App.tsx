@@ -81,24 +81,24 @@ const CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#f1f5f9;}::-webkit-scrollbar-thumb{background:#1a3a6b;border-radius:3px;}
 
-body{background:#ffffff;font-family:'Geist',sans-serif;color:#111827;}
+body{background:#FAFAFA;font-family:'Geist',sans-serif;color:#111827;}
 
-.hex-bg{background:#ffffff;}
+.hex-bg{background:#FAFAFA;}
 
 /* Cards */
 .card{
   background:#ffffff;
-  border:1px solid #E5E7EB;
-  border-radius:12px;
+  border:1px solid #D1D5DB;
+  border-radius:6px;
   transition:all .2s ease;
   position:relative;
   overflow:hidden;
 }
 .card::before{display:none;}
 .card:hover{
-  border-color:#1a3a6b;
-  box-shadow:0 4px 16px rgba(26,58,107,.1);
-  transform:translateY(-2px);
+  border-color:#0A0A0A;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  transform:translateY(-1px);
 }
 
 .card-img-wrap{position:relative;overflow:hidden;}
@@ -107,43 +107,44 @@ body{background:#ffffff;font-family:'Geist',sans-serif;color:#111827;}
 /* Buttons */
 .btn{font-family:'Geist',sans-serif;cursor:pointer;border:none;border-radius:8px;font-weight:600;transition:all .15s ease;}
 .btn-gold{
-  background:#1a3a6b;
+  background:#0A0A0A;
   color:#ffffff;
   padding:10px 20px;
   font-size:14px;
+  border-radius:5px;
 }
 .btn-gold::after{display:none;}
-.btn-gold:hover{background:#2563EB;box-shadow:0 4px 12px rgba(26,58,107,.3);}
-.btn-gold:disabled{opacity:.4;cursor:not-allowed;}
-.btn-ghost{background:transparent;color:#6B7280;border:1px solid #E5E7EB;padding:10px 20px;font-size:14px;}
-.btn-ghost:hover{border-color:#1a3a6b;color:#1a3a6b;}
-.btn-outline{background:transparent;color:#1a3a6b;border:1px solid #1a3a6b;padding:10px 20px;font-size:14px;}
-.btn-outline:hover{background:#EFF6FF;}
+.btn-gold:hover{background:#1a3a6b;}
+.btn-gold:disabled{opacity:.35;cursor:not-allowed;}
+.btn-ghost{background:transparent;color:#374151;border:1px solid #D1D5DB;padding:10px 20px;font-size:14px;border-radius:5px;}
+.btn-ghost:hover{border-color:#0A0A0A;color:#0A0A0A;}
+.btn-outline{background:transparent;color:#0A0A0A;border:1px solid #0A0A0A;padding:10px 20px;font-size:14px;border-radius:5px;}
+.btn-outline:hover{background:#0A0A0A;color:#ffffff;}
 .btn-mp{background:linear-gradient(135deg,#009EE3,#0066B2);color:#fff;padding:16px;font-size:15px;width:100%;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:10px;}
 .btn-mp:hover{box-shadow:0 4px 16px rgba(0,158,227,.3);transform:scale(1.01);}
 .btn-danger{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;padding:8px 16px;font-size:13px;}
 .btn-danger:hover{background:#FEE2E2;}
 
 /* Inputs */
-.input{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Geist',sans-serif;width:100%;outline:none;transition:all .15s;}
-.input:focus{border-color:#1a3a6b;box-shadow:0 0 0 3px rgba(26,58,107,.1);}
+.input{background:#ffffff;border:1px solid #D1D5DB;color:#0A0A0A;padding:11px 14px;border-radius:5px;font-size:14px;font-family:'Geist',sans-serif;width:100%;outline:none;transition:all .15s;}
+.input:focus{border-color:#0A0A0A;box-shadow:0 0 0 2px rgba(10,10,10,.08);}
 .input::placeholder{color:#9CA3AF;}
-.select{background:#ffffff;border:1px solid #D1D5DB;color:#111827;padding:11px 14px;border-radius:8px;font-size:14px;font-family:'Geist',sans-serif;outline:none;cursor:pointer;}
-.select:focus{border-color:#1a3a6b;box-shadow:0 0 0 3px rgba(26,58,107,.1);}
+.select{background:#ffffff;border:1px solid #D1D5DB;color:#0A0A0A;padding:11px 14px;border-radius:5px;font-size:14px;font-family:'Geist',sans-serif;outline:none;cursor:pointer;}
+.select:focus{border-color:#0A0A0A;box-shadow:0 0 0 2px rgba(10,10,10,.08);}
 .select option{background:#ffffff;color:#111827;}
 label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:.3px;margin-bottom:6px;font-family:'Geist',sans-serif;}
 
 /* Filter chips */
-.filter-chip{background:#ffffff;color:#6B7280;border:1px solid #E5E7EB;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Geist',sans-serif;}
-.filter-chip.active{background:#1a3a6b;color:#ffffff;border-color:#1a3a6b;font-weight:600;}
-.filter-chip:hover{border-color:#1a3a6b;color:#1a3a6b;}
+.filter-chip{background:#ffffff;color:#374151;border:1px solid #D1D5DB;padding:5px 12px;border-radius:3px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Geist',sans-serif;}
+.filter-chip.active{background:#0A0A0A;color:#ffffff;border-color:#0A0A0A;font-weight:600;}
+.filter-chip:hover{border-color:#0A0A0A;color:#0A0A0A;}
 
 /* Modals */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .15s;}
 .modal{
   background:#ffffff;
-  border:1px solid #E5E7EB;
-  border-radius:16px;
+  border:1px solid #D1D5DB;
+  border-radius:6px;
   padding:28px;
   width:100%;
   max-width:520px;
@@ -192,7 +193,7 @@ label{display:block;font-size:12px;font-weight:600;color:#374151;letter-spacing:
 .autocomplete-item:hover{background:#F9FAFB;}
 
 .upload-zone{border:2px dashed #D1D5DB;border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .15s;}
-.upload-zone:hover,.upload-zone.drag{border-color:#1a3a6b;background:#EFF6FF;}
+.upload-zone:hover,.upload-zone.drag{border-color:#0A0A0A;background:#F9FAFB;}
 
 .stat-card{
   background:#F9FAFB;
@@ -724,16 +725,16 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
         {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
       </div>
       <div style={{padding:"10px 12px 12px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'Geist',sans-serif"}}>
-        <div style={{fontWeight:600,fontSize:13,color:"#111827",lineHeight:1.3,marginBottom:4}}>{card.name}</div>
+        <div style={{fontWeight:600,fontSize:13,color:"#0A0A0A",lineHeight:1.3,marginBottom:4}}>{card.name}</div>
         <div style={{fontSize:11,color:"#9CA3AF",marginBottom:6}}>{card.set_name||card.set}</div>
         <div style={{marginBottom:10}}>
-          <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 6px",borderRadius:4,fontSize:10,fontWeight:500}}>{COND_LABEL[card.condition]||card.condition}</span>
+          <span style={{background:"#F3F4F6",color:"#4B5563",padding:"2px 6px",borderRadius:4,fontSize:10,fontWeight:500}}>{COND_LABEL[card.condition]||card.condition}</span>
         </div>
         <button onClick={()=>onSellerClick(card)} style={{background:"none",border:"none",padding:"0 0 10px",cursor:"pointer",textAlign:"left",fontSize:11,color:"#9CA3AF",fontFamily:"'Geist',sans-serif"}}>
           @{sellerName}
         </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid #F3F4F6",paddingTop:10,marginTop:"auto"}}>
-          <div style={{fontWeight:700,fontSize:15,color:"#111827"}}>{fmt(card.price)}</div>
+          <div style={{fontWeight:700,fontSize:15,color:"#0A0A0A"}}>{fmt(card.price)}</div>
           <a href={`https://wa.me/54${(card.seller_whatsapp||"").replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
             style={{display:"flex",alignItems:"center",gap:4,background:"#25D366",color:"#fff",padding:"5px 9px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none",marginLeft:12}}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.486a.75.75 0 00.912.972l5.86-1.539A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22.5a10.45 10.45 0 01-5.348-1.465l-.383-.228-3.977 1.044 1.062-3.878-.25-.397A10.45 10.45 0 011.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5z"/></svg>
@@ -1066,7 +1067,7 @@ function SellerPage({ seller, allCards, allSportCards, allSealed, allOtros, onBa
   return (
     <div style={{paddingTop:28,maxWidth:1100,margin:"0 auto"}}>
       {/* Back button */}
-      <button onClick={onBack} style={{background:"none",border:"none",color:"#6B7280",fontSize:13,cursor:"pointer",fontFamily:"'Geist',sans-serif",display:"flex",alignItems:"center",gap:6,marginBottom:24,padding:0}}>
+      <button onClick={onBack} style={{background:"none",border:"none",color:"#4B5563",fontSize:13,cursor:"pointer",fontFamily:"'Geist',sans-serif",display:"flex",alignItems:"center",gap:6,marginBottom:24,padding:0}}>
         ← Volver al marketplace
       </button>
 
@@ -1077,11 +1078,11 @@ function SellerPage({ seller, allCards, allSportCards, allSealed, allOtros, onBa
           {(profile?.name||seller.name||"?")[0].toUpperCase()}
         </div>
         <div style={{flex:1}}>
-          <div style={{fontFamily:"'Geist',sans-serif",fontWeight:700,fontSize:22,color:"#111827",marginBottom:4}}>{profile?.name||seller.name}</div>
+          <div style={{fontFamily:"'Geist',sans-serif",fontWeight:700,fontSize:22,color:"#0A0A0A",marginBottom:4}}>{profile?.name||seller.name}</div>
           <div style={{fontSize:13,color:"#9CA3AF",marginBottom:8}}>📍 {profile?.province||seller.province}</div>
-          {profile?.bio && <div style={{fontSize:13,color:"#6B7280",marginBottom:12,maxWidth:500,lineHeight:1.6}}>{profile.bio}</div>}
+          {profile?.bio && <div style={{fontSize:13,color:"#4B5563",marginBottom:12,maxWidth:500,lineHeight:1.6}}>{profile.bio}</div>}
           <div style={{display:"flex",gap:12,alignItems:"center"}}>
-            <span style={{fontSize:13,color:"#6B7280",fontFamily:"'Geist',sans-serif"}}><strong style={{color:"#111827"}}>{allItems.length}</strong> publicaciones activas</span>
+            <span style={{fontSize:13,color:"#4B5563",fontFamily:"'Geist',sans-serif"}}><strong style={{color:"#0A0A0A"}}>{allItems.length}</strong> publicaciones activas</span>
             {(profile?.whatsapp||seller.whatsapp) && (
               <a href={`https://wa.me/54${(profile?.whatsapp||seller.whatsapp).replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
                 style={{display:"inline-flex",alignItems:"center",gap:6,background:"#25D366",color:"#fff",padding:"7px 16px",borderRadius:8,fontSize:13,fontWeight:600,textDecoration:"none",fontFamily:"'Geist',sans-serif"}}>
@@ -1097,7 +1098,7 @@ function SellerPage({ seller, allCards, allSportCards, allSealed, allOtros, onBa
       <div style={{display:"flex",gap:0,borderBottom:"1px solid #E5E7EB",marginBottom:24}}>
         {tabs.map(t=>(
           <button key={t.key} onClick={()=>setActiveTab(t.key)}
-            style={{background:"none",border:"none",color:activeTab===t.key?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:activeTab===t.key?600:400,fontSize:14,cursor:"pointer",padding:"12px 18px",borderBottom:activeTab===t.key?"2px solid #1a3a6b":"2px solid transparent",transition:"all .15s",whiteSpace:"nowrap"}}>
+            style={{background:"none",border:"none",color:activeTab===t.key?"#0A0A0A":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:activeTab===t.key?600:400,fontSize:14,cursor:"pointer",padding:"12px 18px",borderBottom:activeTab===t.key?"2px solid #1a3a6b":"2px solid transparent",transition:"all .15s",whiteSpace:"nowrap"}}>
             {t.label}
           </button>
         ))}
@@ -1120,10 +1121,10 @@ function SellerPage({ seller, allCards, allSportCards, allSealed, allOtros, onBa
                   {imgUrl?<img src={imgUrl} alt={name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
                 </div>
                 <div style={{padding:"10px 12px 12px",fontFamily:"'Geist',sans-serif"}}>
-                  <div style={{fontWeight:600,fontSize:13,color:"#111827",marginBottom:2,lineHeight:1.3}}>{name}</div>
+                  <div style={{fontWeight:600,fontSize:13,color:"#0A0A0A",marginBottom:2,lineHeight:1.3}}>{name}</div>
                   <div style={{fontSize:11,color:"#9CA3AF",marginBottom:8}}>{sub}</div>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                    <div style={{fontWeight:700,fontSize:15,color:"#111827"}}>{fmt(price)}</div>
+                    <div style={{fontWeight:700,fontSize:15,color:"#0A0A0A"}}>{fmt(price)}</div>
                     {userId!==c.seller_id && (c.seller_whatsapp||seller.whatsapp) && (
                       <a href={`https://wa.me/54${((c.seller_whatsapp||seller.whatsapp)||"").replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
                         style={{background:"#25D366",color:"#fff",padding:"5px 10px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none"}}>WP</a>
@@ -1296,6 +1297,52 @@ function PublishSealedForm({ user, onPublish }) {
   );
 }
 
+// ── PROMO CODE INPUT ───────────────────────────────────────────────────────────
+function PromoCodeInput({ userId, onActivated }) {
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState(null); // null | "loading" | "ok" | "error"
+  const [msg, setMsg] = useState("");
+
+  const apply = async () => {
+    if (!code.trim()) return;
+    setStatus("loading");
+    const { data, error } = await supabase
+      .from("promo_codes")
+      .select("*")
+      .eq("code", code.trim().toUpperCase())
+      .is("used_by", null)
+      .single();
+    if (error || !data) {
+      setStatus("error");
+      setMsg("Código inválido o ya usado.");
+      return;
+    }
+    await supabase.from("promo_codes").update({ used_by: userId, used_at: new Date().toISOString() }).eq("id", data.id);
+    await supabase.from("profiles").update({ subscribed: true }).eq("id", userId);
+    setStatus("ok");
+    setMsg("¡Código aplicado! Ya podés publicar.");
+    setTimeout(onActivated, 1500);
+  };
+
+  return (
+    <div style={{marginBottom:4,fontFamily:"'Geist',sans-serif"}}>
+      <div style={{fontSize:13,color:"#374151",marginBottom:8,fontWeight:500}}>¿Tenés un código de acceso?</div>
+      <div style={{display:"flex",gap:8}}>
+        <input className="input" placeholder="Ingresá tu código" value={code}
+          onChange={e=>{setCode(e.target.value);setStatus(null);}}
+          style={{textTransform:"uppercase",letterSpacing:1,flex:1}}
+          disabled={status==="loading"||status==="ok"}/>
+        <button className="btn btn-gold" style={{padding:"0 18px",fontSize:13,whiteSpace:"nowrap"}}
+          onClick={apply} disabled={!code||status==="loading"||status==="ok"}>
+          {status==="loading"?"...":"Aplicar"}
+        </button>
+      </div>
+      {status==="ok"&&<div style={{fontSize:12,color:"#16a34a",marginTop:6}}>✓ {msg}</div>}
+      {status==="error"&&<div style={{fontSize:12,color:"#dc2626",marginTop:6}}>{msg}</div>}
+    </div>
+  );
+}
+
 // ── UNIFIED PUBLISH FORM ───────────────────────────────────────────────────────
 function UnifiedPublishForm({ user, onPublish }) {
   const [categoria, setCategoria] = useState(null); // null | "pokemon" | "sport" | "sellado" | "otros"
@@ -1391,7 +1438,7 @@ function UnifiedPublishForm({ user, onPublish }) {
   return (
     <div style={{maxWidth:560,paddingTop:28}}>
       <div style={{marginBottom:24}}>
-        <div style={{fontFamily:"'Geist',sans-serif",fontSize:22,fontWeight:600,color:"#111827",marginBottom:4}}>Nueva publicación</div>
+        <div style={{fontFamily:"'Geist',sans-serif",fontSize:22,fontWeight:600,color:"#0A0A0A",marginBottom:4}}>Nueva publicación</div>
         <div style={{fontSize:13,color:"#9CA3AF"}}>¿Qué querés publicar?</div>
       </div>
 
@@ -1399,7 +1446,7 @@ function UnifiedPublishForm({ user, onPublish }) {
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:28}}>
         {[{k:"pokemon",l:"Pokémon"},{k:"sport",l:"Deportiva"},{k:"sellado",l:"Sellado"},{k:"otros",l:"Otros"}].map(c=>(
           <button key={c.k} onClick={()=>setCategoria(c.k)}
-            style={{padding:"10px",border:`1px solid ${categoria===c.k?"#1a3a6b":"#E5E7EB"}`,borderRadius:8,background:categoria===c.k?"#EFF6FF":"#fff",color:categoria===c.k?"#1a3a6b":"#374151",fontFamily:"'Geist',sans-serif",fontSize:13,fontWeight:categoria===c.k?600:400,cursor:"pointer",transition:"all .15s"}}>
+            style={{padding:"10px",border:`1px solid ${categoria===c.k?"#0A0A0A":"#E5E7EB"}`,borderRadius:8,background:categoria===c.k?"#F0F4FF":"#fff",color:categoria===c.k?"#0A0A0A":"#374151",fontFamily:"'Geist',sans-serif",fontSize:13,fontWeight:categoria===c.k?600:400,cursor:"pointer",transition:"all .15s"}}>
             {c.l}
           </button>
         ))}
@@ -1441,7 +1488,7 @@ function UnifiedPublishForm({ user, onPublish }) {
                       onMouseLeave={e=>e.currentTarget.style.borderColor="#E5E7EB"}>
                       {s.images?.small?<img src={s.images.small} alt="" style={{width:54,height:75,objectFit:"contain",borderRadius:4}}/>:<div style={{width:54,height:75,background:"#F9FAFB",borderRadius:4}}/>}
                       <div style={{fontFamily:"'Geist',sans-serif",textAlign:"center"}}>
-                        <div style={{fontWeight:600,fontSize:10,color:"#111827",lineHeight:1.2}}>{s.name}</div>
+                        <div style={{fontWeight:600,fontSize:10,color:"#0A0A0A",lineHeight:1.2}}>{s.name}</div>
                         <div style={{color:"#9CA3AF",fontSize:9,marginTop:1}}>{s.set?.name}</div>
                       </div>
                     </div>
@@ -1481,7 +1528,7 @@ function UnifiedPublishForm({ user, onPublish }) {
           </div>
           {/* Numerada check */}
           <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",border:"1px solid #E5E7EB",borderRadius:8,cursor:"pointer"}} onClick={()=>setForm(p=>({...p,numerada:!p.numerada}))}>
-            <div style={{width:18,height:18,border:`1px solid ${form.numerada?"#1a3a6b":"#D1D5DB"}`,borderRadius:4,background:form.numerada?"#1a3a6b":"#fff",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <div style={{width:18,height:18,border:`1px solid ${form.numerada?"#0A0A0A":"#D1D5DB"}`,borderRadius:4,background:form.numerada?"#0A0A0A":"#fff",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               {form.numerada&&<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>}
             </div>
             <span style={{fontFamily:"'Geist',sans-serif",fontSize:13,color:"#374151"}}>Carta numerada</span>
@@ -1718,12 +1765,12 @@ export default function App() {
     .sort((a,b) => sortBy==="asc" ? a.price-b.price : sortBy==="desc" ? b.price-a.price : 0);
 
   return (
-    <div className="hex-bg" style={{minHeight:"100vh",color:"#111827",fontFamily:"'Geist',sans-serif",position:"relative"}}>
+    <div className="hex-bg" style={{minHeight:"100vh",color:"#0A0A0A",fontFamily:"'Geist',sans-serif",position:"relative"}}>
       <style>{CSS}</style>
       
 
       {/* NAV */}
-      <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.05)",padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#ffffff",borderBottom:"1px solid #E5E7EB"}}>
+      <nav style={{position:"sticky",top:0,zIndex:50,borderBottom:"1px solid rgba(255,255,255,.05)",padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",background:"#ffffff",borderBottom:"1px solid #D1D5DB"}}>
         <div className="nav-glow"/>
         <div style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}} onClick={()=>setTab("marketplace")}>
                   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1734,8 +1781,8 @@ export default function App() {
           <path d="M14 10 L18 8 L22 10" stroke="#ffffff" strokeWidth="1" fill="none" strokeLinecap="round"/>
         </svg>
           <div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#1a3a6b",lineHeight:1}}>COLECCIONES FACU</div>
-            <div style={{fontSize:9,color:"#111827",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#0A0A0A",lineHeight:1,letterSpacing:3}}>COLECCIONES FACU</div>
+            <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -1840,7 +1887,7 @@ export default function App() {
 
         {/* MARKETPLACE TABS */}
         {(tab==="marketplace"||tab==="deportivas"||tab==="sellado"||tab==="otros")&&<>
-          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"#ffffff",borderBottom:"1px solid #E5E7EB"}}>
+          <div style={{display:"flex",gap:0,borderBottom:"1px solid rgba(255,255,255,.07)",marginBottom:24,marginTop:20,position:"sticky",top:62,zIndex:40,background:"#ffffff",borderBottom:"1px solid #D1D5DB"}}>
 
             {/* DEPORTES TAB */}
             <div style={{position:"relative"}}>
@@ -1857,8 +1904,8 @@ export default function App() {
                 }}
                 onMouseLeave={()=>startClose(()=>setSportDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("deportivas");setFilterSet("Todos");setSportDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="deportivas"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                Deportes <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sportCards.length}</span>
+                style={{background:"none",border:"none",color:tab==="deportivas"?"#0A0A0A":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="deportivas"?"2px solid #0A0A0A":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Deportes <span style={{background:"#F3F4F6",color:"#4B5563",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sportCards.length}</span>
                 <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {sportDropdown && sportPos.top > 0 && (
@@ -1893,9 +1940,9 @@ export default function App() {
                     {label:"Fórmula 1", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 17h4l2-6h6l2 6h4"/><path d="M8 11V7h8v4"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg>`, filter:"F1"},
                     ].map(item=>(
                       <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
-                        style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#1a3a6b":"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
+                        style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"#F0F4FF":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#0A0A0A":"#0A0A0A",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
                         onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
-                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none"}>
+                        onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"#F0F4FF":"none"}>
                         {item.icon&&<span style={{opacity:.5,display:"flex",alignItems:"center"}} dangerouslySetInnerHTML={{__html:item.icon}}/>}
                         {item.label}
                       </button>
@@ -1920,8 +1967,8 @@ export default function App() {
                 }}
                 onMouseLeave={()=>startClose(()=>setPokemonDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("marketplace");setFilterSet("Todos");setPokemonSearchMode(null);setPokemonDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="marketplace"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                Pokémon <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{cards.length}</span>
+                style={{background:"none",border:"none",color:tab==="marketplace"?"#0A0A0A":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="marketplace"?"2px solid #0A0A0A":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Pokémon <span style={{background:"#F3F4F6",color:"#4B5563",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{cards.length}</span>
                 <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {pokemonDropdown && pokemonPos.top > 0 && (
@@ -1945,7 +1992,7 @@ export default function App() {
                     <div style={{height:200,overflowY:"auto"}}>
                       {SETS.map(s=>(
                         <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
-                          style={{display:"block",width:"100%",background:filterSet===s?"#EFF6FF":"none",border:"none",color:filterSet===s?"#1a3a6b":"#111827",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
+                          style={{display:"block",width:"100%",background:filterSet===s?"#F0F4FF":"none",border:"none",color:filterSet===s?"#0A0A0A":"#0A0A0A",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
                           onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                           onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
                           {s === "Todos" ? "📋 Ver todos" : s}
@@ -1967,8 +2014,8 @@ export default function App() {
                 }}
                 onMouseLeave={()=>startClose(()=>setOtrosDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("otros");setFilterSet("Todos");setOtrosDropdown(false);}}
-                style={{background:"none",border:"none",color:tab==="otros"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                Otros <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{otrosCards.length}</span>
+                style={{background:"none",border:"none",color:tab==="otros"?"#0A0A0A":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="otros"?"2px solid #0A0A0A":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Otros <span style={{background:"#F3F4F6",color:"#4B5563",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{otrosCards.length}</span>
                 <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {otrosDropdown && otrosPos.top > 0 && (
@@ -1978,7 +2025,7 @@ export default function App() {
                   style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:220,zIndex:99999}}>
                   {OTROS_TYPES.map(t=>(
                     <button key={t} onClick={()=>{setTab("otros");setFilterSet(t);setOtrosDropdown(false);}}
-                      style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"#EFF6FF":"none",border:"none",color:filterSet===t&&tab==="otros"?"#1a3a6b":"#111827",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                      style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"#F0F4FF":"none",border:"none",color:filterSet===t&&tab==="otros"?"#0A0A0A":"#0A0A0A",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
                       onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                       onMouseLeave={e=>e.currentTarget.style.background=filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none"}>
                       {t === "Todos" ? "Ver todo" : t}
@@ -1999,8 +2046,8 @@ export default function App() {
                 onMouseLeave={()=>startClose(()=>setSealedDropdown(false))}
                 onClick={(e)=>{e.stopPropagation();setTab("sellado");setFilterSet("Todos");setSealedDropdown(false);}}
                 ref={sealedBtnRef}
-                style={{background:"none",border:"none",color:tab==="sellado"?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #1a3a6b":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
-                Sellado <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sealedProducts.length}</span>
+                style={{background:"none",border:"none",color:tab==="sellado"?"#0A0A0A":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:500,fontSize:14,cursor:"pointer",padding:"14px 20px",borderBottom:tab==="sellado"?"2px solid #0A0A0A":"2px solid transparent",display:"flex",alignItems:"center",gap:8,transition:"all .2s",whiteSpace:"nowrap"}}>
+                Sellado <span style={{background:"#F3F4F6",color:"#4B5563",padding:"2px 7px",borderRadius:4,fontSize:11,fontWeight:500}}>{sealedProducts.length}</span>
                 <span style={{fontSize:10,color:"#9CA3AF"}}>▾</span>
               </button>
               {sealedDropdown && sealedPos.top > 0 && (
@@ -2019,7 +2066,7 @@ export default function App() {
                     {label:"Ver todo", icon:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, filter:"Todos"},
                   ].map(item=>(
                     <button key={item.label} onClick={()=>{setTab("sellado");setFilterSet(item.filter);setSealedDropdown(false);}}
-                      style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:"none",border:"none",color:"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
+                      style={{display:"flex",alignItems:"center",gap:8,width:"100%",background:"none",border:"none",color:"#0A0A0A",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
                       onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                       onMouseLeave={e=>e.currentTarget.style.background="none"}>
                       <span style={{opacity:.4,display:"flex",alignItems:"center"}} dangerouslySetInnerHTML={{__html:SELLADO_ICONS[item.label]||""}}/>
@@ -2054,15 +2101,15 @@ export default function App() {
             <div style={{flex:1,minWidth:240}}>
               <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:50,lineHeight:.88,marginBottom:10}}>
                 <span style={{color:"#1a3a6b"}}>COMPRÁ</span> Y <span style={{color:"#1a3a6b"}}>VENDÉ</span><br/>
-                <span style={{color:"#6B7280",fontSize:26}}>CARTAS & COLECCIONES</span>
+                <span style={{color:"#4B5563",fontSize:26}}>CARTAS & COLECCIONES</span>
               </div>
               <div style={{color:"#9CA3AF",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
             </div>
             <div style={{display:"flex",gap:10}}>
               <div style={{display:"flex",gap:24,alignItems:"center",fontFamily:"'Geist',sans-serif"}}>
-                <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>publicaciones</span></div>
+                <div><span style={{fontSize:22,fontWeight:700,color:"#0A0A0A"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>publicaciones</span></div>
                 <div style={{width:1,height:20,background:"#E5E7EB"}}/>
-                <div><span style={{fontSize:22,fontWeight:700,color:"#111827"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>vendedores</span></div>
+                <div><span style={{fontSize:22,fontWeight:700,color:"#0A0A0A"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>vendedores</span></div>
               </div>
             </div>
           </div>
@@ -2092,28 +2139,25 @@ export default function App() {
               <button className="btn btn-gold" onClick={()=>setShowAuth(true)}>Iniciar sesión / Registrarse</button>
             </div>
           ):!user.subscribed?(
-            <div style={{textAlign:"center",padding:"60px 24px",maxWidth:500,margin:"0 auto"}}>
-              
-              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:34,color:"#DAA520",marginBottom:8,letterSpacing:1}}>ACTIVÁ TU CUENTA DE VENDEDOR</div>
-              <div style={{color:"#888",fontFamily:"'DM Sans',sans-serif",fontSize:15,lineHeight:1.7,marginBottom:28}}>
-                Por <strong style={{color:"#DAA520"}}>{fmt(PRECIO_SUSCRIPCION)}/mes</strong> podés publicar todas las cartas que quieras y recibir consultas por WhatsApp directamente de los compradores.
+            <div style={{textAlign:"center",padding:"60px 24px",maxWidth:500,margin:"0 auto",fontFamily:"'Geist',sans-serif"}}>
+              <div style={{fontSize:22,fontWeight:600,color:"#0A0A0A",marginBottom:8}}>Activá tu cuenta de vendedor</div>
+              <div style={{color:"#6B7280",fontSize:14,lineHeight:1.7,marginBottom:28}}>
+                Por <strong style={{color:"#0A0A0A"}}>{fmt(PRECIO_SUSCRIPCION)}/mes</strong> publicás todas las cartas que quieras y recibís consultas por WhatsApp.
               </div>
-              <div style={{background:"rgba(218,165,32,.08)",border:"1px solid rgba(218,165,32,.2)",borderRadius:14,padding:20,marginBottom:24,fontFamily:"'DM Sans',sans-serif",textAlign:"left"}}>
-                <div style={{fontWeight:700,color:"#DAA520",marginBottom:12,fontSize:14}}>✅ ¿Qué incluye?</div>
-                {["Publicaciones ilimitadas por mes","Botón de WhatsApp para que te contacten","Aparecer en el marketplace de Colecciones Facu","Soporte para cartas Pokémon, deportivas, sellados y más"].map(item=>(
-                  <div key={item} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8,fontSize:13,color:"#aaa"}}>
-                    ·{item}
+              <div style={{background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:6,padding:20,marginBottom:20,textAlign:"left"}}>
+                {["Publicaciones ilimitadas","Botón de WhatsApp directo","Visible en Colecciones Facu","Pokémon, deportivas, sellados y más"].map(item=>(
+                  <div key={item} style={{display:"flex",gap:10,alignItems:"center",marginBottom:8,fontSize:13,color:"#374151"}}>
+                    <div style={{width:5,height:5,borderRadius:"50%",background:"#0A0A0A",flexShrink:0}}></div>{item}
                   </div>
                 ))}
               </div>
+              <PromoCodeInput userId={user.id} onActivated={()=>setUser(u=>({...u,subscribed:true}))}/>
+              <div style={{margin:"16px 0",color:"#D1D5DB",fontSize:12}}>— o pagá con Mercado Pago —</div>
               <a href={MP_SUSCRIPCION_URL} target="_blank" rel="noopener noreferrer"
-                style={{display:"inline-flex",alignItems:"center",gap:10,background:"linear-gradient(135deg,#009EE3,#0066B2)",color:"#fff",padding:"16px 32px",borderRadius:12,fontWeight:700,fontSize:16,textDecoration:"none",fontFamily:"'DM Sans',sans-serif",boxShadow:"0 4px 22px rgba(0,158,227,.4)"}}>
-                <span style={{fontWeight:900,fontSize:15,background:"#fff",color:"#009EE3",borderRadius:5,padding:"1px 6px"}}>MP</span>
-                Pagar {fmt(PRECIO_SUSCRIPCION)}/mes con Mercado Pago
+                style={{display:"inline-flex",alignItems:"center",gap:8,background:"#009EE3",color:"#fff",padding:"12px 24px",borderRadius:5,fontWeight:600,fontSize:14,textDecoration:"none"}}>
+                Pagar {fmt(PRECIO_SUSCRIPCION)}/mes
               </a>
-              <div style={{fontSize:12,color:"#444",marginTop:12,fontFamily:"'DM Sans',sans-serif"}}>
-                Una vez que pagues, avisanos por WhatsApp o email y activamos tu cuenta en minutos.
-              </div>
+              <div style={{fontSize:12,color:"#9CA3AF",marginTop:12}}>Una vez que pagues avisanos y activamos tu cuenta.</div>
             </div>
           ):<UnifiedPublishForm user={user} onPublish={()=>{loadCards();loadSportCards();loadSealedProducts();loadOtrosCards();}}/>}
         </>}
@@ -2326,10 +2370,10 @@ export default function App() {
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
                     {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
                     <div style={{fontFamily:"'Geist',sans-serif",flex:1,minWidth:0}}>
-                      <div style={{fontWeight:500,fontSize:12,color:"#111827",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.name}</div>
+                      <div style={{fontWeight:500,fontSize:12,color:"#0A0A0A",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.name}</div>
                       <div style={{fontSize:10,color:"#9CA3AF"}}>{c.set_name} · Pokémon</div>
                     </div>
-                    <div style={{fontSize:13,fontWeight:600,color:"#111827",flexShrink:0}}>{fmt(c.price)}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#0A0A0A",flexShrink:0}}>{fmt(c.price)}</div>
                   </button>
                 ))}
                 {sportCards.filter(c=>[c.player_name,c.card_name,c.brand].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,3).map(c=>(
@@ -2339,10 +2383,10 @@ export default function App() {
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
                     {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
                     <div style={{fontFamily:"'Geist',sans-serif",flex:1,minWidth:0}}>
-                      <div style={{fontWeight:500,fontSize:12,color:"#111827",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.player_name}</div>
+                      <div style={{fontWeight:500,fontSize:12,color:"#0A0A0A",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{c.player_name}</div>
                       <div style={{fontSize:10,color:"#9CA3AF"}}>{c.brand} · Deportes</div>
                     </div>
-                    <div style={{fontSize:13,fontWeight:600,color:"#111827",flexShrink:0}}>{fmt(c.price)}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#0A0A0A",flexShrink:0}}>{fmt(c.price)}</div>
                   </button>
                 ))}
                 {cards.filter(c=>c.name.toLowerCase().includes(globalSearch.toLowerCase())).length===0 && sportCards.filter(c=>c.player_name.toLowerCase().includes(globalSearch.toLowerCase())).length===0 && (
