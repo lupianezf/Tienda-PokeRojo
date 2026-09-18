@@ -1297,6 +1297,40 @@ function PublishSealedForm({ user, onPublish }) {
   );
 }
 
+// ── SUSCRIPCION BUTTON ─────────────────────────────────────────────────────────
+function SuscripcionButton({ userId, userEmail }) {
+  const [loading, setLoading] = useState(false);
+
+  const pay = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/bright-task`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cardId: `suscripcion_${userId}`,
+          cardName: "Suscripción mensual - Colecciones Market",
+          amount: PRECIO_SUSCRIPCION,
+          buyerEmail: userEmail,
+          shippingMethod: "Digital",
+          userId: userId
+        })
+      });
+      const data = await res.json();
+      if (data?.init_point) {
+        window.location.href = data.init_point;
+      }
+    } catch(e) { console.error(e); }
+    setLoading(false);
+  };
+
+  return (
+    <button className="btn btn-gold" style={{padding:"12px 28px",fontSize:14,display:"inline-flex",alignItems:"center",gap:8}} onClick={pay} disabled={loading}>
+      {loading ? <><div className="spinner" style={{width:16,height:16,borderWidth:2}}/>Procesando...</> : `Pagar ${fmt(PRECIO_SUSCRIPCION)}/mes`}
+    </button>
+  );
+}
+
 // ── PROMO CODE INPUT ───────────────────────────────────────────────────────────
 function PromoCodeInput({ userId, onActivated }) {
   const [code, setCode] = useState("");
@@ -2153,10 +2187,7 @@ export default function App() {
               </div>
               <PromoCodeInput userId={user.id} onActivated={()=>setUser(u=>({...u,subscribed:true}))}/>
               <div style={{margin:"16px 0",color:"#D1D5DB",fontSize:12}}>— o pagá con Mercado Pago —</div>
-              <a href={MP_SUSCRIPCION_URL} target="_blank" rel="noopener noreferrer"
-                style={{display:"inline-flex",alignItems:"center",gap:8,background:"#009EE3",color:"#fff",padding:"12px 24px",borderRadius:5,fontWeight:600,fontSize:14,textDecoration:"none"}}>
-                Pagar {fmt(PRECIO_SUSCRIPCION)}/mes
-              </a>
+              <SuscripcionButton userId={user.id} userEmail={user.email}/>
               <div style={{fontSize:12,color:"#9CA3AF",marginTop:12}}>Una vez que pagues avisanos y activamos tu cuenta.</div>
             </div>
           ):<UnifiedPublishForm user={user} onPublish={()=>{loadCards();loadSportCards();loadSealedProducts();loadOtrosCards();}}/>}
