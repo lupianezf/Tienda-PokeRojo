@@ -270,7 +270,7 @@ function AuthModal({ onLogin, onClose }) {
         <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,background:"rgba(255,255,255,.06)",color:"#888",width:30,height:30,borderRadius:8,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         <div style={{textAlign:"center",marginBottom:24}}>
           
-          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:2}}>COLECCIONES FACU</div>
+          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,color:"#DAA520",letterSpacing:2}}>COLECCIONES MARKET</div>
           <div style={{fontSize:13,color:"#555",fontFamily:"'DM Sans',sans-serif",marginTop:3}}>{mode==="login"?"Ingresá a tu cuenta":"Creá tu cuenta gratis"}</div>
         </div>
         <div style={{display:"flex",background:"rgba(255,255,255,.04)",borderRadius:10,padding:4,marginBottom:20}}>
@@ -1781,7 +1781,7 @@ export default function App() {
           <path d="M14 10 L18 8 L22 10" stroke="#ffffff" strokeWidth="1" fill="none" strokeLinecap="round"/>
         </svg>
           <div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#0A0A0A",lineHeight:1,letterSpacing:3}}>COLECCIONES FACU</div>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#0A0A0A",lineHeight:1,letterSpacing:3}}>COLECCIONES MARKET</div>
             <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
           </div>
         </div>
@@ -2145,7 +2145,7 @@ export default function App() {
                 Por <strong style={{color:"#0A0A0A"}}>{fmt(PRECIO_SUSCRIPCION)}/mes</strong> publicás todas las cartas que quieras y recibís consultas por WhatsApp.
               </div>
               <div style={{background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:6,padding:20,marginBottom:20,textAlign:"left"}}>
-                {["Publicaciones ilimitadas","Botón de WhatsApp directo","Visible en Colecciones Facu","Pokémon, deportivas, sellados y más"].map(item=>(
+                {["Publicaciones ilimitadas","Botón de WhatsApp directo","Visible en Colecciones Market","Pokémon, deportivas, sellados y más"].map(item=>(
                   <div key={item} style={{display:"flex",gap:10,alignItems:"center",marginBottom:8,fontSize:13,color:"#374151"}}>
                     <div style={{width:5,height:5,borderRadius:"50%",background:"#0A0A0A",flexShrink:0}}></div>{item}
                   </div>
@@ -2339,7 +2339,7 @@ export default function App() {
       </div>
 
       <div style={{borderTop:"1px solid #E5E7EB",padding:"16px 24px",textAlign:"center",color:"#9CA3AF",fontSize:12}}>
-        ⬤ Colecciones Facu · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
+        ⬤ Colecciones Market · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
       </div>
 
       {/* GLOBAL SEARCH — below navbar, full width */}
