@@ -724,23 +724,25 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
         {imgUrl?<img src={imgUrl} alt={card.name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
       </div>
       <div style={{padding:"10px 12px 12px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'Geist',sans-serif"}}>
-        <div style={{fontWeight:600,fontSize:13,color:"#111827",lineHeight:1.3,marginBottom:2}}>{card.name}</div>
-        <div style={{fontSize:11,color:"#9CA3AF",marginBottom:8}}>{card.set_name||card.set}</div>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-          <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 6px",borderRadius:4,fontSize:10,fontWeight:500}}>{card.condition}</span>
-          <span style={{fontSize:10,color:"#D1D5DB"}}>📍{card.province}</span>
+        <div style={{fontWeight:600,fontSize:13,color:"#111827",lineHeight:1.3,marginBottom:4}}>{card.name}</div>
+        <div style={{fontSize:11,color:"#9CA3AF",marginBottom:6}}>{card.set_name||card.set}</div>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+          <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 6px",borderRadius:4,fontSize:10,fontWeight:500}}>{COND_LABEL[card.condition]||card.condition}</span>
+          <span style={{color:"#D1D5DB",fontSize:10}}>·</span>
+          <span style={{fontSize:10,color:"#9CA3AF"}}>{card.province}</span>
         </div>
-        <button onClick={()=>onSellerClick(card)} style={{background:"none",border:"none",padding:"0 0 8px",cursor:"pointer",textAlign:"left",fontSize:11,color:"#9CA3AF",textDecoration:"underline",fontFamily:"'Geist',sans-serif"}}>
-          @{sellerName}
+        <button onClick={()=>onSellerClick(card)} style={{background:"none",border:"none",padding:"0 0 10px",cursor:"pointer",textAlign:"left",fontSize:11,color:"#9CA3AF",fontFamily:"'Geist',sans-serif",display:"flex",alignItems:"center",gap:3}}>
+          <span style={{color:"#D1D5DB"}}>@</span>{sellerName}
         </button>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid #F3F4F6",paddingTop:10,marginTop:"auto"}}>
           <div style={{fontWeight:700,fontSize:15,color:"#111827"}}>{fmt(card.price)}</div>
           {userId==null
-            ?<button className="btn btn-ghost" style={{padding:"4px 10px",fontSize:11}} onClick={onLogin}>Entrar</button>
+            ?<a href={`https://wa.me/54${(card.seller_whatsapp||"").replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
+              style={{background:"#25D366",color:"#fff",padding:"5px 10px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none"}}>Consultar</a>
             :userId===sellerId
               ?<span style={{fontSize:10,color:"#9CA3AF"}}>Tu carta</span>
               :<a href={`https://wa.me/54${(card.seller_whatsapp||"").replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
-                style={{background:"#25D366",color:"#fff",padding:"5px 10px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none"}}>WP</a>
+                style={{background:"#25D366",color:"#fff",padding:"5px 10px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none"}}>Consultar</a>
           }
         </div>
       </div>
