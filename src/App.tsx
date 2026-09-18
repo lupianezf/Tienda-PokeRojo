@@ -1630,7 +1630,7 @@ export default function App() {
                   style={{position:"fixed",top:sportPos.top+"px",left:sportPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:12,minWidth:260,zIndex:99999}}>
                   {/* Buscador */}
                   <div style={{marginBottom:10}}>
-                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar jugador o marca</div>
+                    <div style={{padding:"0 4px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Buscar</div>
                     <div style={{position:"relative"}}>
                       <span style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#555",pointerEvents:"none"}}>🔍</span>
                       <input className="input" style={{paddingLeft:36,fontSize:13}}
@@ -1644,15 +1644,15 @@ export default function App() {
                   <div style={{borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:8}}>
                     <div style={{padding:"4px 8px 6px",fontSize:10,color:"#DAA520",fontWeight:700,letterSpacing:1,textTransform:"uppercase",fontFamily:"'DM Sans',sans-serif"}}>Filtrar por deporte</div>
                     {[
-                      {label:"⚽ Mundiales", filter:"Fútbol"},
-                      {label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", filter:"Fútbol"},
-                      {label:"🇪🇸 La Liga", filter:"Fútbol"},
-                      {label:"🇦🇷 Liga Argentina", filter:"Fútbol"},
-                      {label:"🏀 NBA", filter:"Básquet"},
-                      {label:"🏈 NFL", filter:"Fútbol Americano"},
-                      {label:"⚾ MLB", filter:"Béisbol"},
-                      {label:"🏆 Ver todo", filter:"Todos"},
-                    {label:"🏎️ Fórmula 1", filter:"F1"},
+                      {label:"Mundiales", filter:"Fútbol"},
+                      {label:"Premier League", filter:"Fútbol"},
+                      {label:"La Liga", filter:"Fútbol"},
+                      {label:"Liga Argentina", filter:"Fútbol"},
+                      {label:"NBA", filter:"Básquet"},
+                      {label:"NFL", filter:"Fútbol Americano"},
+                      {label:"MLB", filter:"Béisbol"},
+                      {label:"Ver todo", filter:"Todos"},
+                    {label:"Fórmula 1", filter:"F1"},
                     ].map(item=>(
                       <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
                         style={{display:"block",width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#DAA520":"#aaa",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
