@@ -2188,7 +2188,7 @@ export default function App() {
               <PromoCodeInput userId={user.id} onActivated={()=>setUser(u=>({...u,subscribed:true}))}/>
               <div style={{margin:"16px 0",color:"#D1D5DB",fontSize:12}}>— o pagá con Mercado Pago —</div>
               <SuscripcionButton userId={user.id} userEmail={user.email}/>
-              <div style={{fontSize:12,color:"#9CA3AF",marginTop:12}}>El acceso se activa automáticamente al confirmar el pago.</div>
+              <div style={{fontSize:12,color:"#9CA3AF",marginTop:12}}>Una vez que el pago se confirme, tu cuenta se activa sola. No necesitás hacer nada más.</div>
             </div>
           ):<UnifiedPublishForm user={user} onPublish={()=>{loadCards();loadSportCards();loadSealedProducts();loadOtrosCards();}}/>}
         </>}
