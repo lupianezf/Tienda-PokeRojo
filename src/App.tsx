@@ -1655,8 +1655,8 @@ export default function App() {
                     {label:"Fórmula 1", filter:"F1"},
                     ].map(item=>(
                       <button key={item.label} onClick={()=>{setTab("deportivas");setFilterSet(item.filter);setSportDropdown(false);}}
-                        style={{display:"block",width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#DAA520":"#aaa",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
-                        onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                        style={{display:"block",width:"100%",background:filterSet===item.filter&&tab==="deportivas"?"#EFF6FF":"none",border:"none",color:filterSet===item.filter&&tab==="deportivas"?"#1a3a6b":"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                        onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                         onMouseLeave={e=>e.currentTarget.style.background=filterSet===item.filter&&tab==="deportivas"?"rgba(218,165,32,.1)":"none"}>
                         {item.label}
                       </button>
@@ -1706,8 +1706,8 @@ export default function App() {
                     <div style={{height:200,overflowY:"auto"}}>
                       {SETS.map(s=>(
                         <button key={s} onClick={()=>{setTab("marketplace");setFilterSet(s);setPokemonSearchMode("set");setPokemonDropdown(false);}}
-                          style={{display:"block",width:"100%",background:filterSet===s?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===s?"#DAA520":"#aaa",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
-                          onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                          style={{display:"block",width:"100%",background:filterSet===s?"#EFF6FF":"none",border:"none",color:filterSet===s?"#1a3a6b":"#111827",padding:"7px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:filterSet===s?700:400}}
+                          onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                           onMouseLeave={e=>e.currentTarget.style.background=filterSet===s?"rgba(218,165,32,.1)":"none"}>
                           {s === "Todos" ? "📋 Ver todos" : s}
                         </button>
@@ -1739,8 +1739,8 @@ export default function App() {
                   style={{position:"fixed",top:otrosPos.top+"px",left:otrosPos.left+"px",background:"#ffffff",border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,.1)",borderRadius:14,padding:8,minWidth:220,zIndex:99999}}>
                   {OTROS_TYPES.map(t=>(
                     <button key={t} onClick={()=>{setTab("otros");setFilterSet(t);setOtrosDropdown(false);}}
-                      style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none",border:"none",color:filterSet===t&&tab==="otros"?"#DAA520":"#aaa",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
-                      onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                      style={{display:"block",width:"100%",background:filterSet===t&&tab==="otros"?"#EFF6FF":"none",border:"none",color:filterSet===t&&tab==="otros"?"#1a3a6b":"#111827",padding:"9px 14px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",fontWeight:500}}
+                      onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                       onMouseLeave={e=>e.currentTarget.style.background=filterSet===t&&tab==="otros"?"rgba(218,165,32,.1)":"none"}>
                       {t === "Todos" ? "Ver todo" : t}
                     </button>
@@ -1780,7 +1780,7 @@ export default function App() {
                     {label:"Ver todo", filter:"Todos"},
                   ].map(item=>(
                     <button key={item.label} onClick={()=>{setTab("sellado");setFilterSet(item.filter);setSealedDropdown(false);}}
-                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#374151",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
+                      style={{display:"block",width:"100%",background:"none",border:"none",color:"#111827",padding:"8px 12px",fontSize:13,textAlign:"left",borderRadius:8,cursor:"pointer",fontFamily:"'Geist',sans-serif",fontWeight:400}}
                       onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                       onMouseLeave={e=>e.currentTarget.style.background="none"}>
                       {item.label}
@@ -2080,7 +2080,7 @@ export default function App() {
                 {cards.filter(c=>[c.name,c.set_name,c.seller_name].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,3).map(c=>(
                   <button key={c.id} onClick={()=>{setSearch(globalSearch);setTab("marketplace");setGlobalSearchOpen(false);}}
                     style={{display:"flex",gap:10,alignItems:"center",width:"100%",background:"none",border:"none",padding:"8px 10px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
-                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                    onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
                     {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<div style={{width:26,height:36,background:"#F3F4F6",borderRadius:4,flexShrink:0}}></div>}
                     <div style={{fontFamily:"'DM Sans',sans-serif",flex:1,minWidth:0}}>
@@ -2093,7 +2093,7 @@ export default function App() {
                 {sportCards.filter(c=>[c.player_name,c.card_name,c.brand].join(" ").toLowerCase().includes(globalSearch.toLowerCase())).slice(0,3).map(c=>(
                   <button key={c.id} onClick={()=>{setSearch(globalSearch);setTab("deportivas");setGlobalSearchOpen(false);}}
                     style={{display:"flex",gap:10,alignItems:"center",width:"100%",background:"none",border:"none",padding:"8px 10px",borderRadius:8,cursor:"pointer",textAlign:"left"}}
-                    onMouseEnter={e=>e.currentTarget.style.background="rgba(218,165,32,.08)"}
+                    onMouseEnter={e=>e.currentTarget.style.background="#F9FAFB"}
                     onMouseLeave={e=>e.currentTarget.style.background="none"}>
                     {c.img_url?<img src={c.img_url} style={{width:26,height:36,objectFit:"contain",borderRadius:3,flexShrink:0}}/>:<span style={{fontSize:18,flexShrink:0}}>🏆</span>}
                     <div style={{fontFamily:"'DM Sans',sans-serif",flex:1,minWidth:0}}>
