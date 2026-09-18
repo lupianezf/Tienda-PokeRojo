@@ -726,10 +726,13 @@ function CardItem({ card, userId, onBuy, onLogin, onSellerClick, reviews }) {
       <div style={{padding:"10px 12px 12px",display:"flex",flexDirection:"column",flex:1,fontFamily:"'Geist',sans-serif"}}>
         <div style={{fontWeight:600,fontSize:13,color:"#111827",lineHeight:1.3,marginBottom:2}}>{card.name}</div>
         <div style={{fontSize:11,color:"#9CA3AF",marginBottom:8}}>{card.set_name||card.set}</div>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
           <span style={{background:"#F3F4F6",color:"#6B7280",padding:"2px 6px",borderRadius:4,fontSize:10,fontWeight:500}}>{card.condition}</span>
           <span style={{fontSize:10,color:"#D1D5DB"}}>📍{card.province}</span>
         </div>
+        <button onClick={()=>onSellerClick(card)} style={{background:"none",border:"none",padding:"0 0 8px",cursor:"pointer",textAlign:"left",fontSize:11,color:"#9CA3AF",textDecoration:"underline",fontFamily:"'Geist',sans-serif"}}>
+          @{sellerName}
+        </button>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"auto"}}>
           <div style={{fontWeight:700,fontSize:15,color:"#111827"}}>{fmt(card.price)}</div>
           {userId==null
@@ -1028,6 +1031,117 @@ function PublishOtrosForm({ user, onPublish }) {
   );
 }
 
+// ── SELLER PAGE ────────────────────────────────────────────────────────────────
+function SellerPage({ seller, allCards, allSportCards, allSealed, allOtros, onBack, userId }) {
+  const [activeTab, setActiveTab] = useState("todos");
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    supabase.from("profiles").select("*").eq("id", seller.id).single()
+      .then(({ data }) => data && setProfile(data));
+  }, [seller.id]);
+
+  const sellerCards = allCards.filter(c => c.seller_id === seller.id);
+  const sellerSport = allSportCards.filter(c => c.seller_id === seller.id);
+  const sellerSealed = allSealed.filter(c => c.seller_id === seller.id);
+  const sellerOtros = allOtros.filter(c => c.seller_id === seller.id);
+
+  const allItems = [...sellerCards, ...sellerSport, ...sellerSealed, ...sellerOtros];
+  const filtered = activeTab === "todos" ? allItems
+    : activeTab === "pokemon" ? sellerCards
+    : activeTab === "deportes" ? sellerSport
+    : activeTab === "sellado" ? sellerSealed
+    : sellerOtros;
+
+  const tabs = [
+    {key:"todos", label:`Todo (${allItems.length})`},
+    {key:"pokemon", label:`Pokémon (${sellerCards.length})`},
+    {key:"deportes", label:`Deportes (${sellerSport.length})`},
+    {key:"sellado", label:`Sellado (${sellerSealed.length})`},
+    {key:"otros", label:`Otros (${sellerOtros.length})`},
+  ].filter(t => t.key === "todos" || (
+    t.key === "pokemon" ? sellerCards.length > 0
+    : t.key === "deportes" ? sellerSport.length > 0
+    : t.key === "sellado" ? sellerSealed.length > 0
+    : sellerOtros.length > 0
+  ));
+
+  return (
+    <div style={{paddingTop:28,maxWidth:1100,margin:"0 auto"}}>
+      {/* Back button */}
+      <button onClick={onBack} style={{background:"none",border:"none",color:"#6B7280",fontSize:13,cursor:"pointer",fontFamily:"'Geist',sans-serif",display:"flex",alignItems:"center",gap:6,marginBottom:24,padding:0}}>
+        ← Volver al marketplace
+      </button>
+
+      {/* Seller header */}
+      <div style={{display:"flex",gap:20,alignItems:"flex-start",marginBottom:32,paddingBottom:28,borderBottom:"1px solid #E5E7EB"}}>
+        {/* Avatar */}
+        <div style={{width:72,height:72,borderRadius:"50%",background:"#1a3a6b",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Geist',sans-serif"}}>
+          {(profile?.name||seller.name||"?")[0].toUpperCase()}
+        </div>
+        <div style={{flex:1}}>
+          <div style={{fontFamily:"'Geist',sans-serif",fontWeight:700,fontSize:22,color:"#111827",marginBottom:4}}>{profile?.name||seller.name}</div>
+          <div style={{fontSize:13,color:"#9CA3AF",marginBottom:8}}>📍 {profile?.province||seller.province}</div>
+          {profile?.bio && <div style={{fontSize:13,color:"#6B7280",marginBottom:12,maxWidth:500,lineHeight:1.6}}>{profile.bio}</div>}
+          <div style={{display:"flex",gap:12,alignItems:"center"}}>
+            <span style={{fontSize:13,color:"#6B7280",fontFamily:"'Geist',sans-serif"}}><strong style={{color:"#111827"}}>{allItems.length}</strong> publicaciones activas</span>
+            {(profile?.whatsapp||seller.whatsapp) && (
+              <a href={`https://wa.me/54${(profile?.whatsapp||seller.whatsapp).replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
+                style={{display:"inline-flex",alignItems:"center",gap:6,background:"#25D366",color:"#fff",padding:"7px 16px",borderRadius:8,fontSize:13,fontWeight:600,textDecoration:"none",fontFamily:"'Geist',sans-serif"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.486a.75.75 0 00.912.972l5.86-1.539A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22.5a10.45 10.45 0 01-5.348-1.465l-.383-.228-3.977 1.044 1.062-3.878-.25-.397A10.45 10.45 0 011.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5z"/></svg>
+                Contactar por WhatsApp
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Category tabs */}
+      <div style={{display:"flex",gap:0,borderBottom:"1px solid #E5E7EB",marginBottom:24}}>
+        {tabs.map(t=>(
+          <button key={t.key} onClick={()=>setActiveTab(t.key)}
+            style={{background:"none",border:"none",color:activeTab===t.key?"#1a3a6b":"#6B7280",fontFamily:"'Geist',sans-serif",fontWeight:activeTab===t.key?600:400,fontSize:14,cursor:"pointer",padding:"12px 18px",borderBottom:activeTab===t.key?"2px solid #1a3a6b":"2px solid transparent",transition:"all .15s",whiteSpace:"nowrap"}}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Cards grid */}
+      {filtered.length === 0 ? (
+        <div style={{textAlign:"center",padding:"60px 0",color:"#9CA3AF",fontSize:14,fontFamily:"'Geist',sans-serif"}}>No hay publicaciones en esta categoría.</div>
+      ) : (
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
+          {filtered.map(c => {
+            const isCard = allCards.some(x=>x.id===c.id);
+            const imgUrl = c.img_url || c.imgUrl || "";
+            const price = c.price || 0;
+            const name = c.name || c.player_name || "";
+            const sub = isCard ? (c.set_name||c.set||"") : c.sport||c.product_type||c.categoria||"";
+            return (
+              <div key={c.id} className="card" style={{padding:0,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+                <div style={{height:220,background:"#F9FAFB",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid #F3F4F6"}}>
+                  {imgUrl?<img src={imgUrl} alt={name} style={{height:"100%",width:"100%",objectFit:"contain",padding:12}} onError={e=>e.target.style.display="none"}/>:<div style={{width:40,height:40,borderRadius:"50%",background:"#E5E7EB"}}></div>}
+                </div>
+                <div style={{padding:"10px 12px 12px",fontFamily:"'Geist',sans-serif"}}>
+                  <div style={{fontWeight:600,fontSize:13,color:"#111827",marginBottom:2,lineHeight:1.3}}>{name}</div>
+                  <div style={{fontSize:11,color:"#9CA3AF",marginBottom:8}}>{sub}</div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <div style={{fontWeight:700,fontSize:15,color:"#111827"}}>{fmt(price)}</div>
+                    {userId!==c.seller_id && (c.seller_whatsapp||seller.whatsapp) && (
+                      <a href={`https://wa.me/54${((c.seller_whatsapp||seller.whatsapp)||"").replace(/\s/g,"")}`} target="_blank" rel="noopener noreferrer"
+                        style={{background:"#25D366",color:"#fff",padding:"5px 10px",fontSize:11,borderRadius:6,fontWeight:600,textDecoration:"none"}}>WP</a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── SEALED PRODUCT ITEM ────────────────────────────────────────────────────────
 function SealedItem({ product, userId, onBuy, onLogin, onSellerClick, reviews }) {
   const rep = reviews.filter(r => r.seller_id === product.seller_id);
@@ -1191,6 +1305,7 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
   const [checkoutCard, setCheckoutCard] = useState(null);
   const [sellerModal, setSellerModal] = useState(null);
+  const [sellerPage, setSellerPage] = useState(null); // { id, name, province, whatsapp }
   const [reviewTarget, setReviewTarget] = useState(null);
   const [tab, setTab] = useState("marketplace");
   const [search, setSearch] = useState("");
@@ -1336,7 +1451,8 @@ export default function App() {
   const onPublish = () => { loadCards(); };
 
   const openSeller = (card) => {
-    setSellerModal({ id: card.seller_id||card.sellerId, name: card.seller_name||card.sellerName, province: card.province });
+    setSellerPage({ id: card.seller_id||card.sellerId, name: card.seller_name||card.sellerName, province: card.province, whatsapp: card.seller_whatsapp||"" });
+    setTab("seller");
   };
 
   const myListings = cards.filter(c => c.seller_id === user?.id);
@@ -1669,6 +1785,19 @@ export default function App() {
 
           </div>
         </>}
+
+        {/* SELLER PAGE */}
+        {tab==="seller" && sellerPage && (
+          <SellerPage
+            seller={sellerPage}
+            allCards={cards}
+            allSportCards={sportCards}
+            allSealed={sealedProducts}
+            allOtros={otrosCards}
+            onBack={()=>{setTab("marketplace");setSellerPage(null);}}
+            userId={user?.id}
+          />
+        )}
 
         {/* MARKETPLACE - CARTAS */}
         {tab==="marketplace"&&<>
