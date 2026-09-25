@@ -283,7 +283,7 @@ function AuthModal({ onLogin, onClose }) {
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           {mode==="register"&&<div><label>Nombre completo</label><input className="input" placeholder="Ej: Lucas García" value={form.name} onChange={f("name")}/></div>}
           <div><label>Email</label><input className="input" type="email" placeholder="tu@email.com" value={form.email} onChange={f("email")}/></div>
-          <div><label>Contraseña</label><input className="input" type="password" placeholder={mode==="register"?"Mínimo 6 caracteres":"••••••••"} value={form.password} onChange={f("password")}/></div>
+          <div><label>Contraseña</label><input className="input" type="password" placeholder={mode==="register"?"Mínimo 6 caracteres":"••••••••"} value={form.password} onChange={f("password")} onKeyDown={e=>e.key==="Enter"&&submit()}/></div>
           {mode==="register"&&<div><label>Provincia</label><select className="select" style={{width:"100%"}} value={form.province} onChange={f("province")}>{PROVINCES.map(p=><option key={p}>{p}</option>)}</select></div>}
           {mode==="register"&&<div>
             <label>WhatsApp (para que te contacten compradores)</label>
@@ -1816,7 +1816,7 @@ export default function App() {
         </svg>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#0A0A0A",lineHeight:1,letterSpacing:3}}>COLECCIONES MARKET</div>
-            <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
+            <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Sports & Trading Cards · Argentina</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -2198,7 +2198,7 @@ export default function App() {
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SPORTS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
-                style={filterSet===s?{background:SPORT_COLORS[s]||"#DAA520",color:"#fff",borderColor:"transparent"}:{}}
+                style={filterSet===s?{background:SPORT_COLORS[s]||"#0A0A0A",color:"#fff",borderColor:"transparent"}:{}}
                 onClick={()=>setFilterSet(s)}>{s}</button>
             ))}
           </div>
@@ -2370,7 +2370,7 @@ export default function App() {
       </div>
 
       <div style={{borderTop:"1px solid #E5E7EB",padding:"16px 24px",textAlign:"center",color:"#9CA3AF",fontSize:12}}>
-        ⬤ Colecciones Market · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
+        Colecciones Market · Argentina · Sports & Trading Cards · Pagos seguros vía Mercado Pago
       </div>
 
       {/* GLOBAL SEARCH — below navbar, full width */}
