@@ -2131,35 +2131,68 @@ export default function App() {
 
         {/* MARKETPLACE - CARTAS */}
         {tab==="marketplace"&&<>
-          <div style={{padding:"30px 0 22px",display:"flex",gap:24,alignItems:"center",flexWrap:"wrap",borderBottom:"1px solid rgba(255,255,255,.05)",marginBottom:22}}>
-            <div style={{flex:1,minWidth:240}}>
-              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:50,lineHeight:.88,marginBottom:10}}>
-                <span style={{color:"#1a3a6b"}}>COMPRÁ</span> Y <span style={{color:"#1a3a6b"}}>VENDÉ</span><br/>
-                <span style={{color:"#4B5563",fontSize:26}}>CARTAS & COLECCIONES</span>
+          {/* HERO STRIP */}
+          <div style={{padding:"28px 0 24px",borderBottom:"1px solid #E5E7EB",marginBottom:28}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:4}}>
+              <div>
+                <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:6}}>Marketplace Argentina</div>
+                <div style={{fontFamily:"'Geist',sans-serif",fontSize:28,fontWeight:700,color:"#0A0A0A",lineHeight:1.1}}>Sports & Trading Cards</div>
               </div>
-              <div style={{color:"#9CA3AF",fontSize:13}}>Marketplace argentino · Pagás en pesos · Envíos a todo el país</div>
-            </div>
-            <div style={{display:"flex",gap:10}}>
-              <div style={{display:"flex",gap:24,alignItems:"center",fontFamily:"'Geist',sans-serif"}}>
-                <div><span style={{fontSize:22,fontWeight:700,color:"#0A0A0A"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>publicaciones</span></div>
-                <div style={{width:1,height:20,background:"#E5E7EB"}}/>
-                <div><span style={{fontSize:22,fontWeight:700,color:"#0A0A0A"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</span><span style={{fontSize:13,color:"#9CA3AF",marginLeft:6}}>vendedores</span></div>
+              <div style={{display:"flex",gap:20,alignItems:"center",fontFamily:"'Geist',sans-serif"}}>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:20,fontWeight:700,color:"#0A0A0A"}}>{cards.length + sportCards.length + sealedProducts.length + otrosCards.length}</div>
+                  <div style={{fontSize:11,color:"#9CA3AF"}}>publicaciones</div>
+                </div>
+                <div style={{width:1,height:32,background:"#E5E7EB"}}/>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:20,fontWeight:700,color:"#0A0A0A"}}>{new Set([...cards,...sportCards,...sealedProducts,...otrosCards].map(c=>c.seller_id)).size}</div>
+                  <div style={{fontSize:11,color:"#9CA3AF"}}>vendedores</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {loadingCards ? (
-            <div style={{textAlign:"center",padding:"60px 0"}}>
-              <div style={{display:"flex",justifyContent:"center",marginBottom:12}}><div className="spinner" style={{width:40,height:40,borderWidth:4}}/></div>
-              <div style={{color:"#555",fontFamily:"'DM Sans',sans-serif"}}>Cargando cartas...</div>
-            </div>
-          ) : (
-            <>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
-                {filtered.map(c=><CardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)}
+          {/* RECENT SPORT CARDS STRIP */}
+          {sportCards.length > 0 && (
+            <div style={{marginBottom:36}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+                <div style={{fontFamily:"'Geist',sans-serif",fontSize:13,fontWeight:600,color:"#0A0A0A",letterSpacing:"0.04em",textTransform:"uppercase"}}>Deportivas recientes</div>
+                <button onClick={()=>{setTab("deportivas");setFilterSet("Todos");}} style={{background:"none",border:"none",fontSize:12,color:"#6B7280",cursor:"pointer",fontFamily:"'Geist',sans-serif",textDecoration:"underline"}}>Ver todas</button>
               </div>
-              {filtered.length===0&&<div style={{textAlign:"center",padding:"60px 0",color:"#333"}}><div>No hay cartas con ese filtro.</div></div>}
-            </>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
+                {sportCards.slice(0,6).map(c=><SportCardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)}
+              </div>
+            </div>
+          )}
+
+          {/* DIVIDER */}
+          {sportCards.length > 0 && cards.length > 0 && <div style={{borderTop:"1px solid #E5E7EB",marginBottom:36}}/>}
+
+          {/* POKEMON SECTION */}
+          {cards.length > 0 && (
+            <div style={{marginBottom:36}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+                <div style={{fontFamily:"'Geist',sans-serif",fontSize:13,fontWeight:600,color:"#0A0A0A",letterSpacing:"0.04em",textTransform:"uppercase"}}>Pokémon</div>
+                <button onClick={()=>{setTab("marketplace");}} style={{background:"none",border:"none",fontSize:12,color:"#6B7280",cursor:"pointer",fontFamily:"'Geist',sans-serif",textDecoration:"underline"}}>Ver todas</button>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
+                {filtered.slice(0,6).map(c=><CardItem key={c.id} card={c} userId={user?.id} onBuy={onBuy} onLogin={()=>setShowAuth(true)} onSellerClick={openSeller} reviews={reviews}/>)}
+              </div>
+            </div>
+          )}
+
+          {/* EMPTY STATE */}
+          {cards.length === 0 && sportCards.length === 0 && !loadingCards && (
+            <div style={{textAlign:"center",padding:"80px 0",color:"#9CA3AF",fontFamily:"'Geist',sans-serif"}}>
+              <div style={{fontSize:15,fontWeight:500,marginBottom:6}}>No hay publicaciones todavía.</div>
+              <div style={{fontSize:13}}>Sé el primero en publicar una carta.</div>
+            </div>
+          )}
+
+          {loadingCards && (
+            <div style={{textAlign:"center",padding:"60px 0"}}>
+              <div className="spinner" style={{width:32,height:32,borderWidth:3,margin:"0 auto"}}/>
+            </div>
           )}
         </>}
 
@@ -2195,10 +2228,13 @@ export default function App() {
 
         {/* DEPORTIVAS MARKETPLACE */}
         {tab==="deportivas"&&<>
+          <div style={{padding:"28px 0 20px",borderBottom:"1px solid #E5E7EB",marginBottom:20}}>
+            <div style={{fontSize:11,fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:4}}>Marketplace</div>
+            <div style={{fontFamily:"'Geist',sans-serif",fontSize:22,fontWeight:700,color:"#0A0A0A"}}>Cartas Deportivas</div>
+          </div>
           <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SPORTS.map(s=>(
               <button key={s} className={`filter-chip ${filterSet===s?"active":""}`}
-                style={filterSet===s?{background:SPORT_COLORS[s]||"#DAA520",color:"#fff",borderColor:"transparent"}:{}}
                 onClick={()=>setFilterSet(s)}>{s}</button>
             ))}
           </div>
@@ -2369,8 +2405,20 @@ export default function App() {
         </div>}
       </div>
 
-      <div style={{borderTop:"1px solid #E5E7EB",padding:"16px 24px",textAlign:"center",color:"#9CA3AF",fontSize:12}}>
-        ⬤ Colecciones Market · Argentina · Cartas & Colecciones · Pagos seguros vía Mercado Pago
+      <div style={{borderTop:"1px solid #E5E7EB",padding:"32px 24px",marginTop:40}}>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
+          <div>
+            <div style={{fontFamily:"'Geist',sans-serif",fontWeight:700,fontSize:14,color:"#0A0A0A",letterSpacing:2}}>COLECCIONES MARKET</div>
+            <div style={{fontSize:12,color:"#9CA3AF",marginTop:2}}>Sports & Trading Cards · Argentina</div>
+          </div>
+          <div style={{display:"flex",gap:24,fontSize:12,color:"#9CA3AF",fontFamily:"'Geist',sans-serif"}}>
+            <span>Pagos seguros vía Mercado Pago</span>
+            <span>·</span>
+            <span>Envíos a todo el país</span>
+            <span>·</span>
+            <span>© {new Date().getFullYear()} Colecciones Market</span>
+          </div>
+        </div>
       </div>
 
       {/* GLOBAL SEARCH — below navbar, full width */}
