@@ -1816,7 +1816,7 @@ export default function App() {
         </svg>
           <div>
             <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:2,color:"#0A0A0A",lineHeight:1,letterSpacing:3}}>COLECCIONES MARKET</div>
-            <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Argentina · Cartas & Colecciones</div>
+            <div style={{fontSize:9,color:"#0A0A0A",letterSpacing:1,textTransform:"uppercase"}}>Sports & Trading Cards · Argentina</div>
           </div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
